@@ -37,7 +37,7 @@ public class MessageServiceImpl implements MessageService {
         if(u.isPresent()) {
             User user = u.get();
             return repository.findAll().stream().
-                    filter(m essage -> !message.getSentBy().getId().equals(UUID.fromString(id)) &&
+                    filter(message -> !message.getSentBy().getId().equals(UUID.fromString(id)) &&
                             message.getSentOn().compareTo(LocalDateTime.ofInstant(Instant.ofEpochMilli(user.getLastChecked()), ZoneId.of("UTC"))) > 0)
                     .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
         } else throw new NoSuchElementException();
