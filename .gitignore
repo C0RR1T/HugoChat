@@ -5,8 +5,8 @@ hugo-client/node_modules
 hugo-client/.pnp
 hugo-client/build
 hugo-client/coverage
+*.log
 
 # intellij
 *.iml
 .idea
-
