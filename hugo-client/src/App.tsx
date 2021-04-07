@@ -1,7 +1,7 @@
 import React from 'react';
-import Members from "./Members";
 import Chat from "./Chat";
 import styled from "styled-components";
+import Members from "./Members";
 
 const ParentDiv = styled.div`
   display: grid;
