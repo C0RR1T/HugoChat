@@ -1,6 +1,7 @@
 package com.hugo.chat.domain.user;
 
 import com.hugo.chat.model.user.User;
+import com.hugo.chat.model.user.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,14 +17,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
+    public UserDTO createUser(UserDTO user) {
         user.setId(null);
-        return repository.saveAndFlush(user);
+        User u = repository.saveAndFlush(UserDTO.toUser(user));
+        return new UserDTO(u.getId(), u.getName());
     }
 
     @Override
-    public Collection<User> getUsers() {
-        return repository.findAll();
+    public Collection<UserDTO> getUsers(String id) {
+        return repository.findAll().stream().
+                filter(user -> !user.getId().equals(UUID.fromString(id))).
+                map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
     }
 
     @Override
@@ -40,9 +44,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String id, User user) {
-        if (repository.existsById(user.getId()) && id.equals(user.getId().toString())) {
-            return repository.saveAndFlush(user);
+    public UserDTO updateUser(String id, UserDTO user) {
+        Optional<User> opt = repository.findById(UUID.fromString(id));
+        if (opt.isPresent()) {
+            User u = opt.get();
+            u.setName(user.getUsername());
+            repository.saveAndFlush(u);
+            return new UserDTO(u.getId(), u.getName());
         } else throw new NoSuchElementException();
     }
 }

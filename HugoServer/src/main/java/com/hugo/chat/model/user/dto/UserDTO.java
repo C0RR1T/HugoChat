@@ -1,5 +1,7 @@
 package com.hugo.chat.model.user.dto;
 
+import com.hugo.chat.model.user.User;
+
 import java.util.UUID;
 
 public class UserDTO {
@@ -26,5 +28,13 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public static User toUser(UserDTO user) {
+        User u = new User();
+        u.setName(user.getUsername());
+        u.setLastChecked(System.currentTimeMillis());
+        u.setId(user.getId());
+        return u;
     }
 }
