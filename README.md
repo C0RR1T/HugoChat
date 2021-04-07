@@ -4,3 +4,5 @@ figma
 
 
 postgres-pw: "huGO123.corsBOSS"
+
+default time zone utc
