@@ -4,3 +4,8 @@ figma
 
 
 postgres-pw: "huGO123.corsBOSS"
+
+default time zone utc
+
+
+link zum react frontend: [haha](http://localhost:3000/)
