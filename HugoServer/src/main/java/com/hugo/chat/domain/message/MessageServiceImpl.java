@@ -1,5 +1,6 @@
 package com.hugo.chat.domain.message;
 
+
 import com.hugo.chat.domain.user.UserRepository;
 import com.hugo.chat.model.message.dto.MessageDTO;
 import com.hugo.chat.model.user.User;
@@ -34,11 +35,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Collection<MessageDTO> getNewMessages(String id) {
         Optional<User> u = userRepository.findById(UUID.fromString(id));
-        if(u.isPresent()) {
+        if (u.isPresent()) {
             User user = u.get();
-            return repository.findAll().stream().
-                    filter(message -> !message.getSentBy().getId().equals(UUID.fromString(id)) &&
-                            message.getSentOn().compareTo(LocalDateTime.ofInstant(Instant.ofEpochMilli(user.getLastChecked()), ZoneId.of("UTC"))) > 0)
+            return repository.getNewMessage(user.getLastChecked(), user.getId()).stream()
                     .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
         } else throw new NoSuchElementException();
     }

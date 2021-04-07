@@ -25,9 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<UserDTO> getUsers(String id) {
-        return repository.findAll().stream().
-                filter(user -> !user.getId().equals(UUID.fromString(id))).
-                map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
+        return repository.getActiveUsers(UUID.fromString(id)).stream()
+                .map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
     }
 
     @Override
@@ -36,9 +35,7 @@ public class UserServiceImpl implements UserService {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                List<UUID> inactiveUsers = repository.findAll().stream().
-                        filter(user -> user.getLastChecked() < System.currentTimeMillis() - 10000).map(User::getId).collect(Collectors.toList());
-                repository.deleteUsersById(inactiveUsers);
+
             }
         }, 0, 10000);
     }

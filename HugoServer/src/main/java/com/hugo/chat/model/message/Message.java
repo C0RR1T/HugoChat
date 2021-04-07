@@ -26,6 +26,7 @@ public class Message {
     private UUID id;
     @Column(length = 1000)
     private String body;
+    @Column(name = "sentOn")
     private LocalDateTime sentOn;
     @ManyToOne
     @JoinColumn(name = "UserID_FK", referencedColumnName = "id")

@@ -1,6 +1,5 @@
 package com.hugo.chat.domain.user;
 
-import com.hugo.chat.model.user.User;
 import com.hugo.chat.model.user.dto.UserDTO;
 
 import java.util.Collection;

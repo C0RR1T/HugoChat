@@ -1,8 +1,6 @@
 package com.hugo.chat.model.message.dto;
 
-import com.hugo.chat.model.message.Message;
-import com.hugo.chat.model.user.User;
-import com.hugo.chat.model.user.dto.UserDTO;
+import com.hugo.chat.model.message.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -55,6 +53,6 @@ public class MessageDTO {
     }
 
     public static MessageDTO toMessageDTO(Message message) {
-        return new MessageDTO(message.getBody(), message.getSentBy(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli());
+        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli());
     }
 }
