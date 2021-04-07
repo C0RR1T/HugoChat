@@ -1,12 +1,12 @@
 package com.hugo.chat.domain.user;
 
 import com.hugo.chat.model.user.User;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Service
 public class UserServiceImpl implements UserService {
     private UserRepository repository;
 
