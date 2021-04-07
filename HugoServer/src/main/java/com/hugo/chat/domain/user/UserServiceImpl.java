@@ -35,7 +35,9 @@ public class UserServiceImpl implements UserService {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
+                List<UUID> inactiveUsers = repository.findAll().stream().
+                        filter(user -> user.getLastChecked() < System.currentTimeMillis() - 10000).map(User::getId).collect(Collectors.toList());
+                repository.deleteUsersById(inactiveUsers);
             }
         }, 0, 10000);
     }
