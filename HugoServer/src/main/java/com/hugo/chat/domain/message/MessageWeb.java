@@ -1,14 +1,14 @@
-package com.hugo.chat.domain.user;
+package com.hugo.chat.domain.message;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
-public class UserWeb {
-    private UserService service;
+@RequestMapping("/messages")
+public class MessageWeb {
+    private MessageService service;
 
-    public UserWeb(UserService service) {
+    public MessageWeb(MessageService service) {
         this.service = service;
     }
 }

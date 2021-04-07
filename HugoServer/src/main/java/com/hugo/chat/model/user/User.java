@@ -1,9 +1,13 @@
 package com.hugo.chat.model.user;
 
+import com.hugo.chat.model.message.Message;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +30,12 @@ public class User {
     @Column(name = "username")
     private String name;
     private long lastChecked;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "user",
+            cascade = CascadeType.DETACH
+    )
+    private List<Message> messages = new ArrayList<>();
 
     public User() {}
 
