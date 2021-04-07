@@ -8,3 +8,5 @@ hugo-client/coverage
 
 # intellij
 *.iml
+.idea
+
