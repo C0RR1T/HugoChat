@@ -6,8 +6,12 @@ import java.util.Collection;
 
 public interface UserService {
     UserDTO createUser(UserDTO user);
+
     Collection<String> getUsers();
+
     void deleteInactiveUser();
+
     UserDTO updateUser(UserDTO user);
+
     void setUserActive(String id);
 }

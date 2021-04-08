@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository repository;
+    private final UserRepository repository;
 
     public UserServiceImpl(UserRepository repository) {
         this.repository = repository;
@@ -19,7 +19,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO user) {
         user.setId(null);
-        User u = repository.saveAndFlush(UserDTO.toUser(user));
+        User u = UserDTO.toUser(user);
+        u.setLastActive(System.currentTimeMillis());
+        u = repository.saveAndFlush(u);
         return new UserDTO(u.getId(), u.getName());
     }
 
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setUserActive(String id) {
         Optional<User> user = repository.findById(UUID.fromString(id));
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             user.get().setLastActive(System.currentTimeMillis());
         } else throw new NoSuchElementException();
     }

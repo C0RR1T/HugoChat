@@ -1,11 +1,12 @@
 package com.hugo.chat.domain.message;
 
 
+import com.hugo.chat.domain.user.UserRepository;
 import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
+import com.hugo.chat.model.user.User;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,15 +15,22 @@ import java.util.stream.Collectors;
 
 @Service
 public class MessageServiceImpl implements MessageService {
-    private MessageRepository repository;
+    private final MessageRepository repository;
+    private final UserRepository userRepo;
 
-    public MessageServiceImpl(MessageRepository repository) {
+    public MessageServiceImpl(MessageRepository repository, UserRepository repository1) {
         this.repository = repository;
+        this.userRepo = repository1;
     }
 
     @Override
-    public MessageDTO createMessage(MessageDTO message) {
-        return MessageDTO.toMessageDTO(repository.saveAndFlush(MessageDTO.toMessage(message)));
+    public MessageDTO createMessage(MessageDTO messagedto) {
+        Message message = MessageDTO.toMessage(messagedto);
+        Optional<User> user = userRepo.findById(UUID.fromString(messagedto.getSentByID()));
+        if(user.isPresent()) {
+            message.setSentBy(user.get());
+            return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
+        } else throw new NoSuchElementException();
     }
 
     @Override
@@ -31,11 +39,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Collection<MessageDTO> getNewMessages(String messageID) {
-        Optional<Message> m = repository.findById(UUID.fromString(messageID));
-        if (m.isPresent()) {
-           return repository.getNewMessage(m.get().getSentOn().toInstant(ZoneOffset.UTC).toEpochMilli()).stream()
-                   .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
-        } else throw new NoSuchElementException("Message ID was not found");
+    public Collection<MessageDTO> getNewMessages(String timestampString) {
+        return repository.getNewMessage(Long.parseLong(timestampString)).stream()
+                .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
 }

@@ -18,7 +18,11 @@ public class MessageWeb {
 
     @PostMapping("")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO message) {
-        return ResponseEntity.ok().body(service.createMessage(message));
+        try {
+            return ResponseEntity.ok().body(service.createMessage(message));
+        } catch (NoSuchElementException n) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("")
@@ -26,10 +30,10 @@ public class MessageWeb {
         return ResponseEntity.ok().body(service.getAllMessages());
     }
 
-    @GetMapping("/new/{id}")
-    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("id") String lastMessageID) {
+    @GetMapping("/new/{timestamp}")
+    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("timestamp") String timestamp) {
         try {
-            return ResponseEntity.ok().body(service.getNewMessages(lastMessageID));
+            return ResponseEntity.ok().body(service.getNewMessages(timestamp));
         } catch (NoSuchElementException n) {
             return ResponseEntity.notFound().build();
         }
