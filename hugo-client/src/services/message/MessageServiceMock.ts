@@ -31,7 +31,7 @@ export default class MessageServiceMock implements MessageService {
                 sentByID: "8b34fb07-93bd-47e0-b317-7dbb8e3985a8",
                 body: "hallo" +
                     "mein name ist hugo boss" +
-                    "lol wenn ich hier ganz viel schreibe sollte es wrappen, -----------------------------------------------------",
+                    "lol wenn ich hier ganz viel schreibe sollte es wrappen, ----------------------------------------------------- lol wenn ich hier ganz viel schreibe sollte es wrappen, -----------------------------------------------------lol wenn ich hier ganz viel schreibe sollte es wrappen, -----------------------------------------------------lol wenn ich hier ganz viel schreibe sollte es wrappen, -----------------------------------------------------",
                 sentOn: Date.now() - 1000
             }
         ];
@@ -62,8 +62,9 @@ export default class MessageServiceMock implements MessageService {
             return {
                 author: dto.sentBy,
                 own: dto.sentByID === ownId,
+                timestamp: dto.sentOn,
                 content: dto.body
-            }
+            };
         });
     }
 }

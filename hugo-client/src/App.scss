@@ -1,9 +1,12 @@
-$brighterColor: #979ca2;
-$brightColor: #444951;
-$slightlyBrightColor: #3f434a;
+$color5: #d8dce3;
+$color4: #bbbfc6;
+$color3: #9aa0a4;
+$color2: #5a6269;
+$color1: #383c41;
+$color0: #30343c;
 $bgColor: #282c34;
 $blue: #37465c;
-$lightBlue:  #566d8f;
+$lightBlue: #566d8f;
 
 body {
   margin: 0;
@@ -11,12 +14,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: $bgColor;
-  color: white;
+  color: $color5;
 }
 
 input {
-  color: white;
-  background-color: $brightColor;
+  color: $color5;
+  background-color: $color2;
   border: none;
   padding: 5px;
   font-size: 16px;
@@ -40,17 +43,30 @@ input {
 
 
   .message {
-    background-color: $brightColor;
+    background-color: $color1;
     margin: 10px;
+    padding: 5px;
 
     .author {
+      display: inline-block;
     }
 
     .content {
       margin-top: 5px;
       margin-left: 20px;
     }
+
+    .time {
+      display: inline-block;
+      margin-left: 10px;
+      color: $color2;
+    }
+
+    &:hover {
+      background-color: $color2;
+    }
   }
+
 
   .own-message {
     background-color: $blue;
@@ -64,7 +80,7 @@ input {
   margin-right: 10px;
 
   .member {
-    background-color: $brightColor;
+    background-color: $color2;
     margin: 10px;
     padding: 10px;
   }
@@ -87,11 +103,11 @@ input {
 }
 
 ::-webkit-scrollbar-track {
-  background: $slightlyBrightColor;
+  background: $color0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $brighterColor;
+  background: $color3;
 }
 
 ::-webkit-scrollbar-thumb:hover {
