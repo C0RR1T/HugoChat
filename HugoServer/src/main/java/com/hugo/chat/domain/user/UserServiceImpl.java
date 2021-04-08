@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setUserActive(String id) {
         Optional<User> user = repository.findById(UUID.fromString(id));
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             user.get().setLastActive(System.currentTimeMillis());
         } else throw new NoSuchElementException();
     }

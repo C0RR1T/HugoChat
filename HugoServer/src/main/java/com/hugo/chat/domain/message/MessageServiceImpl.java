@@ -1,15 +1,10 @@
 package com.hugo.chat.domain.message;
 
 
-import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneOffset;
 import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service

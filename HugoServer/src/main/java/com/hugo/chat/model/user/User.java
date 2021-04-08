@@ -35,7 +35,8 @@ public class User {
     private List<Message> messages = new ArrayList<>();
     private long lastActive;
 
-    public User() {}
+    public User() {
+    }
 
     public UUID getId() {
         return id;

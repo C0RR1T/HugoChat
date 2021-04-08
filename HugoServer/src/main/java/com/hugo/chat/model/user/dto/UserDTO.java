@@ -8,7 +8,9 @@ public class UserDTO {
     private UUID id;
     private String username;
 
-    public UserDTO() {}
+    public UserDTO() {
+    }
+
     public UserDTO(UUID id, String username) {
         this.id = id;
         this.username = username;

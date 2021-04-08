@@ -63,6 +63,6 @@ public class MessageDTO {
     }
 
     public static MessageDTO toMessageDTO(Message message) {
-        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli() , message.getSentBy().getId().toString());
+        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli(), message.getSentBy().getId().toString());
     }
 }
