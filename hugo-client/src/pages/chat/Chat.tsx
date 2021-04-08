@@ -23,30 +23,52 @@ class Chat extends React.Component<{}, ChatState> {
 
     constructor(props: {}) {
         super(props);
-        const userCreate = userService.createUser({
+
+        const userGet = userService.getUsers();
+        const messageGet = messageService.getAllMessages();
+
+        userService.createUser({
             username: DEFAULT_NAME
         }).then(r => {
             this.setState({
                 userID: r.id || ""
             });
-            return r.id;
-        });
+            return r.id || "";
+        }).then(selfId => {
 
-        const userGet = userService.getUsers().then(r => {
-            Promise.all([userCreate]).then(_ => {
+            messageGet.then(messages =>
                 this.setState({
-                    onlineMembers: userService.userDTOtoString(r, this.state.userID || "")
+                    messages: messageService.dtoToProps(messages, selfId)
+                })
+            );
+
+            userGet.then(users =>
+                this.setState({
+                    onlineMembers: userService.userDTOtoString(users, selfId || "")
+                })
+            );
+
+            setInterval(() => {
+                userService.getUsers().then(users => {
+                    const members = userService.userDTOtoString(users, selfId || "");
+                    this.setState({
+                        onlineMembers: members
+                    });
                 });
             });
-        });
 
-        messageService.getAllMessages().then(r => {
-            Promise.all([userCreate]).then(id => {
+            setInterval(() => {
+                messageService.getNewMessages(this.state.lastMsgCheck).then(newMessages => {
+                    const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
+                    this.setState({messages});
+                });
+
                 this.setState({
-                    messages: messageService.dtoToProps(r, (id[0] || ""))
-                })
-            });
-        })
+                    lastMsgCheck: Date.now()
+                });
+
+            }, 500);
+        });
 
         this.state = {
             userID: "",
@@ -55,30 +77,6 @@ class Chat extends React.Component<{}, ChatState> {
             messages: [],
             lastMsgCheck: Date.now()
         }
-
-        setInterval(() => {
-            messageService.getNewMessages(this.state.lastMsgCheck).then(newMessages => {
-                const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, this.state.userID));
-                this.setState({messages});
-            });
-
-            this.setState({
-                lastMsgCheck: Date.now()
-            })
-
-        }, 500);
-
-        Promise.all([userCreate]).then(_ => {
-            setInterval(() => {
-                userService.getUsers().then(users => {
-                    const members = userService.userDTOtoString(users, this.state.userID || "");
-                    this.setState({
-                        onlineMembers: members
-                    });
-                });
-            });
-        });
-
     }
 
     render() {
