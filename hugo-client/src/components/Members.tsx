@@ -1,7 +1,11 @@
-const Members = (selfName: string, members: string[]) =>
-    <div>
+interface MembersProps {
+    selfName: string,
+    members: string[]
+}
+const Members = (props: MembersProps) =>
+    <div className="members">
         <SelfMember name="corsin"/>
-        {members.map(n => <Member name={n}/>)}
+        {props.members.map(n => <Member name={n}/>)}
     </div>
 
 
@@ -22,3 +26,4 @@ const SelfMember = (props: MemberProps) =>
     </div>
 
 export default Members;
+export type {MemberProps};

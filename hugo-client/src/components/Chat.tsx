@@ -1,39 +1,20 @@
-import "./Chat.scss"
+import "../App.scss"
 import React, {useState} from "react";
 
 let messageList: JSX.Element[] = [];
 
-
-const Chat = () => {
-    const [messages, setMessages] = useState(messageList);
-
+interface ChatProps {
+    messages: MessageProps[],
+    sendHandler: SubmitHandler;
+}
+const Chat = (props: ChatProps) => {
     return (
         <div>
             <div className="messages">
-                {messages}
-                <Message author="Timo Nicolas Angst" content="ich bin timo"/>
-                <Message author="hugo" content="hallo corsin"/>
-                <Message author="corsin" content="hallo" own/>
-                <Message author="hugo" content="hallo
-        mein name ist hugo boss
-        lol wenn ich hier ganz viel schreibe sollte es wrappen
-        -----------------------------------------------------
-        successful wrap completed"/>
-                <Message author="corsin" content="das muss ich selbst testen
-            -----------------------------------
-            -----------------------------------
-            -----------------------------------
-            -----------------------------------
-            -----------------------------------
-            -----------------------------------
-            -----------------------------------
-            ----------------------------------- oh stimmt es wrapped Hecht
-            (der spell checker wollte Hecht aus echt machen)" own/>
+                {props.messages.map(msg => <Message author={msg.author} content={msg.content} own={msg.own}/>)}
             </div>
             <InputField submitHandler={content => {
-                console.log(content);
-                messageList.push(<Message author="corsin" content="f" own/>);
-                setMessages(messageList);
+                props.sendHandler(content);
             }}/>
         </div>
     );
@@ -54,7 +35,7 @@ const Message = (props: MessageProps) =>
     </div>
 
 
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 100; i++) {
     messageList.push(<Message author="hugo" content="hallo corsin"/>);
 }
 //setInterval(() => messageList.push(<Message author="corsin" content="hallo hugo" own/>), 500)
@@ -86,3 +67,4 @@ const InputField = (props: InputFieldProps) => {
 
 
 export default Chat;
+export type { MessageProps };
