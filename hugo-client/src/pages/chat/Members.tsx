@@ -23,7 +23,7 @@ const Member = (props: MemberProps) =>
     </div>
 
 const SelfMember = (props: MemberProps) =>
-    <div className="member" style={{backgroundColor: "#37465c"}}>
+    <div className="member self">
         <div className="name">
             {props.name}
         </div>

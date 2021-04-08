@@ -1,5 +1,9 @@
+$brighterColor: #979ca2;
 $brightColor: #444951;
+$slightlyBrightColor: #3f434a;
 $bgColor: #282c34;
+$blue: #37465c;
+$lightBlue:  #566d8f;
 
 body {
   margin: 0;
@@ -30,6 +34,9 @@ body {
 .messages {
   overflow-y: scroll;
   height: 90vh;
+  margin-top: 10px;
+  margin-left: 10px;
+
 
   .message {
     background-color: $brightColor;
@@ -43,35 +50,42 @@ body {
       margin-left: 20px;
     }
   }
+
+  .own-message {
+    background-color: $blue;
+  }
 }
 
 .members {
   overflow-y: scroll;
   height: 90vh;
+  margin-top: 10px;
+  margin-right: 10px;
 
   .member {
     background-color: $brightColor;
     margin: 10px;
     padding: 10px;
   }
+
+  .self {
+    background-color: $blue;
+  }
 }
 
-/* width */
+
 ::-webkit-scrollbar {
   width: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: $slightlyBrightColor;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: $brighterColor;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: $lightBlue;
 }

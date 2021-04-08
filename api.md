@@ -1,7 +1,8 @@
 # API Routes
 Base route: `/api/v1`
 
-## Login
+## User
+### Log in
 `POST` `/users`  
 
 Example Body
@@ -14,20 +15,43 @@ Example Body
 Response:
 ```json
 {
-  "uuid": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
   "name": "corsin"
 }
 ```
 
-## Members
-`GET` `/members`
+### Get active users
 
-Response:  
+`GET` `/users`
+
+Response:
+```json
+["corsin", "timo", "hugo"]
+```
+
+### Change name
+`PUT` `/users`
+
+Example Body:
 ```json
 {
-  "members": ["corsin", "timo", "hugo"]
+  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+  "name": "corsin"
 }
 ```
+
+Example Response:
+```json
+{
+  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+  "name": "corsin"
+}
+```
+
+### Send still here
+`PATCH` `/users/active/{uuid}`
+
+No request or response body
 
 ## Messages
 ### All Messages
@@ -54,7 +78,7 @@ Response:
 ```
 
 ### New Messages for a User
-`GET` `/messages/new/{timeStamp}`
+`GET` `/messages/new/{idOfLastCheckedMessage}`
 
 Response: 
 ```json
@@ -87,8 +111,3 @@ Example body:
   "sentOn": 5590432785885
 }
 ```
-
-### Send still here
-`PATCH` `/users/active/{uuid}`
-
-No request or response body

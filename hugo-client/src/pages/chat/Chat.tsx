@@ -1,7 +1,11 @@
 import React from 'react';
-import Chat, {MessageProps} from "./Chat";
+import Messages, {MessageProps} from "./Messages";
 import Members from "./Members";
+import UserServiceImpl from "../../services/user/UserServiceImpl";
+import MessageServiceImpl from "../../services/message/MessageServiceImpl";
 
+const messageService = new MessageServiceImpl();
+const userService = new UserServiceImpl();
 
 let members = ["hugo", "timo nicolas angst", "noel", "schiel", "gebhardt", "rolf", "Michi", "dragon99", "Cyrill", "Joey Rüegg", "Mark Zuckerberg"];
 let messages = [{author: "Timo Nicolas Angst", content: "ich bin timo"},
@@ -14,13 +18,14 @@ let messages = [{author: "Timo Nicolas Angst", content: "ich bin timo"},
     }]
 
 
-interface AppState {
+interface ChatState {
     name: string,
+    userID?: string,
     onlineMembers: string[],
     messages: MessageProps[]
 }
 
-class App extends React.Component<{}, AppState> {
+class Chat extends React.Component<{}, ChatState> {
 
     constructor(props: {}) {
         super(props);
@@ -57,7 +62,7 @@ class App extends React.Component<{}, AppState> {
     render() {
         return (
             <div className="parent">
-                <Chat messages={this.state.messages} sendHandler={s => console.log(s)}/>
+                <Messages messages={this.state.messages} sendHandler={s => console.log(s)}/>
                 <Members selfName="corsin" members={members}/>
             </div>
         );
@@ -65,4 +70,4 @@ class App extends React.Component<{}, AppState> {
 
 }
 
-export default App;
+export default Chat;

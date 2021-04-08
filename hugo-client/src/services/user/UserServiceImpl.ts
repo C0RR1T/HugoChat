@@ -1,11 +1,11 @@
 import UserService from "./UserService";
 import UserDTO from "./model/UserDTO";
-import axios from "axios";
+import axiosAPI from "../AxiosUtility";
 
 export default class UserServiceImpl implements UserService {
     async createUser(user: UserDTO): Promise<UserDTO> {
         try {
-            const {data} = await axios.post<UserDTO>("/users", user)
+            const {data} = await axiosAPI.post<UserDTO>("/users", user)
             return data;
         } catch (e) {
             throw new Error(e);
@@ -14,7 +14,7 @@ export default class UserServiceImpl implements UserService {
 
     async keepActive(uuid: string): Promise<void> {
         try {
-            await axios.post<UserDTO>(`/users/active/${uuid}`)
+            await axiosAPI.post<UserDTO>(`/users/active/${uuid}`)
         } catch (e) {
             throw new Error(e);
         }
