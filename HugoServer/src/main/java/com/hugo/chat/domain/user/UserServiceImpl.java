@@ -50,4 +50,12 @@ public class UserServiceImpl implements UserService {
             return new UserDTO(u.getId(), u.getName());
         } else throw new NoSuchElementException();
     }
+
+    @Override
+    public void setUserActive(String id) {
+        Optional<User> user = repository.findById(UUID.fromString(id));
+        if(user.isPresent()) {
+            user.get().setLastActive(System.currentTimeMillis());
+        } else throw new NoSuchElementException();
+    }
 }

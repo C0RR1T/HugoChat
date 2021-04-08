@@ -9,4 +9,5 @@ public interface UserService {
     Collection<UserDTO> getUsers(String id);
     void deleteInactiveUser();
     UserDTO updateUser(String id, UserDTO user);
+    void setUserActive(String id);
 }
