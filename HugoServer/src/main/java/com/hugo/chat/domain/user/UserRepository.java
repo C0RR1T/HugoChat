@@ -13,6 +13,10 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
     void deleteUsersById(List<UUID> ids);
-    @Query(value = "SELECT u FROM users u WHERE u.userID <> param")
+
+    @Query(value = "SELECT * FROM User u WHERE u.id <> :param")
     List<User> getActiveUsers(@Param("param") UUID userID);
+
+    @Query(value = "DELETE FROM User u WHERE u. < :allowedTime ")
+    void deleteInactiveUsers(@Param("allowedTime") long allowedTime);
 }

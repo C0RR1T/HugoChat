@@ -12,8 +12,8 @@ import java.util.UUID;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, UUID> {
-    @Query(value = "SELECT m FROM messages m WHERE m.messageID <> userID AND m.sentOn > lastChecked")
-    List<Message> getNewMessage(@Param("lastChecked") long lastTimeChecked, @Param("userID") UUID id);
+    @Query(value = "SELECT m FROM Message m WHERE extract(EPOCH FROM m.sentOn) > :lastChecked ORDER BY m.sentOn DESC")
+    List<Message> getNewMessage(@Param("lastChecked") long lastTimeChecked);
 
 
 }

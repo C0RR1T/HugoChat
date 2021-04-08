@@ -1,25 +1,23 @@
 package com.hugo.chat.domain.message;
 
 
-import com.hugo.chat.domain.user.UserRepository;
+import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
-import com.hugo.chat.model.user.User;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
+import java.time.ZoneOffset;
+import java.util.Collection;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class MessageServiceImpl implements MessageService {
     private MessageRepository repository;
-    private UserRepository userRepository;
 
-    public MessageServiceImpl(MessageRepository repository, UserRepository userRepository) {
+    public MessageServiceImpl(MessageRepository repository) {
         this.repository = repository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -33,12 +31,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Collection<MessageDTO> getNewMessages(String id) {
-        Optional<User> u = userRepository.findById(UUID.fromString(id));
-        if (u.isPresent()) {
-            User user = u.get();
-            return repository.getNewMessage(user.getLastChecked(), user.getId()).stream()
-                    .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
-        } else throw new NoSuchElementException();
+    public Collection<MessageDTO> getNewMessages(String messageID) {
+        Optional<Message> m = repository.findById(UUID.fromString(messageID));
+        if (m.isPresent()) {
+//            return repository.getNewMessage(m.get().getSentOn().toInstant(ZoneOffset.UTC).toEpochMilli()).stream()
+//                    .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
+            return null;
+        } else throw new NoSuchElementException("Message ID was not found");
     }
 }

@@ -33,7 +33,6 @@ public class UserDTO {
     public static User toUser(UserDTO user) {
         User u = new User();
         u.setName(user.getUsername());
-        u.setLastChecked(System.currentTimeMillis());
         u.setId(user.getId());
         return u;
     }

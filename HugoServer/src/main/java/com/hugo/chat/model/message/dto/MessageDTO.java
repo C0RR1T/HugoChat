@@ -1,6 +1,6 @@
 package com.hugo.chat.model.message.dto;
 
-import com.hugo.chat.model.message.*;
+import com.hugo.chat.model.message.Message;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -9,14 +9,16 @@ import java.util.TimeZone;
 
 public class MessageDTO {
     private String body;
+    private String sentByID;
     private String sentBy;
     private long sentOn;
 
     public MessageDTO() {
     }
 
-    public MessageDTO(String body, String sentBy, long sentOn) {
+    public MessageDTO(String body, String sentBy, long sentOn, String sentByID) {
         this.body = body;
+        this.sentByID = sentByID;
         this.sentBy = sentBy;
         this.sentOn = sentOn;
     }
@@ -27,6 +29,14 @@ public class MessageDTO {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getSentByID() {
+        return sentByID;
+    }
+
+    public void setSentByID(String sentByID) {
+        this.sentByID = sentByID;
     }
 
     public String getSentBy() {
@@ -53,6 +63,6 @@ public class MessageDTO {
     }
 
     public static MessageDTO toMessageDTO(Message message) {
-        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli());
+        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli() , message.getSentBy().getId().toString());
     }
 }
