@@ -26,7 +26,20 @@ Response:
 
 Response:
 ```json
-["corsin", "timo", "hugo"]
+[
+  {
+    "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+    "name": "corsin"
+  },
+  {
+    "id": "6b343b07-83bd-47e0-b317-7dbb8e3985a8",
+    "name": "timo"
+  },
+  {
+    "id": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+    "name": "hugo"
+  }
+]
 ```
 
 ### Change name

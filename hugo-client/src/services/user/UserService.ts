@@ -5,7 +5,9 @@ export default interface UserService {
 
     keepActive(uuid: string): Promise<void>;
 
-    getUsers(): Promise<string[]>;
+    getUsers(selfId: string): Promise<UserDTO[]>;
+
+    userDTOtoString(data: UserDTO[], selfId: string): string[]
 
     changeName(user: UserDTO): Promise<UserDTO>;
 }
