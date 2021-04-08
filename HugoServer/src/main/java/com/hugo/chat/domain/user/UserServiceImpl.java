@@ -19,7 +19,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO user) {
         user.setId(null);
-        User u = repository.saveAndFlush(UserDTO.toUser(user));
+        User u = UserDTO.toUser(user);
+        u.setLastActive(System.currentTimeMillis());
+        u = repository.saveAndFlush(u);
         return new UserDTO(u.getId(), u.getName());
     }
 

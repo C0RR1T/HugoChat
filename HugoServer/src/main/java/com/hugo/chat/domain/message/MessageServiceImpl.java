@@ -31,11 +31,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Collection<MessageDTO> getNewMessages(String messageID) {
-        Optional<Message> m = repository.findById(UUID.fromString(messageID));
-        if (m.isPresent()) {
-           return repository.getNewMessage(m.get().getSentOn().toInstant(ZoneOffset.UTC).toEpochMilli()).stream()
-                   .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
-        } else throw new NoSuchElementException("Message ID was not found");
+    public Collection<MessageDTO> getNewMessages(String timestampString) {
+        return repository.getNewMessage(Long.parseLong(timestampString)).stream()
+                .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
 }

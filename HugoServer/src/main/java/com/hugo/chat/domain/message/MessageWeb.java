@@ -26,10 +26,10 @@ public class MessageWeb {
         return ResponseEntity.ok().body(service.getAllMessages());
     }
 
-    @GetMapping("/new/{id}")
-    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("id") String lastMessageID) {
+    @GetMapping("/new/{timestamp}")
+    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("timestamp") String timestamp) {
         try {
-            return ResponseEntity.ok().body(service.getNewMessages(lastMessageID));
+            return ResponseEntity.ok().body(service.getNewMessages(timestamp));
         } catch (NoSuchElementException n) {
             return ResponseEntity.notFound().build();
         }
