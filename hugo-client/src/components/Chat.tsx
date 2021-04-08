@@ -1,8 +1,6 @@
 import "../App.scss"
 import React, {useEffect, useRef, useState} from "react";
 
-let messageList: JSX.Element[] = [];
-
 interface ChatProps {
     messages: MessageProps[],
     sendHandler: SubmitHandler;
