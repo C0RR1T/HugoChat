@@ -13,7 +13,7 @@ const Chat = (props: ChatProps) => {
         if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight + 100) {
             ref.scrollIntoView({behavior: "smooth"});
         }
-    })
+    });
 
     return (
         <div>
@@ -35,8 +35,7 @@ interface MessageProps {
 }
 
 const Message = (props: MessageProps) =>
-    <div className="message"
-         style={(props.own) ? {backgroundColor: "#37465c"} : {}}>
+    <div className={props.own ? "message own-message" : "message"}>
         <div className="author">{props.author}</div>
         <div className="content">{props.content}</div>
     </div>
