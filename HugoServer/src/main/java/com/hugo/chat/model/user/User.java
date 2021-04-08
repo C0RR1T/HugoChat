@@ -33,6 +33,7 @@ public class User {
             cascade = CascadeType.DETACH
     )
     private List<Message> messages = new ArrayList<>();
+    private long lastActive;
 
     public User() {}
 
@@ -50,5 +51,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getLastActive() {
+        return lastActive;
+    }
+
+    public void setLastActive(long lastActive) {
+        this.lastActive = lastActive;
     }
 }
