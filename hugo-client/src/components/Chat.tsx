@@ -1,5 +1,5 @@
 import "../App.scss"
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 let messageList: JSX.Element[] = [];
 
@@ -7,11 +7,21 @@ interface ChatProps {
     messages: MessageProps[],
     sendHandler: SubmitHandler;
 }
+
 const Chat = (props: ChatProps) => {
+    const messageRef = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const ref = messageRef.current;
+        if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight + 100) {
+            ref.scrollIntoView({behavior: "smooth"});
+        }
+    })
+
     return (
         <div>
             <div className="messages">
                 {props.messages.map(msg => <Message author={msg.author} content={msg.content} own={msg.own}/>)}
+                <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {
                 props.sendHandler(content);
@@ -33,12 +43,6 @@ const Message = (props: MessageProps) =>
         <div className="author">{props.author}</div>
         <div className="content">{props.content}</div>
     </div>
-
-
-for (let i = 0; i < 100; i++) {
-    messageList.push(<Message author="hugo" content="hallo corsin"/>);
-}
-//setInterval(() => messageList.push(<Message author="corsin" content="hallo hugo" own/>), 500)
 
 
 type SubmitHandler = (content: string) => void
@@ -67,4 +71,4 @@ const InputField = (props: InputFieldProps) => {
 
 
 export default Chat;
-export type { MessageProps };
+export type {MessageProps};
