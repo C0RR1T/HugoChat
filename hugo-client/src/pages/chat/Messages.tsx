@@ -1,12 +1,12 @@
-import "../App.scss"
+import "../../App.scss"
 import React, {useEffect, useRef, useState} from "react";
 
-interface ChatProps {
+interface MessagesProps {
     messages: MessageProps[],
     sendHandler: SubmitHandler;
 }
 
-const Chat = (props: ChatProps) => {
+const Messages = (props: MessagesProps) => {
     const messageRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         const ref = messageRef.current;
@@ -66,5 +66,5 @@ const InputField = (props: InputFieldProps) => {
 }
 
 
-export default Chat;
+export default Messages;
 export type {MessageProps};
