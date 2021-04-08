@@ -9,3 +9,4 @@ default time zone utc
 
 
 link zum react frontend: [haha](http://localhost:3000/)
+Docker Container run: docker run --name HugoChat -e POSTGRES_PASSWORD=huGO123.corsBOSS -d postgres
