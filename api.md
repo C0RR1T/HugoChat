@@ -2,7 +2,7 @@
 Base route: `/api/v1`
 
 ## Login
-`POST` `/login`  
+`POST` `/users`  
 
 Example Body
 ```json
@@ -88,3 +88,7 @@ Example body:
 }
 ```
 
+### Send still here
+`PATCH` `/users/active/{uuid}`
+
+No request or response body
