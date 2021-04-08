@@ -31,7 +31,7 @@ Response:
 
 ## Messages
 ### All Messages
-`GET` `/messages`
+`GET` `/messages?uuid=8b343b07-83bd-47e0-b317-7dbb8e3985a8`
 
 Response:
 ```json
@@ -52,7 +52,7 @@ Response:
 ```
 
 ### New Messages for a User
-`GET` `/messages/new/{userId}`
+`GET` `/messages/new/{timeStamp}?uuid=8b343b07-83bd-47e0-b317-7dbb8e3985a8`
 
 Response: 
 ```json
@@ -83,4 +83,3 @@ Example body:
   "sentOn": 5590432785885
 }
 ```
-

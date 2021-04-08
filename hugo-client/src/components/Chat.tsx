@@ -28,7 +28,6 @@ const Chat = (props: ChatProps) => {
     );
 }
 
-
 interface MessageProps {
     author: string,
     content: string,
