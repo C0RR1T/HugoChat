@@ -11,6 +11,14 @@ Example Body
 }
 ```
 
+Response:
+```json
+{
+  "uuid": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+  "name": "corsin"
+}
+```
+
 ## Members
 `GET` `/members`
 
