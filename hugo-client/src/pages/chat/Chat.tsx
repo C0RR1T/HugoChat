@@ -4,6 +4,8 @@ import Members from "./Members";
 import UserServiceImpl from "../../services/user/UserServiceImpl";
 import MessageServiceImpl from "../../services/message/MessageServiceImpl";
 
+const DEFAULT_NAME = "corsin";
+
 const messageService = new MessageServiceImpl();
 const userService = new UserServiceImpl();
 
@@ -30,7 +32,7 @@ class Chat extends React.Component<{}, ChatState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            name: "corsin",
+            name: DEFAULT_NAME,
             onlineMembers: members,
             messages: messages
         }
@@ -51,22 +53,22 @@ class Chat extends React.Component<{}, ChatState> {
     componentDidMount() {
         setInterval(() => {
             members.push("cors");
-            this.changeMembers(members);
-        }, 1000);
-        setInterval(() => {
-            messages.push({author: "dragon99", content: "spam"});
-            this.changeMessages(messages);
-        }, 500);
-    }
+    this.changeMembers(members);
+}, 1000);
+setInterval(() => {
+    messages.push({author: "dragon99", content: "spam"});
+    this.changeMessages(messages);
+}, 500);
+}
 
-    render() {
-        return (
-            <div className="parent">
-                <Messages messages={this.state.messages} sendHandler={s => console.log(s)}/>
-                <Members selfName="corsin" members={members}/>
-            </div>
-        );
-    }
+render() {
+    return (
+        <div className="parent">
+            <Messages messages={this.state.messages} sendHandler={s => console.log(s)}/>
+            <Members selfName={this.state.name} members={members} nameChangeHandler={name => this.setState({name})}/>
+        </div>
+    );
+}
 
 }
 

@@ -18,7 +18,7 @@ const Messages = (props: MessagesProps) => {
     return (
         <div>
             <div className="messages">
-                {props.messages.map(msg => <Message author={msg.author} content={msg.content} own={msg.own}/>)}
+                {props.messages.map((msg, i) => <Message author={msg.author} content={msg.content} own={msg.own} key={i}/>)}
                 <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {

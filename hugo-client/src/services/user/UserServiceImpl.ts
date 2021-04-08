@@ -14,7 +14,25 @@ export default class UserServiceImpl implements UserService {
 
     async keepActive(uuid: string): Promise<void> {
         try {
-            await axiosAPI.post<UserDTO>(`/users/active/${uuid}`)
+            await axiosAPI.patch<UserDTO>(`/users/active/${uuid}`)
+        } catch (e) {
+            throw new Error(e);
+        }
+    }
+
+    async getUsers(): Promise<string[]> {
+        try {
+            const {data} = await axiosAPI.get<string[]>("/users");
+            return data;
+        } catch (e) {
+            throw new Error(e);
+        }
+    }
+
+    async changeName(user: UserDTO): Promise<UserDTO> {
+        try {
+            const {data} = await axiosAPI.put<UserDTO>("/users", user);
+            return data;
         } catch (e) {
             throw new Error(e);
         }
