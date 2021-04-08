@@ -1,6 +1,7 @@
 import MessageService from "./MessageService";
 import MessageDTO from "./model/MessageDTO";
 import axiosAPI from "../AxiosUtility";
+import {MessageProps} from "../../pages/chat/Messages";
 
 export default class MessageServiceImpl implements MessageService {
     async getAllMessages(): Promise<MessageDTO[]> {
@@ -28,5 +29,15 @@ export default class MessageServiceImpl implements MessageService {
         } catch (e) {
             throw new Error(e);
         }
+    }
+
+    dtoToProps(dtos: MessageDTO[], ownId: string): MessageProps[] {
+        return dtos.map(dto => {
+            return {
+                author: dto.sentBy,
+                own: dto.sentByID === ownId,
+                content: dto.body
+            }
+        });
     }
 }

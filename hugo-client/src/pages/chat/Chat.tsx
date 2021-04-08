@@ -3,22 +3,13 @@ import Messages, {MessageProps} from "./Messages";
 import Members from "./Members";
 import UserServiceImpl from "../../services/user/UserServiceImpl";
 import MessageServiceImpl from "../../services/message/MessageServiceImpl";
+import MessageServiceMock from "../../services/message/MessageServiceMock";
+import UserServiceMock from "../../services/user/UserServiceMock";
 
 const DEFAULT_NAME = "corsin";
 
-const messageService = new MessageServiceImpl();
-const userService = new UserServiceImpl();
-
-let members = ["hugo", "timo nicolas angst", "noel", "schiel", "gebhardt", "rolf", "Michi", "dragon99", "Cyrill", "Joey Rüegg", "Mark Zuckerberg"];
-let messages = [{author: "Timo Nicolas Angst", content: "ich bin timo"},
-    {author: "hugo", content: "hallo corsin"}, {author: "corsin", content: "hallo", own: true},
-    {
-        author: "hugo", content: "hallo\n" +
-            "        mein name ist hugo boss\n" +
-            "        lol wenn ich hier ganz viel schreibe sollte es wrappen\n" +
-            "        -----------------------------------------------------"
-    }]
-
+const messageService = new MessageServiceMock();
+const userService = new UserServiceMock();
 
 interface ChatState {
     name: string,
@@ -31,10 +22,28 @@ class Chat extends React.Component<{}, ChatState> {
 
     constructor(props: {}) {
         super(props);
+        const userCreate = userService.createUser({
+            name: DEFAULT_NAME
+        }).then(r => {
+            this.setState({
+                userID: r.uuid
+            });
+            return r.uuid;
+        });
+        userService.getUsers().then(r => this.setState({
+            onlineMembers: r
+        }))
+        messageService.getAllMessages().then(r => {
+            Promise.all([userCreate]).then(id => {
+                this.setState({
+                    messages: messageService.dtoToProps(r, (id[0] || ""))
+                })
+            });
+        })
         this.state = {
             name: DEFAULT_NAME,
-            onlineMembers: members,
-            messages: messages
+            onlineMembers: [],
+            messages: []
         }
     }
 
@@ -50,25 +59,15 @@ class Chat extends React.Component<{}, ChatState> {
         })
     }
 
-    componentDidMount() {
-        setInterval(() => {
-            members.push("cors");
-    this.changeMembers(members);
-}, 1000);
-setInterval(() => {
-    messages.push({author: "dragon99", content: "spam"});
-    this.changeMessages(messages);
-}, 500);
-}
-
-render() {
-    return (
-        <div className="parent">
-            <Messages messages={this.state.messages} sendHandler={s => console.log(s)}/>
-            <Members selfName={this.state.name} members={members} nameChangeHandler={name => this.setState({name})}/>
-        </div>
-    );
-}
+    render() {
+        return (
+            <div className="parent">
+                <Messages messages={this.state.messages} sendHandler={s => console.log(s)}/>
+                <Members selfName={this.state.name} members={this.state.onlineMembers}
+                         nameChangeHandler={name => this.setState({name})}/>
+            </div>
+        );
+    }
 
 }
 
