@@ -11,6 +11,14 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof UserDTO) {
+            UserDTO dto = (UserDTO) obj;
+            return dto.getId().equals(this.getId()) && dto.getUsername().equals(this.getUsername());
+        } return false;
+    }
+
     public UserDTO(UUID id, String username) {
         this.id = id;
         this.username = username;

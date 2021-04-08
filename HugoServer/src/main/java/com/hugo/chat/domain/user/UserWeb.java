@@ -27,7 +27,7 @@ public class UserWeb {
     }
 
     @GetMapping("")
-    public ResponseEntity<Collection<String>> getActiveUsers() {
+    public ResponseEntity<Collection<UserDTO>> getActiveUsers() {
         return ResponseEntity.ok().body(service.getUsers());
     }
 

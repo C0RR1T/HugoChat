@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<String> getUsers() {
+    public Collection<UserDTO> getUsers() {
         return repository.findAll().stream()
-                .map(User::getName).collect(Collectors.toList());
+                .map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
     }
 
     @Override
