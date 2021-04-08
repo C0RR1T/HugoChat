@@ -3,6 +3,7 @@
 # react
 hugo-client/node_modules
 hugo-client/.pnp
+hugo-client/build
 hugo-client/coverage
 *.log
 react-app-env.d.ts
