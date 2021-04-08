@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/users")
 public class UserWeb {
-    private UserService service;
+    private final UserService service;
 
     public UserWeb(UserService service) {
         this.service = service;

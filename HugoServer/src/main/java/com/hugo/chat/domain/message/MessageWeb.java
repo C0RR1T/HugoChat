@@ -18,7 +18,11 @@ public class MessageWeb {
 
     @PostMapping("")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO message) {
-        return ResponseEntity.ok().body(service.createMessage(message));
+        try {
+            return ResponseEntity.ok().body(service.createMessage(message));
+        } catch (NoSuchElementException n) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("")
