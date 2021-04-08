@@ -24,9 +24,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<UserDTO> getUsers(String id) {
-        return repository.getActiveUsers(UUID.fromString(id)).stream()
-                .map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
+    public Collection<String> getUsers() {
+        return repository.findAll().stream()
+                .map(User::getName).collect(Collectors.toList());
     }
 
     @Override
@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(String id, UserDTO user) {
-        Optional<User> opt = repository.findById(UUID.fromString(id));
+    public UserDTO updateUser(UserDTO user) {
+        Optional<User> opt = repository.findById(user.getId());
         if (opt.isPresent()) {
             User u = opt.get();
             u.setName(user.getUsername());

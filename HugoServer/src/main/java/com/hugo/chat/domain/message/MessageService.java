@@ -8,5 +8,5 @@ import java.util.Collection;
 public interface MessageService {
     MessageDTO createMessage(MessageDTO message);
     Collection<MessageDTO> getAllMessages();
-    Collection<MessageDTO> getNewMessages(String id);
+    Collection<MessageDTO> getNewMessages(String timestampString);
 }
