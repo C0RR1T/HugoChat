@@ -20,9 +20,9 @@ export default class UserServiceImpl implements UserService {
         }
     }
 
-    async getUsers(): Promise<string[]> {
+    async getUsers(): Promise<UserDTO[]> {
         try {
-            const {data} = await axiosAPI.get<string[]>("/users");
+            const {data} = await axiosAPI.get<UserDTO[]>("/users");
             return data;
         } catch (e) {
             throw new Error(e);
@@ -36,5 +36,9 @@ export default class UserServiceImpl implements UserService {
         } catch (e) {
             throw new Error(e);
         }
+    }
+
+    userDTOtoString(data: UserDTO[], selfId: string): string[] {
+        return data.filter(user => user.id !== selfId).map(user => user.username);
     }
 }

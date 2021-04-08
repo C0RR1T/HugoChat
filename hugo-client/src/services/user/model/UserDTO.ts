@@ -1,4 +1,4 @@
 export default interface UserDTO {
-    uuid?: string,
-    name: string
+    id?: string,
+    username: string
 }

@@ -13,9 +13,10 @@ const userService = new UserServiceMock();
 
 interface ChatState {
     name: string,
-    userID?: string,
+    userID: string,
     onlineMembers: string[],
-    messages: MessageProps[]
+    messages: MessageProps[],
+    lastMsgCheck: number
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -23,16 +24,22 @@ class Chat extends React.Component<{}, ChatState> {
     constructor(props: {}) {
         super(props);
         const userCreate = userService.createUser({
-            name: DEFAULT_NAME
+            username: DEFAULT_NAME
         }).then(r => {
             this.setState({
-                userID: r.uuid
+                userID: r.id || ""
             });
-            return r.uuid;
+            return r.id;
         });
-        userService.getUsers().then(r => this.setState({
-            onlineMembers: r
-        }))
+
+        const userGet = userService.getUsers().then(r => {
+            Promise.all([userCreate]).then(_ => {
+                this.setState({
+                    onlineMembers: userService.userDTOtoString(r, this.state.userID || "")
+                });
+            });
+        });
+
         messageService.getAllMessages().then(r => {
             Promise.all([userCreate]).then(id => {
                 this.setState({
@@ -40,23 +47,38 @@ class Chat extends React.Component<{}, ChatState> {
                 })
             });
         })
+
         this.state = {
+            userID: "",
             name: DEFAULT_NAME,
             onlineMembers: [],
-            messages: []
+            messages: [],
+            lastMsgCheck: Date.now()
         }
-    }
 
-    changeMembers(members: string[]) {
-        this.setState({
-            onlineMembers: members
-        })
-    }
+        setInterval(() => {
+            messageService.getNewMessages(this.state.lastMsgCheck).then(newMessages => {
+                const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, this.state.userID));
+                this.setState({messages});
+            });
 
-    changeMessages(messages: MessageProps[]) {
-        this.setState({
-            messages: messages
-        })
+            this.setState({
+                lastMsgCheck: Date.now()
+            })
+
+        }, 500);
+
+        Promise.all([userCreate]).then(_ => {
+            setInterval(() => {
+                userService.getUsers().then(users => {
+                    const members = userService.userDTOtoString(users, this.state.userID || "");
+                    this.setState({
+                        onlineMembers: members
+                    });
+                });
+            });
+        });
+
     }
 
     render() {

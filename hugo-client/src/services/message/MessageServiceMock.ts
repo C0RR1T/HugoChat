@@ -12,19 +12,19 @@ export default class MessageServiceMock implements MessageService {
                 sentBy: "corsin",
                 sentByID: "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
                 body: "hallo",
-                sentOn: 1617887629000
+                sentOn: Date.now() - 10000
             },
             {
                 sentBy: "hugo",
                 sentByID: "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
                 body: "hallo leut",
-                sentOn: 1617887549000
+                sentOn: Date.now() - 90000
             },
             {
                 sentBy: "Timo Nicolas Angst",
                 sentByID: "8b34fb07-93bd-47e0-b317-7dbb8e3985a8",
                 body: "ich bin timo",
-                sentOn: 1617886650000
+                sentOn: Date.now() - 5000
             },
             {
                 sentBy: "hugo",
@@ -32,12 +32,16 @@ export default class MessageServiceMock implements MessageService {
                 body: "hallo" +
                     "mein name ist hugo boss" +
                     "lol wenn ich hier ganz viel schreibe sollte es wrappen, -----------------------------------------------------",
-                sentOn: 1617888650000
+                sentOn: Date.now() - 1000
             }
         ];
 
         setInterval(() => {
-            this.messages.push({sentBy: "dragon99", body: "spam", sentByID: "", sentOn: 1617887549000});
+            if (Math.random() > 0.9) {
+                this.messages.push({sentBy: "fake corsin", body: "stop pls", sentByID: "8b343b07-83bd-47e0-b317-7dbb8e3985a8", sentOn: Date.now()});
+            } else {
+                this.messages.push({sentBy: "dragon99", body: "spam", sentByID: "", sentOn: Date.now()});
+            }
         }, 500);
     }
 
@@ -46,11 +50,11 @@ export default class MessageServiceMock implements MessageService {
     }
 
     async getAllMessages(): Promise<MessageDTO[]> {
-        return Promise.resolve(this.messages);
+        return Promise.resolve([...this.messages]);
     }
 
     async getNewMessages(after: number): Promise<MessageDTO[]> {
-        return Promise.resolve([]);
+        return Promise.resolve(this.messages.filter(msg => msg.sentOn > after));
     }
 
     dtoToProps(dtos: MessageDTO[], ownId: string): MessageProps[] {
