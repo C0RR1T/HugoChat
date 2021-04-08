@@ -31,7 +31,7 @@ Response:
 
 ## Messages
 ### All Messages
-`GET` `/messages?uuid=8b343b07-83bd-47e0-b317-7dbb8e3985a8`
+`GET` `/messages`
 
 Response:
 ```json
@@ -39,11 +39,13 @@ Response:
   "messages": [
     {
       "sentBy": "corsin",
+      "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo",
       "sentOn": 2643578034265
     },
     {
       "sentBy": "hugo",
+      "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo leut",
       "sentOn": 4382759627480
     }
@@ -52,7 +54,7 @@ Response:
 ```
 
 ### New Messages for a User
-`GET` `/messages/new/{timeStamp}?uuid=8b343b07-83bd-47e0-b317-7dbb8e3985a8`
+`GET` `/messages/new/{timeStamp}`
 
 Response: 
 ```json
@@ -60,11 +62,13 @@ Response:
   "messages": [
     {
       "sentBy": "corsin",
+      "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo",
       "sentOn": 2643578034265
     },
     {
       "sentBy": "hugo",
+      "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo leut",
       "sentOn": 4382759627480
     }
@@ -83,3 +87,4 @@ Example body:
   "sentOn": 5590432785885
 }
 ```
+
