@@ -1,8 +1,16 @@
-const Members = (selfName: string, members: string[]) =>
-    <div>
-        <SelfMember name="corsin"/>
-        {members.map(n => <Member name={n}/>)}
-    </div>
+interface MembersProps {
+    selfName: string,
+    members: string[]
+}
+
+const Members = (props: MembersProps) => {
+    return (
+        <div className="members">
+            <SelfMember name="corsin"/>
+            {props.members.map(n => <Member name={n}/>)}
+        </div>
+    )
+}
 
 
 interface MemberProps {
@@ -22,3 +30,4 @@ const SelfMember = (props: MemberProps) =>
     </div>
 
 export default Members;
+export type {MemberProps};

@@ -1,0 +1,77 @@
+$brightColor: #444951;
+$bgColor: #282c34;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $bgColor;
+  color: white;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: auto 20%;
+}
+
+.input-field {
+  width: 97%;
+  margin: 10px;
+  color: white;
+  background-color: $brightColor;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
+}
+
+.messages {
+  overflow-y: scroll;
+  height: 90vh;
+
+  .message {
+    background-color: $brightColor;
+    margin: 10px;
+
+    .author {
+    }
+
+    .content {
+      margin-top: 5px;
+      margin-left: 20px;
+    }
+  }
+}
+
+.members {
+  overflow-y: scroll;
+  height: 90vh;
+
+  .member {
+    background-color: $brightColor;
+    margin: 10px;
+    padding: 10px;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

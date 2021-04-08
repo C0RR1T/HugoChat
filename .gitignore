@@ -1,11 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# react
 hugo-client/node_modules
 hugo-client/.pnp
 hugo-client/build
 hugo-client/coverage
 *.log
+react-app-env.d.ts
 
 # intellij
 *.iml
