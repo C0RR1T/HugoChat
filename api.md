@@ -78,7 +78,7 @@ Response:
 ```
 
 ### New Messages for a User
-`GET` `/messages/new/{idOfLastCheckedMessage}`
+`GET` `/messages/new/{timestamp}`
 
 Response: 
 ```json
