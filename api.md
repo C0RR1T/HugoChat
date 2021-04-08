@@ -20,6 +20,15 @@ Response:
 }
 ```
 
+### Get active users
+
+`GET` `/users`
+
+Response:
+```json
+["corsin", "timo", "hugo"]
+```
+
 ### Change name
 `PUT` `/users`
 
@@ -43,17 +52,6 @@ Example Response:
 `PATCH` `/users/active/{uuid}`
 
 No request or response body
-
-
-## Members
-`GET` `/members`
-
-Response:  
-```json
-{
-  "members": ["corsin", "timo", "hugo"]
-}
-```
 
 ## Messages
 ### All Messages
