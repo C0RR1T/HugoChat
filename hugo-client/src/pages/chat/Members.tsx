@@ -18,30 +18,31 @@ const Members = (props: MembersProps) => {
 
     useEffect(() => {
         if (!listening) {
-            eventSource = new EventSource("http://localhost:8080/users");
+            eventSource = new EventSource("http://localhost:8080/update");
 
-            eventSource.onopen = (_) => {
-                console.log("connection opened");
-            };
+            eventSource.onopen = (event) => {
+                console.log("connection opened")
+            }
 
             eventSource.onmessage = (event) => {
-                console.log("result: " + event.data);
+                console.log("result", event.data);
                 props.newMembersHandler(event);
-            };
+            }
 
-            eventSource.onerror = (event) => {
-                console.log("error");
+            eventSource.onerror = (_) => {
                 eventSource.close();
             }
+
+            setListening(true);
         }
 
         return () => {
             eventSource.close();
-            console.log("closed");
+            console.log("eventsource closed")
         }
-    }, []);
 
-    setListening(true);
+    }, [])
+
 
     return (
         <div className="members">

@@ -5,7 +5,6 @@ import UserServiceImpl from "../../services/user/UserServiceImpl";
 import MessageServiceImpl from "../../services/message/MessageServiceImpl";
 import MessageServiceMock from "../../services/message/MessageServiceMock";
 import UserServiceMock from "../../services/user/UserServiceMock";
-import {log} from "util";
 
 const DEFAULT_NAME = "corsin";
 
@@ -117,7 +116,7 @@ class Chat extends React.Component<{}, ChatState> {
                             body: content,
                             id: "",
                             sentOn: 0
-                        }).catch(_ => alert("You are writing too fast"));
+                        }).catch(r => alert("You are writing too fast"));
                     }
                 }}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}

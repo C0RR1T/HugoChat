@@ -15,7 +15,7 @@ const Messages = (props: MessagesProps) => {
         }
     });
 
-    const messages = props.messages.map(msg => <Message {...msg} key={msg.timestamp + msg.author}/>);
+    const messages = props.messages.map((msg, i) => <Message {...msg} key={i}/>);
 
     return (
         <div className="text-chat">
