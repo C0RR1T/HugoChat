@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
             message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
             message.setId(null);
             if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
-                if(!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis()) < 11) {
+                if(!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) < 11) {
                     message.setUserID(UUID.fromString(messagedto.getSentByID()));
                     return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
                 } else throw new IllegalArgumentException("You're sending messages to fast.");
