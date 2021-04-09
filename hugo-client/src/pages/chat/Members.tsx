@@ -2,13 +2,13 @@ import React, {useEffect, useRef, useState} from "react";
 import {MessageProps} from "./Messages";
 
 type NameChangeHandler = (nam: string) => void
-type NewMembersHandler = (event: MessageEvent) => void
+type SSEHandler = (event: MessageEvent) => void
 
 interface MembersProps {
     selfName: string,
     members: string[],
     nameChangeHandler: NameChangeHandler,
-    newMembersHandler: NewMembersHandler
+    sseHandler: SSEHandler
 }
 
 const Members = (props: MembersProps) => {
@@ -26,7 +26,7 @@ const Members = (props: MembersProps) => {
 
             eventSource.onmessage = (event) => {
                 console.log("result", event.data);
-                props.newMembersHandler(event);
+                props.sseHandler(event);
             }
 
             eventSource.onerror = (_) => {
