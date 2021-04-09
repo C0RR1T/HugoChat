@@ -28,9 +28,8 @@ public class Message {
     private String body;
     @Column(name = "sentOn")
     private long sentOn;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID_FK", referencedColumnName = "id")
-    private User sentBy;
+    private UUID userID;
+    private String username;
 
     public Message() {
     }
@@ -51,19 +50,27 @@ public class Message {
         this.body = body;
     }
 
-    public User getSentBy() {
-        return sentBy;
-    }
-
-    public void setSentBy(User sentBy) {
-        this.sentBy = sentBy;
-    }
-
     public long getSentOn() {
         return sentOn;
     }
 
     public void setSentOn(long sentOn) {
         this.sentOn = sentOn;
+    }
+
+    public UUID getUserID() {
+        return userID;
+    }
+
+    public void setUserID(UUID userID) {
+        this.userID = userID;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

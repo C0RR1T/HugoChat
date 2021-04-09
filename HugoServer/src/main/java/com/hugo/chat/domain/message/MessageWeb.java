@@ -36,10 +36,10 @@ public class MessageWeb {
         }
     }
 
-    @GetMapping("/new/{timestamp}")
-    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("timestamp") String timestamp) {
+    @GetMapping("/new/{messageID}")
+    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("messageID") String messageID) {
         try {
-            return ResponseEntity.ok().body(service.getNewMessages(timestamp));
+            return ResponseEntity.ok().body(service.getNewMessages(messageID));
         } catch (NoSuchElementException n) {
             return ResponseEntity.notFound().build();
         }
