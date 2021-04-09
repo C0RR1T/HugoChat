@@ -27,7 +27,7 @@ public class Message {
     @Column(length = 1000)
     private String body;
     @Column(name = "sentOn")
-    private LocalDateTime sentOn;
+    private long sentOn;
     @ManyToOne
     @JoinColumn(name = "UserID_FK", referencedColumnName = "id")
     private User sentBy;
@@ -59,11 +59,11 @@ public class Message {
         this.sentBy = sentBy;
     }
 
-    public LocalDateTime getSentOn() {
+    public long getSentOn() {
         return sentOn;
     }
 
-    public void setSentOn(LocalDateTime sentOn) {
+    public void setSentOn(long sentOn) {
         this.sentOn = sentOn;
     }
 }

@@ -58,11 +58,11 @@ public class MessageDTO {
     public static Message toMessage(MessageDTO message) {
         Message m = new Message();
         m.setBody(message.getBody());
-        m.setSentOn(LocalDateTime.ofInstant(Instant.ofEpochMilli(message.getSentOn()), TimeZone.getTimeZone("UTC").toZoneId()));
+        m.setSentOn(message.sentOn);
         return m;
     }
 
     public static MessageDTO toMessageDTO(Message message) {
-        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli(), message.getSentBy().getId().toString());
+        return new MessageDTO(message.getBody(), message.getSentBy().getName(), message.getSentOn(), message.getSentBy().getId().toString());
     }
 }
