@@ -8,8 +8,8 @@ import UserServiceMock from "../../services/user/UserServiceMock";
 
 const DEFAULT_NAME = "corsin";
 
-const messageService = new MessageServiceMock();
-const userService = new UserServiceMock();
+const messageService = new MessageServiceImpl();
+const userService = new UserServiceImpl();
 
 interface ChatState {
     name: string,
@@ -23,6 +23,17 @@ class Chat extends React.Component<{}, ChatState> {
 
     constructor(props: {}) {
         super(props);
+
+        this.state = {
+            userID: "",
+            name: DEFAULT_NAME,
+            onlineMembers: [],
+            messages: [],
+            lastMsgCheck: Date.now()
+        }
+    }
+
+    componentDidMount() {
 
         const userGet = userService.getUsers();
         const messageGet = messageService.getOldMessages();
@@ -55,7 +66,7 @@ class Chat extends React.Component<{}, ChatState> {
                         onlineMembers: members
                     });
                 });
-            });
+            }, 1000);
 
             setInterval(() => {
                 messageService.getNewMessages(this.state.lastMsgCheck).then(newMessages => {
@@ -71,14 +82,6 @@ class Chat extends React.Component<{}, ChatState> {
 
             setInterval(() => userService.keepActive(selfId), 5000);
         });
-
-        this.state = {
-            userID: "",
-            name: DEFAULT_NAME,
-            onlineMembers: [],
-            messages: [],
-            lastMsgCheck: Date.now()
-        }
     }
 
     render() {
@@ -88,10 +91,17 @@ class Chat extends React.Component<{}, ChatState> {
                     sentBy: this.state.name,
                     sentOn: Date.now(),
                     sentByID: this.state.userID,
-                    body: content
+                    body: content,
+                    id: ""
                 })}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
-                         nameChangeHandler={name => this.setState({name})}/>
+                         nameChangeHandler={name => {
+                             userService.changeName({
+                                 id: this.state.userID,
+                                 username: name
+                             }).then(r => this.setState({name}));
+
+                         }}/>
             </div>
         );
     }

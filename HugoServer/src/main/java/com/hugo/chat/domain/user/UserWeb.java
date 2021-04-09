@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserWeb {
     private final UserService service;
 

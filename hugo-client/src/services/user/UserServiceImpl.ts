@@ -6,6 +6,7 @@ export default class UserServiceImpl implements UserService {
     async createUser(user: UserDTO): Promise<UserDTO> {
         try {
             const {data} = await axiosAPI.post<UserDTO>("/users", user)
+            console.log("created user " + data.id);
             return data;
         } catch (e) {
             throw new Error(e);
@@ -13,6 +14,7 @@ export default class UserServiceImpl implements UserService {
     }
 
     async keepActive(uuid: string): Promise<void> {
+        console.log(uuid);
         try {
             await axiosAPI.patch<UserDTO>(`/users/active/${uuid}`)
         } catch (e) {

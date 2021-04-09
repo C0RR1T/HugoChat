@@ -68,7 +68,7 @@ No request or response body
 
 ## Messages
 ### x Messages before a time
-`GET` `/messages/old/{timestamp}?amount={n}`
+`GET` `/messages/old/{messageid}?amount={n}`
 
 Response:
 ```json
@@ -78,20 +78,22 @@ Response:
       "sentBy": "corsin",
       "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo",
-      "sentOn": 2643578034265
+      "sentOn": 2643578034265,
+      "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
     },
     {
       "sentBy": "hugo",
       "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo leut",
-      "sentOn": 4382759627480
+      "sentOn": 4382759627480,
+      "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
     }
   ]
 }
 ```
 
 ### New Messages since a time
-`GET` `/messages/new/{timestamp}`
+`GET` `/messages/new/{messageid}`
 
 Response: 
 ```json
@@ -101,13 +103,16 @@ Response:
       "sentBy": "corsin",
       "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo",
-      "sentOn": 2643578034265
+      "sentOn": 2643578034265,
+      "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
+
     },
     {
       "sentBy": "hugo",
       "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
       "body": "hallo leut",
-      "sentOn": 4382759627480
+      "sentOn": 4382759627480,
+      "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
     }
   ]
 }
