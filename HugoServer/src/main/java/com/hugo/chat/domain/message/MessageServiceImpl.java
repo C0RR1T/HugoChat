@@ -57,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
     public Collection<MessageDTO> getNewMessages(String messageID) {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
         if (m.isPresent()) {
-            return repository.getNewMessage(Long.parseLong(messageID)).stream()
+            return repository.getNewMessage(m.get().getSentOn()).stream()
                     .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
         } else throw new NoSuchElementException();
     }
