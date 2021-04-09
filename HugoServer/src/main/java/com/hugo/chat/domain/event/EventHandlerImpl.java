@@ -3,6 +3,7 @@ package com.hugo.chat.domain.event;
 import com.hugo.chat.model.message.dto.MessageDTO;
 import com.hugo.chat.model.user.User;
 import com.hugo.chat.model.user.dto.UserDTO;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class EventHandlerImpl implements EventHandler {
         return emitter;
     }
 
+    @EventListener
     public void newMessage(MessageDTO message) {
         ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
         emitters.forEach(emitter -> {
@@ -44,6 +46,7 @@ public class EventHandlerImpl implements EventHandler {
         emitters.remove(deadEmitters);
     }
 
+    @EventListener
     public void userListChanged(Collection<UserDTO> users) {
         ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
         emitters.forEach(emitter -> {
