@@ -1,6 +1,5 @@
 import MessageDTO from "./model/MessageDTO";
 import {MessageProps} from "../../pages/chat/Messages";
-import MessageDTOSend from "./model/MessageDTOSend";
 
 export default interface MessageService {
     getNewMessages(after: string): Promise<MessageDTO[]>;
@@ -9,7 +8,7 @@ export default interface MessageService {
 
     getLatestMessages(amount: number): Promise<MessageDTO[]>;
 
-    createMessage(msg: MessageDTOSend): Promise<MessageDTO>;
+    createMessage(msg: MessageDTO): Promise<MessageDTO>;
 
     dtoToProps(dtos: MessageDTO[], ownId: string): MessageProps[];
 

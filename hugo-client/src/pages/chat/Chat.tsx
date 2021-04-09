@@ -8,15 +8,15 @@ import UserServiceMock from "../../services/user/UserServiceMock";
 
 const DEFAULT_NAME = "corsin";
 
-const messageService = new MessageServiceMock();
-const userService = new UserServiceMock();
+const messageService = new MessageServiceImpl();
+const userService = new UserServiceImpl();
 
 interface ChatState {
     name: string,
     userID: string,
     onlineMembers: string[],
     messages: MessageProps[],
-    lastCheckedMessage: string
+    lastCheckedMessage: string | undefined
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -29,14 +29,17 @@ class Chat extends React.Component<{}, ChatState> {
             name: DEFAULT_NAME,
             onlineMembers: [],
             messages: [],
-            lastCheckedMessage: ""
+            lastCheckedMessage: undefined
         }
     }
 
     componentDidMount() {
 
         const userGet = userService.getUsers();
-        const messageGet = messageService.getLatestMessages();
+        const messageGet = messageService.getLatestMessages(50).then(msg => {
+            console.log(msg);
+            return msg;
+        });
 
         userService.createUser({
             username: DEFAULT_NAME
@@ -47,11 +50,16 @@ class Chat extends React.Component<{}, ChatState> {
             return r.id || "";
         }).then(selfId => {
 
-            messageGet.then(messages =>
-                this.setState({
-                    messages: messageService.dtoToProps(messages, selfId),
-                    lastCheckedMessage: messages[messages.length - 1].id
-                })
+            messageGet.then(messages => {
+                    this.setState({
+                        messages: messageService.dtoToProps(messages, selfId),
+                    });
+                    if (messages.length > 0) {
+                        this.setState({
+                            lastCheckedMessage: messages[messages.length - 1].id
+                        });
+                    }
+                }
             );
 
             userGet.then(users =>
@@ -70,17 +78,27 @@ class Chat extends React.Component<{}, ChatState> {
             }, 1000);
 
             setInterval(() => {
-                messageService.getNewMessages(this.state.lastCheckedMessage).then(newMessages => {
-                    if (newMessages.length > 0) {
-                        const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
-                        this.setState({
-                            messages,
-                            lastCheckedMessage: newMessages[newMessages.length - 1].id
-                        });
-                    }
-                });
-
-
+                if (this.state.lastCheckedMessage) {
+                    messageService.getNewMessages(this.state.lastCheckedMessage).then(newMessages => {
+                        if (newMessages.length > 0) {
+                            const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
+                            this.setState({
+                                messages,
+                                lastCheckedMessage: newMessages[newMessages.length - 1].id
+                            });
+                        }
+                    });
+                } else {
+                    messageService.getLatestMessages(50).then(newMessages => {
+                        if (newMessages.length > 0) {
+                            const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
+                            this.setState({
+                                messages,
+                                lastCheckedMessage: newMessages[newMessages.length - 1].id
+                            });
+                        }
+                    })
+                }
             }, 500);
 
             setInterval(() => userService.keepActive(selfId), 5000);
@@ -94,6 +112,8 @@ class Chat extends React.Component<{}, ChatState> {
                     sentBy: this.state.name,
                     sentByID: this.state.userID,
                     body: content,
+                    id: "",
+                    sentOn:  0
                 })}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
                          nameChangeHandler={name => {

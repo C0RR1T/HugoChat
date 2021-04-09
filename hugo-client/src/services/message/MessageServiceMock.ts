@@ -1,7 +1,6 @@
 import MessageService from "./MessageService";
 import MessageDTO from "./model/MessageDTO";
 import {MessageProps} from "../../pages/chat/Messages";
-import MessageDTOSend from "./model/MessageDTOSend";
 
 export default class MessageServiceMock implements MessageService {
 
@@ -51,11 +50,11 @@ export default class MessageServiceMock implements MessageService {
         }, 500);
     }
 
-    getLatestMessages(amount: number): Promise<MessageDTO[]> {
-        throw new Error("Method not implemented.");
+    async getLatestMessages(amount: number): Promise<MessageDTO[]> {
+        return Promise.resolve([...this.messages]);
     }
 
-    async createMessage(msg: MessageDTOSend): Promise<MessageDTO> {
+    async createMessage(msg: MessageDTO): Promise<MessageDTO> {
         this.messages.push({
             sentBy: msg.sentBy,
             sentOn: Date.now(),
