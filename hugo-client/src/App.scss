@@ -17,14 +17,6 @@ body {
   color: $color5;
 }
 
-input {
-  color: $color5;
-  background-color: $color1;
-  border: none;
-  padding: 5px;
-  font-size: 16px;
-}
-
 .parent {
   display: grid;
   grid-template-columns: auto 20%;
@@ -63,6 +55,10 @@ input {
 
       &:hover {
         background-color: $color2;
+
+        .time {
+          color: $color3
+        }
       }
     }
 
@@ -73,10 +69,16 @@ input {
 
   .input-field {
     width: 100%;
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
-    margin-top: 10px;
+    color: $color5;
+    background-color: $color1;
+    margin-top: 20px;
+    padding: 5px;
+    border: none;
+    font-size: 18px;
+
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
   }
 }
 

@@ -8,8 +8,8 @@ import UserServiceMock from "../../services/user/UserServiceMock";
 
 const DEFAULT_NAME = "corsin";
 
-const messageService = new MessageServiceImpl();
-const userService = new UserServiceImpl();
+const messageService = new MessageServiceMock();
+const userService = new UserServiceMock();
 
 interface ChatState {
     name: string,
