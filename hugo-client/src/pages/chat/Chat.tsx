@@ -25,7 +25,7 @@ class Chat extends React.Component<{}, ChatState> {
         super(props);
 
         const userGet = userService.getUsers();
-        const messageGet = messageService.getAllMessages();
+        const messageGet = messageService.getOldMessages();
 
         userService.createUser({
             username: DEFAULT_NAME
@@ -68,6 +68,8 @@ class Chat extends React.Component<{}, ChatState> {
                 });
 
             }, 500);
+
+            setInterval(() => userService.keepActive(selfId), 5000);
         });
 
         this.state = {
@@ -82,7 +84,12 @@ class Chat extends React.Component<{}, ChatState> {
     render() {
         return (
             <div className="parent">
-                <Messages messages={this.state.messages} sendHandler={s => console.log(s)}/>
+                <Messages messages={this.state.messages} sendHandler={content => messageService.createMessage({
+                    sentBy: this.state.name,
+                    sentOn: Date.now(),
+                    sentByID: this.state.userID,
+                    body: content
+                })}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
                          nameChangeHandler={name => this.setState({name})}/>
             </div>

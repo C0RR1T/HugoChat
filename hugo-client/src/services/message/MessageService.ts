@@ -4,7 +4,7 @@ import {MessageProps} from "../../pages/chat/Messages";
 export default interface MessageService {
     getNewMessages(after: number): Promise<MessageDTO[]>;
 
-    getAllMessages(): Promise<MessageDTO[]>;
+    getOldMessages(before: number, amount: number): Promise<MessageDTO[]>;
 
     createMessage(msg: MessageDTO): Promise<MessageDTO>;
 

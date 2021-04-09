@@ -42,14 +42,15 @@ export default class MessageServiceMock implements MessageService {
             } else {
                 this.messages.push({sentBy: "dragon99", body: "spam", sentByID: "", sentOn: Date.now()});
             }
-        }, 100);
+        }, 500);
     }
 
     async createMessage(msg: MessageDTO): Promise<MessageDTO> {
+        this.messages.push(msg);
         return Promise.resolve(msg);
     }
 
-    async getAllMessages(): Promise<MessageDTO[]> {
+    async getOldMessages(before: number = Date.now(), amount: number = 100): Promise<MessageDTO[]> {
         return Promise.resolve([...this.messages]);
     }
 

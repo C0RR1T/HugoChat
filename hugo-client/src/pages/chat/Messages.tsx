@@ -18,7 +18,7 @@ const Messages = (props: MessagesProps) => {
     const messages = props.messages.map(msg => <Message {...msg} key={msg.timestamp + msg.author}/>);
 
     return (
-        <div>
+        <div className="text-chat">
             <div className="messages">
                 {messages}
                 <div ref={messageRef}/>

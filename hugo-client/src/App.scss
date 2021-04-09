@@ -19,11 +19,10 @@ body {
 
 input {
   color: $color5;
-  background-color: $color2;
+  background-color: $color1;
   border: none;
   padding: 5px;
   font-size: 16px;
-  margin: 10px;
 }
 
 .parent {
@@ -31,45 +30,53 @@ input {
   grid-template-columns: auto 20%;
 }
 
-.input-field {
-  width: 97%;
-}
+.text-chat {
 
-.messages {
-  overflow-y: scroll;
-  height: 90vh;
+  margin-left: 20px;
   margin-top: 10px;
-  margin-left: 10px;
 
+  .messages {
+    height: 90vh;
+    overflow-y: scroll;
 
-  .message {
-    background-color: $color1;
-    margin: 10px;
-    padding: 5px;
+    .message {
+      background-color: $color1;
+      margin-top: 10px;
+      margin-right: 10px;
+      padding: 5px;
 
-    .author {
-      display: inline-block;
+      .author {
+        display: inline-block;
+        font-weight: bold;
+      }
+
+      .content {
+        margin-top: 5px;
+        margin-left: 20px;
+      }
+
+      .time {
+        display: inline-block;
+        margin-left: 10px;
+        color: $color2;
+      }
+
+      &:hover {
+        background-color: $color2;
+      }
     }
 
-    .content {
-      margin-top: 5px;
-      margin-left: 20px;
-    }
-
-    .time {
-      display: inline-block;
-      margin-left: 10px;
-      color: $color2;
-    }
-
-    &:hover {
-      background-color: $color2;
+    .own-message {
+      background-color: $blue;
     }
   }
 
-
-  .own-message {
-    background-color: $blue;
+  .input-field {
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+    margin-top: 10px;
   }
 }
 
