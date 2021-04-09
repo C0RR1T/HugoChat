@@ -28,7 +28,7 @@ public class MessageServiceImpl implements MessageService {
         Message message = MessageDTO.toMessage(messagedto);
         message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
         message.setId(null);
-        if (userRepo.existsById(UUID.fromString(messagedto.getSentBy()))) {
+        if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
             message.setUserID(UUID.fromString(messagedto.getSentByID()));
             return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
         } else throw new NoSuchElementException();
