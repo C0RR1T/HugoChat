@@ -70,7 +70,7 @@ public class MessageDTO {
         Message m = new Message();
         m.setBody(message.getBody());
         m.setSentOn(message.sentOn);
-        m.setId((message.getId() != null) ? UUID.fromString(message.getId()) : null);
+        m.setId((!message.getId().isBlank() || message.getId() != null) ? UUID.fromString(message.getId()) : null);
         m.setUsername(message.getSentBy());
         m.setUserID(UUID.fromString(message.getSentByID()));
         return m;

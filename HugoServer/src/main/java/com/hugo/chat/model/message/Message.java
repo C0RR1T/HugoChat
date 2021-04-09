@@ -10,6 +10,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "messages")
 public class Message {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

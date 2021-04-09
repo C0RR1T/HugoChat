@@ -24,6 +24,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDTO createMessage(MessageDTO messagedto) {
+        messagedto.setId(null);
         Message message = MessageDTO.toMessage(messagedto);
         message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
         message.setId(null);
