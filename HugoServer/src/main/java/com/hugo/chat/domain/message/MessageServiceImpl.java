@@ -25,16 +25,18 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDTO createMessage(MessageDTO messagedto) {
-        if(messagedto.getBody().length() <= 1000) {
+        if (messagedto.getBody().length() <= 1000) {
             messagedto.setId(null);
             Message message = MessageDTO.toMessage(messagedto);
             message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
             message.setId(null);
             if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
-                if(!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) < 11) {
+                if (!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) < 11) {
                     message.setUserID(UUID.fromString(messagedto.getSentByID()));
                     return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
-                } else throw new IllegalArgumentException("You're sending messages to fast.");
+                } else if (message.getBody().isBlank())
+                    throw new IllegalArgumentException("Message Body can't be blank.");
+                else throw new IllegalArgumentException("You're sending messages to fast.");
             } else throw new NoSuchElementException("UserID not found.");
         } else throw new IllegalArgumentException("Message can't be longer than 1000 characters");
     }
