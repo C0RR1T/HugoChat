@@ -1,6 +1,7 @@
 package com.hugo.chat.domain.message;
 
 import com.hugo.chat.model.message.dto.MessageDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/messages")
 public class MessageWeb {
-    private MessageService service;
+    private final MessageService service;
 
     public MessageWeb(MessageService service) {
         this.service = service;
@@ -25,9 +26,13 @@ public class MessageWeb {
         }
     }
 
-    @GetMapping("")
-    public ResponseEntity<Collection<MessageDTO>> getAllMessages() {
-        return ResponseEntity.ok().body(service.getAllMessages());
+    @GetMapping("/old/{timestamp}")
+    public ResponseEntity<?> getAllMessages(@PathVariable("timestamp") String timestamp, @RequestParam("amount") String amount) {
+        try {
+            return ResponseEntity.ok().body(service.getOldMessages(timestamp, amount));
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>("Amount must be positive", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/new/{timestamp}")
