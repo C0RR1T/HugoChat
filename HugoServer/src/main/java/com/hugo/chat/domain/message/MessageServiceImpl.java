@@ -4,6 +4,7 @@ package com.hugo.chat.domain.message;
 import com.hugo.chat.domain.user.UserRepository;
 import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
+import com.hugo.chat.model.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -30,8 +31,10 @@ public class MessageServiceImpl implements MessageService {
             message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
             message.setId(null);
             if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
-                message.setUserID(UUID.fromString(messagedto.getSentByID()));
-                return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
+                if(!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis()) < 11) {
+                    message.setUserID(UUID.fromString(messagedto.getSentByID()));
+                    return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
+                } else throw new IllegalArgumentException("You're sending messages to fast.");
             } else throw new NoSuchElementException("UserID not found.");
         } else throw new IllegalArgumentException("Message can't be longer than 1000 characters");
     }
