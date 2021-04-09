@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
             public void run() {
                 repository.deleteInactiveUsers(System.currentTimeMillis() - 10000); //10000ms -> 10 sec
             }
-        }, 0, 10000);
+        }, 10000, 10000);
     }
 
     @Override
@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = repository.findById(UUID.fromString(id));
         if (user.isPresent()) {
             user.get().setLastActive(System.currentTimeMillis());
+            repository.saveAndFlush(user.get());
         } else throw new NoSuchElementException();
     }
 }

@@ -108,25 +108,32 @@ class Chat extends React.Component<{}, ChatState> {
     render() {
         return (
             <div className="parent">
-                <Messages messages={this.state.messages} sendHandler={content => messageService.createMessage({
-                    sentBy: this.state.name,
-                    sentByID: this.state.userID,
-                    body: content,
-                    id: "",
-                    sentOn:  0
-                })}/>
+                <Messages messages={this.state.messages} sendHandler={content => {
+                    if (content !== "") {
+                        messageService.createMessage({
+                            sentBy: this.state.name,
+                            sentByID: this.state.userID,
+                            body: content,
+                            id: "",
+                            sentOn: 0
+                        }).then(_ => _);
+                    }
+                }}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
                          nameChangeHandler={name => {
-                             userService.changeName({
-                                 id: this.state.userID,
-                                 username: name
-                             }).then(r => this.setState({name}));
-
+                             if (name.length < 255) {
+                                 userService.changeName({
+                                     id: this.state.userID,
+                                     username: name
+                                 }).then(r => this.setState({name}));
+                             } else {
+                                 alert(`Name too long: ${name.length}. Must be less than 255 characters`)
+                             }
                          }}/>
             </div>
         );
     }
-
 }
+
 
 export default Chat;

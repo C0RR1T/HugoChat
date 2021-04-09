@@ -52,4 +52,13 @@ public class User {
     public void setLastActive(long lastActive) {
         this.lastActive = lastActive;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastActive=" + lastActive +
+                '}';
+    }
 }

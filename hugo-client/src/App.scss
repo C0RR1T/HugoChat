@@ -92,6 +92,7 @@ input {
   margin-right: 10px;
 
   .member {
+    overflow-x: hidden;
     background-color: $color2;
     margin: 10px;
     padding: 10px;
