@@ -68,7 +68,7 @@ No request or response body
 
 ## Messages
 ### x Messages before a time
-`GET` `/messages/old/{timestamp}?amount={n}`
+`GET` `/messages/old/{messageid}?amount={n}`
 
 Response:
 ```json
@@ -93,7 +93,7 @@ Response:
 ```
 
 ### New Messages since a time
-`GET` `/messages/new/{timestamp}`
+`GET` `/messages/new/{messageid}`
 
 Response: 
 ```json
