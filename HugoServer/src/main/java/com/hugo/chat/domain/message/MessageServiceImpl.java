@@ -26,8 +26,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageDTO createMessage(MessageDTO messagedto) {
         Message message = MessageDTO.toMessage(messagedto);
+        System.out.println("h u g o");
         Optional<User> user = userRepo.findById(UUID.fromString(messagedto.getSentByID()));
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             message.setSentBy(user.get());
             return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
         } else throw new NoSuchElementException();
