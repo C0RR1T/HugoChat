@@ -67,8 +67,8 @@ Example Response:
 No request or response body
 
 ## Messages
-### All Messages
-`GET` `/messages`
+### x Messages before a time
+`GET` `/messages/old/{timestamp}?amount={n}`
 
 Response:
 ```json
@@ -90,7 +90,7 @@ Response:
 }
 ```
 
-### New Messages for a User
+### New Messages since a time
 `GET` `/messages/new/{timestamp}`
 
 Response: 

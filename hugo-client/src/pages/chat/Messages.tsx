@@ -15,10 +15,12 @@ const Messages = (props: MessagesProps) => {
         }
     });
 
+    const messages = props.messages.map(msg => <Message {...msg} key={msg.timestamp + msg.author}/>);
+
     return (
         <div>
             <div className="messages">
-                {props.messages.map((msg, i) => <Message author={msg.author} content={msg.content} own={msg.own} key={i}/>)}
+                {messages}
                 <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {
@@ -31,15 +33,27 @@ const Messages = (props: MessagesProps) => {
 interface MessageProps {
     author: string,
     content: string,
+    timestamp: number
     own?: boolean
 }
 
 const Message = (props: MessageProps) =>
     <div className={props.own ? "message own-message" : "message"}>
         <div className="author">{props.author}</div>
+        <div className="time">{formatDateTime(new Date(props.timestamp))}</div>
         <div className="content">{props.content}</div>
     </div>
 
+function formatDateTime(d: Date): string {
+    let string = "";
+    if (d.getDate() === new Date().getDate()) {
+        string += "Today ";
+     } else {
+        string += d.toLocaleDateString();
+    }
+    string += d.getHours() + ":" + d.getMinutes();
+    return string;
+}
 
 type SubmitHandler = (content: string) => void
 

@@ -36,6 +36,7 @@ export default class MessageServiceImpl implements MessageService {
             return {
                 author: dto.sentBy,
                 own: dto.sentByID === ownId,
+                timestamp: dto.sentOn,
                 content: dto.body
             }
         });
