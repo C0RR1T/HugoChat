@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
             User u = UserDTO.toUser(user);
             u.setLastActive(System.currentTimeMillis());
             u = repository.saveAndFlush(u);
-            eventHandler.userListChanged();
+            eventHandler.userListChanged(getUsers());
             return new UserDTO(u.getId(), u.getName());
         } else throw new IllegalArgumentException("Message is too long");
     }

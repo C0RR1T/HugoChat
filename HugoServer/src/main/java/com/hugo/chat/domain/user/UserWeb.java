@@ -32,11 +32,6 @@ public class UserWeb {
         return ResponseEntity.ok().body("Hugo Boss");
     }
 
-    @GetMapping("")
-    public ResponseEntity<Collection<UserDTO>> getActiveUsers() {
-        return ResponseEntity.ok().body(service.getUsers());
-    }
-
     @PutMapping("")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         try {
