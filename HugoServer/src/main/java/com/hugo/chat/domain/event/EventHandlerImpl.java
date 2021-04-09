@@ -1,5 +1,6 @@
 package com.hugo.chat.domain.event;
 
+import com.hugo.chat.model.message.dto.MessageDTO;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class EventHandlerImpl implements EventHandler {
         return emitter;
     }
 
-    public void newMessage() {
+    public void newMessage(MessageDTO message) {
         sendMessage("new messages");
     }
 

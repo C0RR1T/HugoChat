@@ -35,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
             if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
                 if (!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) < 11) {
                     message.setUserID(UUID.fromString(messagedto.getSentByID()));
-                    eventHandler.newMessage();
+                    eventHandler.newMessage(MessageDTO.toMessageDTO(message));
                     return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
                 } else if (message.getBody().isBlank())
                     throw new IllegalArgumentException("Message Body can't be blank.");
@@ -61,14 +61,5 @@ public class MessageServiceImpl implements MessageService {
 
     private Collection<MessageDTO> getMessagesBefore(long before, int amount) {
         return repository.getOldMessage(before).stream().limit(amount).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<MessageDTO> getNewMessages(String messageID) {
-        Optional<Message> m = repository.findById(UUID.fromString(messageID));
-        if (m.isPresent()) {
-            return repository.getNewMessage(m.get().getSentOn()).stream()
-                    .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
-        } else throw new NoSuchElementException();
     }
 }
