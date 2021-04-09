@@ -4,6 +4,7 @@ $color3: #9aa0a4;
 $color2: #5a6269;
 $color1: #383c41;
 $color0: #30343c;
+$color-1: #23252b;
 $bgColor: #282c34;
 $blue: #37465c;
 $lightBlue: #566d8f;
@@ -90,25 +91,22 @@ input {
   height: 90vh;
   margin-top: 10px;
   margin-right: 10px;
+  margin-left: 10px;
 
   .member {
     overflow-x: hidden;
-    background-color: $color2;
+    background-color: $color-1;
     margin: 10px;
     padding: 10px;
+
+    &:hover {
+      background-color: $color2;
+    }
   }
 
   .self {
     background-color: $blue;
   }
-}
-
-.name-set {
-  background-color: red;
-  padding: 40px;
-  position: absolute;
-  transform: translate(100%, 50%);
-  z-index: 1;
 }
 
 ::-webkit-scrollbar {
