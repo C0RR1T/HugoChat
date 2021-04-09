@@ -37,7 +37,6 @@ class Chat extends React.Component<{}, ChatState> {
 
         const userGet = userService.getUsers();
         const messageGet = messageService.getLatestMessages(20).then(msg => {
-            console.log(msg);
             return msg;
         });
 
@@ -102,6 +101,7 @@ class Chat extends React.Component<{}, ChatState> {
                     onlineMembers: members
                 });
             });
+
         }
     }
 
