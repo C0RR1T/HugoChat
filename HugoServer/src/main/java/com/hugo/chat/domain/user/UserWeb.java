@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserWeb {
