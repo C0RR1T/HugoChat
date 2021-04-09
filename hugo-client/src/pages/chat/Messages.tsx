@@ -58,7 +58,7 @@ function formatDateTime(d: Date): string {
 }
 
 function formatZero(n: number): string {
-    return `${n < 10 ? "0" : ""}${n}`;
+    return `${n < 10 ? "0" : "" + n}`;
 }
 
 type SubmitHandler = (content: string) => void

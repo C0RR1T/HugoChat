@@ -16,7 +16,7 @@ interface ChatState {
     userID: string,
     onlineMembers: string[],
     messages: MessageProps[],
-    lastMsgCheck: number
+    lastCheckedMessage: string
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -29,7 +29,7 @@ class Chat extends React.Component<{}, ChatState> {
             name: DEFAULT_NAME,
             onlineMembers: [],
             messages: [],
-            lastMsgCheck: Date.now()
+            lastCheckedMessage: ""
         }
     }
 
@@ -49,7 +49,8 @@ class Chat extends React.Component<{}, ChatState> {
 
             messageGet.then(messages =>
                 this.setState({
-                    messages: messageService.dtoToProps(messages, selfId)
+                    messages: messageService.dtoToProps(messages, selfId),
+                    lastCheckedMessage: messages[messages.length - 1].id
                 })
             );
 
@@ -69,14 +70,16 @@ class Chat extends React.Component<{}, ChatState> {
             }, 1000);
 
             setInterval(() => {
-                messageService.getNewMessages(this.state.lastMsgCheck).then(newMessages => {
-                    const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
-                    this.setState({messages});
+                messageService.getNewMessages(this.state.lastCheckedMessage).then(newMessages => {
+                    if (newMessages.length > 0) {
+                        const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
+                        this.setState({
+                            messages,
+                            lastCheckedMessage: newMessages[newMessages.length - 1].id
+                        });
+                    }
                 });
 
-                this.setState({
-                    lastMsgCheck: Date.now()
-                });
 
             }, 500);
 
