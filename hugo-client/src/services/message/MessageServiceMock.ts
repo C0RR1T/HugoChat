@@ -42,7 +42,7 @@ export default class MessageServiceMock implements MessageService {
             } else {
                 this.messages.push({sentBy: "dragon99", body: "spam", sentByID: "", sentOn: Date.now()});
             }
-        }, 500);
+        }, 100);
     }
 
     async createMessage(msg: MessageDTO): Promise<MessageDTO> {
