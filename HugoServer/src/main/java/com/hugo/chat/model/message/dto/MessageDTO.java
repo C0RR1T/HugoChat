@@ -77,6 +77,6 @@ public class MessageDTO {
     }
 
     public static MessageDTO toMessageDTO(Message message) {
-        return new MessageDTO(message.getBody(), message.getId().toString() , message.getUsername(), message.getUserID().toString(), message.getSentOn());
+        return new MessageDTO(message.getBody(), message.getId().toString(), message.getUserID().toString(), message.getUsername(), message.getSentOn());
     }
 }
