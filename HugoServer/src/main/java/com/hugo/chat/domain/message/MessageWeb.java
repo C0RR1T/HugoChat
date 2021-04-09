@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/v1/messages")
 public class MessageWeb {
     private final MessageService service;
 
