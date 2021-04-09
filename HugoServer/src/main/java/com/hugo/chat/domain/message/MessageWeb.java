@@ -27,7 +27,7 @@ public class MessageWeb {
         }
     }
 
-    @GetMapping("/old/")
+    @GetMapping("/old")
     public ResponseEntity<?> getLatestMessages(@RequestParam("amount") String amount) {
         try {
             return ResponseEntity.ok().body(service.getOldMessages(amount));
