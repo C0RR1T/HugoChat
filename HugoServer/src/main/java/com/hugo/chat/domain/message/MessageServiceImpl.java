@@ -34,8 +34,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Collection<MessageDTO> getAllMessages() {
-        return repository.findAll().stream().map(MessageDTO::toMessageDTO).collect(Collectors.toList());
+    public Collection<MessageDTO> getOldMessages(String timestampString, String amountString) throws IllegalArgumentException {
+        long timestamp = Long.parseLong(timestampString);
+        int amount = Integer.parseInt(amountString);
+        return repository.getOldMessage(timestamp).stream().limit(amount).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
 
     @Override
