@@ -36,10 +36,10 @@ public class MessageWeb {
         }
     }
 
-    @GetMapping("/old/{timestamp}")
-    public ResponseEntity<?> getAllMessages(@PathVariable("timestamp") String timestamp, @RequestParam("amount") String amount) {
+    @GetMapping("/old/{messageID}")
+    public ResponseEntity<?> getAllMessages(@PathVariable("messageID") String messageID, @RequestParam("amount") String amount) {
         try {
-            return ResponseEntity.ok().body(service.getOldMessages(timestamp, amount));
+            return ResponseEntity.ok().body(service.getOldMessages(messageID, amount));
         } catch (IllegalArgumentException i) {
             return new ResponseEntity<>("Amount must be positive", HttpStatus.BAD_REQUEST);
         }
