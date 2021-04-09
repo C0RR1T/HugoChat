@@ -28,7 +28,7 @@ public class Message {
     private String body;
     @Column(name = "sentOn")
     private long sentOn;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID_FK", referencedColumnName = "id")
     private User sentBy;
 

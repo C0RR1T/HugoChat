@@ -2,6 +2,8 @@ package com.hugo.chat.model.user;
 
 import com.hugo.chat.model.message.Message;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,12 +32,17 @@ public class User {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "sentBy",
-            cascade = CascadeType.DETACH
+            cascade = CascadeType.PERSIST
     )
     private List<Message> messages = new ArrayList<>();
     private long lastActive;
 
     public User() {
+    }
+
+    @PreRemove
+    private void preRemove() {
+        messages.forEach( child -> child.setSentBy(null));
     }
 
     public User(UUID id, String name, long lastActive) {
