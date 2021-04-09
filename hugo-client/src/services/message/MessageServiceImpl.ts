@@ -2,11 +2,21 @@ import MessageService from "./MessageService";
 import MessageDTO from "./model/MessageDTO";
 import axiosAPI from "../AxiosUtility";
 import {MessageProps} from "../../pages/chat/Messages";
+import MessageDTOSend from "./model/MessageDTOSend";
 
 export default class MessageServiceImpl implements MessageService {
     async getOldMessages(before: string = "", amount: number = 100): Promise<MessageDTO[]> {
         try {
             const {data} = await axiosAPI.get<MessageDTO[]>(`/messages/old/${before}?amount=${amount}`);
+            return data;
+        } catch (e) {
+            throw new Error(e);
+        }
+    }
+
+    async getLatestMessages(amount: number): Promise<MessageDTO[]> {
+        try {
+            const {data} = await axiosAPI.get<MessageDTO[]>(`/messages/old?amount=${amount}`);
             return data;
         } catch (e) {
             throw new Error(e);
@@ -22,7 +32,7 @@ export default class MessageServiceImpl implements MessageService {
         }
     }
 
-    async createMessage(msg: MessageDTO): Promise<MessageDTO> {
+    async createMessage(msg: MessageDTOSend): Promise<MessageDTO> {
         try {
             const {data} = await axiosAPI.post<MessageDTO>("/messages", msg)
             return data;
@@ -41,4 +51,5 @@ export default class MessageServiceImpl implements MessageService {
             }
         });
     }
+
 }

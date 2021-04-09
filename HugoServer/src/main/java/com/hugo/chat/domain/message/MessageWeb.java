@@ -27,6 +27,15 @@ public class MessageWeb {
         }
     }
 
+    @GetMapping("/old/")
+    public ResponseEntity<?> getLatestMessages(@RequestParam("amount") String amount) {
+        try {
+            return ResponseEntity.ok().body(service.getOldMessages(amount));
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>("Amount must be positive", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/old/{timestamp}")
     public ResponseEntity<?> getAllMessages(@PathVariable("timestamp") String timestamp, @RequestParam("amount") String amount) {
         try {

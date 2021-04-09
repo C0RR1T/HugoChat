@@ -25,6 +25,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageDTO createMessage(MessageDTO messagedto) {
         Message message = MessageDTO.toMessage(messagedto);
+        message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
         message.setId(null);
         if (userRepo.existsById(UUID.fromString(messagedto.getSentBy()))) {
             message.setUserID(UUID.fromString(messagedto.getSentByID()));
@@ -37,8 +38,18 @@ public class MessageServiceImpl implements MessageService {
         int amount = Integer.parseInt(amountString);
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
         if (m.isPresent()) {
-            return repository.getOldMessage(m.get().getSentOn()).stream().limit(amount).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
+            return getMessagesBefore(m.get().getSentOn(), amount);
         } else throw new NoSuchElementException();
+    }
+
+    @Override
+    public Collection<MessageDTO> getOldMessages(String amountString) {
+        int amount = Integer.parseInt(amountString);
+        return getMessagesBefore(System.currentTimeMillis(), amount);
+    }
+
+    private Collection<MessageDTO> getMessagesBefore(long before, int amount) {
+        return repository.getOldMessage(before).stream().limit(amount).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
 
     @Override
