@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 long count = repository.count();
                 repository.deleteInactiveUsers(System.currentTimeMillis() - 10000); //10000ms -> 10 sec
                 if(repository.count() < count)
-                    eventHandler.userListChanged();
+                    eventHandler.userListChanged(getUsers());
             }
         }, 10000, 10000);
     }
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 User u = opt.get();
                 u.setName(user.getUsername());
                 repository.saveAndFlush(u);
-                eventHandler.userListChanged();
+                eventHandler.userListChanged(getUsers());
                 return new UserDTO(u.getId(), u.getName());
             } else throw new NoSuchElementException();
         } else throw new IllegalArgumentException();

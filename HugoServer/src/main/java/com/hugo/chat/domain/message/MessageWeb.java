@@ -46,4 +46,13 @@ public class MessageWeb {
             return new ResponseEntity<>("Amount must be positive", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/new/{messageID}")
+    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("messageID") String messageID) {
+        try {
+            return ResponseEntity.ok().body(service.getNewMessages(messageID));
+        } catch (NoSuchElementException n) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -62,4 +62,13 @@ public class MessageServiceImpl implements MessageService {
     private Collection<MessageDTO> getMessagesBefore(long before, int amount) {
         return repository.getOldMessage(before).stream().limit(amount).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public Collection<MessageDTO> getNewMessages(String messageID) {
+        Optional<Message> m = repository.findById(UUID.fromString(messageID));
+        if (m.isPresent()) {
+            return repository.getNewMessage(m.get().getSentOn()).stream()
+                    .map(MessageDTO::toMessageDTO).collect(Collectors.toList());
+        } else throw new NoSuchElementException();
+    }
 }

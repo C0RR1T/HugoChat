@@ -43,6 +43,11 @@ public class UserWeb {
         }
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<Collection<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok().body(service.getUsers());
+    }
+
     @PatchMapping("/active/{userId}")
     public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id) {
         try {

@@ -9,4 +9,5 @@ public interface MessageService {
     MessageDTO createMessage(MessageDTO message);
     Collection<MessageDTO> getOldMessages(String timestampString, String amountString);
     Collection<MessageDTO> getOldMessages(String amountString);
+    Collection<MessageDTO> getNewMessages(String timestampString);
 }
