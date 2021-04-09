@@ -1,6 +1,7 @@
 package com.hugo.chat.domain.user;
 
 import com.hugo.chat.model.user.dto.UserDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,12 @@ public class UserWeb {
     }
 
     @PostMapping("")
-    public ResponseEntity<UserDTO> newUser(@RequestBody UserDTO user) {
-        return ResponseEntity.ok().body(service.createUser(user));
+    public ResponseEntity<?> newUser(@RequestBody UserDTO user) {
+        try {
+            return ResponseEntity.ok().body(service.createUser(user));
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>("Length of the username must be <= 255", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/hugo")
@@ -33,11 +38,13 @@ public class UserWeb {
     }
 
     @PutMapping("")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         try {
             return ResponseEntity.ok().body(service.updateUser(user));
         } catch (NoSuchElementException n) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>("Length of the username must be <= 255", HttpStatus.BAD_REQUEST);
         }
     }
 

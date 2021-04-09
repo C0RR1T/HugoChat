@@ -24,14 +24,16 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDTO createMessage(MessageDTO messagedto) {
-        messagedto.setId(null);
-        Message message = MessageDTO.toMessage(messagedto);
-        message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
-        message.setId(null);
-        if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
-            message.setUserID(UUID.fromString(messagedto.getSentByID()));
-            return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
-        } else throw new NoSuchElementException();
+        if(messagedto.getBody().length() <= 1000) {
+            messagedto.setId(null);
+            Message message = MessageDTO.toMessage(messagedto);
+            message.setSentOn(System.currentTimeMillis()); //the server sets the time so that everything is sync
+            message.setId(null);
+            if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
+                message.setUserID(UUID.fromString(messagedto.getSentByID()));
+                return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
+            } else throw new NoSuchElementException("UserID not found.");
+        } else throw new IllegalArgumentException("Message can't be longer than 1000 characters");
     }
 
     @Override
