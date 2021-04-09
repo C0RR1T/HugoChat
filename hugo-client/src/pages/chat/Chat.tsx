@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Messages, {MessageProps} from "./Messages";
 import Members from "./Members";
 import UserServiceImpl from "../../services/user/UserServiceImpl";
 import MessageServiceImpl from "../../services/message/MessageServiceImpl";
 import MessageServiceMock from "../../services/message/MessageServiceMock";
 import UserServiceMock from "../../services/user/UserServiceMock";
+import {log} from "util";
 
 const DEFAULT_NAME = "corsin";
 
@@ -36,7 +37,7 @@ class Chat extends React.Component<{}, ChatState> {
     componentDidMount() {
 
         const userGet = userService.getUsers();
-        const messageGet = messageService.getLatestMessages(50).then(msg => {
+        const messageGet = messageService.getLatestMessages(20).then(msg => {
             console.log(msg);
             return msg;
         });
@@ -116,7 +117,7 @@ class Chat extends React.Component<{}, ChatState> {
                             body: content,
                             id: "",
                             sentOn: 0
-                        }).then(_ => _);
+                        }).catch(_ => alert("You are writing too fast"));
                     }
                 }}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
@@ -129,7 +130,8 @@ class Chat extends React.Component<{}, ChatState> {
                              } else {
                                  alert(`Name too long: ${name.length}. Must be less than 255 characters`)
                              }
-                         }}/>
+                         }}
+                         newMembersHandler={event => console.log(event.data)}/>
             </div>
         );
     }
