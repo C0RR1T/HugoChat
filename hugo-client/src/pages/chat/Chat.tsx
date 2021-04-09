@@ -61,48 +61,48 @@ class Chat extends React.Component<{}, ChatState> {
                     }
                 }
             );
-
             userGet.then(users =>
                 this.setState({
                     onlineMembers: userService.userDTOtoString(users, selfId || "")
                 })
             );
 
-            setInterval(() => {
-                userService.getUsers().then(users => {
-                    const members = userService.userDTOtoString(users, selfId || "");
-                    this.setState({
-                        onlineMembers: members
-                    });
-                });
-            }, 1000);
-
-            setInterval(() => {
-                if (this.state.lastCheckedMessage) {
-                    messageService.getNewMessages(this.state.lastCheckedMessage).then(newMessages => {
-                        if (newMessages.length > 0) {
-                            const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
-                            this.setState({
-                                messages,
-                                lastCheckedMessage: newMessages[newMessages.length - 1].id
-                            });
-                        }
-                    });
-                } else {
-                    messageService.getLatestMessages(50).then(newMessages => {
-                        if (newMessages.length > 0) {
-                            const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, selfId));
-                            this.setState({
-                                messages,
-                                lastCheckedMessage: newMessages[newMessages.length - 1].id
-                            });
-                        }
-                    })
-                }
-            }, 500);
-
             setInterval(() => userService.keepActive(selfId), 5000);
         });
+    }
+
+    handleSSE(event: MessageEvent) {
+        console.log(event.data);
+        if (event.data === "new messages") {
+            if (this.state.lastCheckedMessage) {
+                messageService.getNewMessages(this.state.lastCheckedMessage).then(newMessages => {
+                    if (newMessages.length > 0) {
+                        const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, this.state.userID));
+                        this.setState({
+                            messages,
+                            lastCheckedMessage: newMessages[newMessages.length - 1].id
+                        });
+                    }
+                });
+            } else {
+                messageService.getLatestMessages(50).then(newMessages => {
+                    if (newMessages.length > 0) {
+                        const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, this.state.userID));
+                        this.setState({
+                            messages,
+                            lastCheckedMessage: newMessages[newMessages.length - 1].id
+                        });
+                    }
+                })
+            }
+        } else if (event.data === "userlist changed") {
+            userService.getUsers().then(users => {
+                const members = userService.userDTOtoString(users, this.state.userID);
+                this.setState({
+                    onlineMembers: members
+                });
+            });
+        }
     }
 
     render() {
@@ -130,7 +130,7 @@ class Chat extends React.Component<{}, ChatState> {
                                  alert(`Name too long: ${name.length}. Must be less than 255 characters`)
                              }
                          }}
-                         newMembersHandler={event => console.log(event.data)}/>
+                         sseHandler={event => this.handleSSE(event)}/>
             </div>
         );
     }
