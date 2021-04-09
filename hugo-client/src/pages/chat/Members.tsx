@@ -1,14 +1,48 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {MessageProps} from "./Messages";
 
 type NameChangeHandler = (nam: string) => void
+type NewMembersHandler = (event: MessageEvent) => void
 
 interface MembersProps {
     selfName: string,
     members: string[],
-    nameChangeHandler: NameChangeHandler
+    nameChangeHandler: NameChangeHandler,
+    newMembersHandler: NewMembersHandler
 }
 
 const Members = (props: MembersProps) => {
+
+    const [listening, setListening] = useState(false);
+    let eventSource: EventSource;
+
+    useEffect(() => {
+        if (!listening) {
+            eventSource = new EventSource("http://localhost:8080/users");
+
+            eventSource.onopen = (_) => {
+                console.log("connection opened");
+            };
+
+            eventSource.onmessage = (event) => {
+                console.log("result: " + event.data);
+                props.newMembersHandler(event);
+            };
+
+            eventSource.onerror = (event) => {
+                console.log("error");
+                eventSource.close();
+            }
+        }
+
+        return () => {
+            eventSource.close();
+            console.log("closed");
+        }
+    }, []);
+
+    setListening(true);
+
     return (
         <div className="members">
             <SelfMember name={props.selfName} nameChangeHandler={props.nameChangeHandler}/>
