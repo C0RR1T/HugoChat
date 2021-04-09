@@ -35,8 +35,9 @@ public class MessageServiceImpl implements MessageService {
             if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
                 if (!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) < 11) {
                     message.setUserID(UUID.fromString(messagedto.getSentByID()));
-                    eventHandler.newMessage(MessageDTO.toMessageDTO(message));
-                    return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
+                     MessageDTO messageSaved = MessageDTO.toMessageDTO(repository.saveAndFlush(message));
+                    eventHandler.newMessage(messageSaved);
+                    return messageSaved;
                 } else if (message.getBody().isBlank())
                     throw new IllegalArgumentException("Message Body can't be blank.");
                 else throw new IllegalArgumentException("You're sending messages to fast.");

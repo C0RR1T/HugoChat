@@ -43,7 +43,7 @@ public class UserWeb {
         }
     }
 
-    @GetMapping("/users")
+    @GetMapping("")
     public ResponseEntity<Collection<UserDTO>> getAllUsers() {
         return ResponseEntity.ok().body(service.getUsers());
     }
