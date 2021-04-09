@@ -36,7 +36,7 @@ class Chat extends React.Component<{}, ChatState> {
     componentDidMount() {
 
         const userGet = userService.getUsers();
-        const messageGet = messageService.getLatestMessages(50).then(msg => {
+        const messageGet = messageService.getLatestMessages(20).then(msg => {
             console.log(msg);
             return msg;
         });
@@ -116,7 +116,7 @@ class Chat extends React.Component<{}, ChatState> {
                             body: content,
                             id: "",
                             sentOn: 0
-                        }).then(_ => _);
+                        }).catch(_ => alert("You are writing too fast"));
                     }
                 }}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
