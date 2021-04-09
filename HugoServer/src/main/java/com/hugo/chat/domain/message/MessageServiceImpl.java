@@ -1,10 +1,10 @@
 package com.hugo.chat.domain.message;
 
 
+import com.hugo.chat.domain.event.EventHandlerImpl;
 import com.hugo.chat.domain.user.UserRepository;
 import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
-import com.hugo.chat.model.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -17,10 +17,12 @@ import java.util.stream.Collectors;
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository repository;
     private final UserRepository userRepo;
+    private final EventHandlerImpl eventHandler;
 
-    public MessageServiceImpl(MessageRepository repository, UserRepository repository1) {
+    public MessageServiceImpl(MessageRepository repository, UserRepository repository1, EventHandlerImpl eventHandler) {
         this.repository = repository;
         this.userRepo = repository1;
+        this.eventHandler = eventHandler;
     }
 
     @Override
@@ -33,6 +35,7 @@ public class MessageServiceImpl implements MessageService {
             if (userRepo.existsById(UUID.fromString(messagedto.getSentByID()))) {
                 if (!message.getBody().isBlank() && repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) < 11) {
                     message.setUserID(UUID.fromString(messagedto.getSentByID()));
+                    eventHandler.newMessage();
                     return MessageDTO.toMessageDTO(repository.saveAndFlush(message));
                 } else if (message.getBody().isBlank())
                     throw new IllegalArgumentException("Message Body can't be blank.");

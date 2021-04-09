@@ -1,5 +1,6 @@
 package com.hugo.chat.domain.user;
 
+import com.hugo.chat.domain.event.EventHandlerImpl;
 import com.hugo.chat.model.user.User;
 import com.hugo.chat.model.user.dto.UserDTO;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final EventHandlerImpl eventHandler;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, EventHandlerImpl eventHandler) {
         this.repository = repository;
+        this.eventHandler = eventHandler;
         deleteInactiveUser();
     }
 
@@ -23,6 +26,7 @@ public class UserServiceImpl implements UserService {
             User u = UserDTO.toUser(user);
             u.setLastActive(System.currentTimeMillis());
             u = repository.saveAndFlush(u);
+            eventHandler.userListChanged();
             return new UserDTO(u.getId(), u.getName());
         } else throw new IllegalArgumentException("Message is too long");
     }
@@ -40,7 +44,10 @@ public class UserServiceImpl implements UserService {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                long count = repository.count();
                 repository.deleteInactiveUsers(System.currentTimeMillis() - 10000); //10000ms -> 10 sec
+                if(repository.count() < count)
+                    eventHandler.userListChanged();
             }
         }, 10000, 10000);
     }
@@ -53,6 +60,7 @@ public class UserServiceImpl implements UserService {
                 User u = opt.get();
                 u.setName(user.getUsername());
                 repository.saveAndFlush(u);
+                eventHandler.userListChanged();
                 return new UserDTO(u.getId(), u.getName());
             } else throw new NoSuchElementException();
         } else throw new IllegalArgumentException();
