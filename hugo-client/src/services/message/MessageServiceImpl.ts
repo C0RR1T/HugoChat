@@ -2,7 +2,6 @@ import MessageService from "./MessageService";
 import MessageDTO from "./model/MessageDTO";
 import axiosAPI from "../AxiosUtility";
 import {MessageProps} from "../../pages/chat/Messages";
-import MessageDTOSend from "./model/MessageDTOSend";
 
 export default class MessageServiceImpl implements MessageService {
     async getOldMessages(before: string = "", amount: number = 100): Promise<MessageDTO[]> {
@@ -32,7 +31,7 @@ export default class MessageServiceImpl implements MessageService {
         }
     }
 
-    async createMessage(msg: MessageDTOSend): Promise<MessageDTO> {
+    async createMessage(msg: MessageDTO): Promise<MessageDTO> {
         try {
             const {data} = await axiosAPI.post<MessageDTO>("/messages", msg)
             return data;
