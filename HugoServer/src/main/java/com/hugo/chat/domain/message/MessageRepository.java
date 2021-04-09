@@ -19,5 +19,5 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     List<Message> getOldMessage(@Param("timestamp") long timeStamp);
 
     @Query(value = "SELECT COUNT(*) FROM Message m WHERE m.userID = :userID AND m.sentOn > (:timestamp - 10000)")
-    int getNewestMessageFromUser(@Param("userID") UUID id, @Param("timestamp") long currentTime);
+    long getNewestMessageFromUser(@Param("userID") UUID id, @Param("timestamp") long currentTime);
 }
