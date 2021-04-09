@@ -18,16 +18,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(UserDTO user) {
-        user.setId(null);
-        User u = UserDTO.toUser(user);
-        u.setLastActive(System.currentTimeMillis());
-        u = repository.saveAndFlush(u);
-        return new UserDTO(u.getId(), u.getName());
+        if (user.getUsername().length() <= 255) {
+            user.setId(null);
+            User u = UserDTO.toUser(user);
+            u.setLastActive(System.currentTimeMillis());
+            u = repository.saveAndFlush(u);
+            return new UserDTO(u.getId(), u.getName());
+        } else throw new IllegalArgumentException("Message is too long");
     }
 
     @Override
     public Collection<UserDTO> getUsers() {
-        return repository.findAll().stream()
+        return repository.findAll().stream().
+                sorted((o1, o2) -> -Long.compare(o1.getLastActive(), o2.getLastActive()))
                 .map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
     }
 
@@ -44,13 +47,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(UserDTO user) {
-        Optional<User> opt = repository.findById(user.getId());
-        if (opt.isPresent()) {
-            User u = opt.get();
-            u.setName(user.getUsername());
-            repository.saveAndFlush(u);
-            return new UserDTO(u.getId(), u.getName());
-        } else throw new NoSuchElementException();
+        if (user.getUsername().length() <= 255) {
+            Optional<User> opt = repository.findById(user.getId());
+            if (opt.isPresent()) {
+                User u = opt.get();
+                u.setName(user.getUsername());
+                repository.saveAndFlush(u);
+                return new UserDTO(u.getId(), u.getName());
+            } else throw new NoSuchElementException();
+        } else throw new IllegalArgumentException();
     }
 
     @Override

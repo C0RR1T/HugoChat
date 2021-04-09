@@ -19,11 +19,13 @@ public class MessageWeb {
     }
 
     @PostMapping("")
-    public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO message) {
+    public ResponseEntity<?> createMessage(@RequestBody MessageDTO message) {
         try {
             return ResponseEntity.ok().body(service.createMessage(message));
         } catch (NoSuchElementException n) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(n.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>(i.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
