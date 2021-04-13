@@ -38,6 +38,14 @@ public class Message {
     public Message() {
     }
 
+    public Message(UUID id, String body, long sentOn, UUID userID, String username) {
+        this.id = id;
+        this.body = body;
+        this.sentOn = sentOn;
+        this.userID = userID;
+        this.username = username;
+    }
+
     public UUID getId() {
         return id;
     }

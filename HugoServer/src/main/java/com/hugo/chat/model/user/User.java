@@ -32,6 +32,12 @@ public class User {
     public User() {
     }
 
+    public User(UUID id, String name, long lastActive) {
+        this.id = id;
+        this.name = name;
+        this.lastActive = lastActive;
+    }
+
     public UUID getId() {
         return id;
     }

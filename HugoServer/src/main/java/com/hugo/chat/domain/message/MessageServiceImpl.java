@@ -1,6 +1,7 @@
 package com.hugo.chat.domain.message;
 
 
+import com.hugo.chat.domain.event.EventHandler;
 import com.hugo.chat.domain.event.EventHandlerImpl;
 import com.hugo.chat.domain.user.UserRepository;
 import com.hugo.chat.model.emitter.EmitterDTO;
@@ -15,9 +16,9 @@ import java.util.stream.Collectors;
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository repository;
     private final UserRepository userRepo;
-    private final EventHandlerImpl eventHandler;
+    private final EventHandler eventHandler;
 
-    public MessageServiceImpl(MessageRepository repository, UserRepository repository1, EventHandlerImpl eventHandler) {
+    public MessageServiceImpl(MessageRepository repository, UserRepository repository1, EventHandler eventHandler) {
         this.repository = repository;
         this.userRepo = repository1;
         this.eventHandler = eventHandler;
