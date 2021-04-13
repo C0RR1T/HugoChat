@@ -8,10 +8,7 @@ import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,7 +62,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     private Collection<MessageDTO> getMessagesBefore(long before, int amount) {
-        return repository.getOldMessage(before).stream().limit(amount).sorted((o1, o2) -> -Long.compare(o1.getSentOn(), o2.getSentOn())).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
+        return repository.getOldMessage(before).stream().limit(amount).sorted(Comparator.comparingLong(Message::getSentOn)).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
 
     @Override
