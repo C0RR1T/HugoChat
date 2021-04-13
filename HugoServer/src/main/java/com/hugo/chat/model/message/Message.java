@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * The message class is the internal representaion of a message in the DB
+ */
 @Entity
 @Table(name = "messages")
 public class Message {
