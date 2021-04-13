@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {MessageProps} from "./Messages";
+import {BASE_URL} from "../../services/AxiosUtility";
 
 type NameChangeHandler = (nam: string) => void
 type SSEHandler = (event: MessageEvent) => void
@@ -18,7 +18,7 @@ const Members = (props: MembersProps) => {
 
     useEffect(() => {
         if (!listening) {
-            eventSource = new EventSource("http://localhost:8080/update");
+            eventSource = new EventSource(BASE_URL + "/update");
 
             eventSource.onmessage = (event) => {
                 props.sseHandler(event);

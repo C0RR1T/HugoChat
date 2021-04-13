@@ -26,6 +26,7 @@ public class EventHandlerImpl implements EventHandler {
         this.emitters = new CopyOnWriteArrayList<>();
     }
 
+    @CrossOrigin
     @GetMapping("/update")
     public SseEmitter streamUpdates() {
         SseEmitter emitter = new SseEmitter(-1L);
@@ -45,6 +46,6 @@ public class EventHandlerImpl implements EventHandler {
                 deadEmitters.add(emitter);
             }
         });
-        emitters.remove(deadEmitters);
+        emitters.removeAll(deadEmitters);
     }
 }
