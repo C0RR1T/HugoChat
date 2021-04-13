@@ -3,9 +3,7 @@ import Chat from "./chat/Chat";
 
 const App = () => {
     return (
-        <div>
-            <Chat/>
-        </div>
+        <Chat/>
     )
 }
 

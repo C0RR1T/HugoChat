@@ -5,17 +5,25 @@ import ReactMarkdown from "react-markdown";
 interface MessagesProps {
     messages: MessageProps[],
     sendHandler: SubmitHandler,
-    loadMessageHandler: (() => void)
+    loadMessageHandler: (() => void),
+    scroll: boolean
 }
 
 const Messages = (props: MessagesProps) => {
+
+    const [firstScroll, setFirstScroll] = useState(false);
 
     const messageRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const ref = messageRef.current;
-        if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight) {
-            ref.scrollIntoView({behavior: "smooth"});
+        if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight && props.scroll) {
+            ref.scrollIntoView();
+        }
+
+        if (!firstScroll && ref) {
+            ref.scrollIntoView();
+            setFirstScroll(true);
         }
     });
 
@@ -29,7 +37,7 @@ const Messages = (props: MessagesProps) => {
                 <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {
-                if (messageRef.current) {
+                if (messageRef.current && props.scroll) {
                     messageRef.current.scrollIntoView();
                 }
                 props.sendHandler(content);

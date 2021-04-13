@@ -16,7 +16,8 @@ interface ChatState {
     userID: string,
     onlineMembers: string[],
     messages: MessageProps[],
-    oldestMessageId: string | undefined
+    oldestMessageId: string | undefined,
+    windowWidth: number
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -29,11 +30,14 @@ class Chat extends React.Component<{}, ChatState> {
             name: DEFAULT_NAME,
             onlineMembers: [],
             messages: [],
-            oldestMessageId: undefined
+            oldestMessageId: undefined,
+            windowWidth: 0
         }
     }
 
     componentDidMount() {
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions);
 
         const userGet = userService.getUsers();
         const messageGet = messageService.getLatestMessages(20).then(msg => {
@@ -68,6 +72,15 @@ class Chat extends React.Component<{}, ChatState> {
 
             setInterval(() => userService.keepActive(selfId), 5000);
         });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions);
+    }
+
+    updateDimensions = () => {
+        const windowWidth = window !== undefined ? window.innerWidth : 0;
+        this.setState({windowWidth});
     }
 
     handleSSE = (event: MessageEvent) => {
@@ -120,12 +133,12 @@ class Chat extends React.Component<{}, ChatState> {
     }
 
     handleMessageLoad = async () => {
-        if (!this.state.oldestMessageId){
+        if (!this.state.oldestMessageId) {
             return;
         }
         const olderMessagesDTOs = await messageService.getOldMessages(this.state.oldestMessageId);
 
-        if (olderMessagesDTOs.length === 0){
+        if (olderMessagesDTOs.length === 0) {
             return;
         }
 
@@ -148,7 +161,8 @@ class Chat extends React.Component<{}, ChatState> {
             <div className="parent">
                 <Messages messages={this.state.messages}
                           sendHandler={this.handleSend}
-                          loadMessageHandler={this.handleMessageLoad}/>
+                          loadMessageHandler={this.handleMessageLoad}
+                          scroll={this.state.windowWidth > 768}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
                          nameChangeHandler={this.handleNameChange}
                          sseHandler={event => this.handleSSE(event)}/>

@@ -96,6 +96,5 @@ const SelfMember = (props: SelfMemberProps) => {
     );
 }
 
-
 export default Members;
 export type {MemberProps};
