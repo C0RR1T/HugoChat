@@ -65,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     private Collection<MessageDTO> getMessagesBefore(long before, int amount) {
-        return repository.getOldMessage(before).stream().limit(amount).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
+        return repository.getOldMessage(before).stream().limit(amount).sorted((o1, o2) -> -Long.compare(o1.getSentOn(), o2.getSentOn())).map(MessageDTO::toMessageDTO).collect(Collectors.toList());
     }
 
     @Override
