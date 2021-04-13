@@ -1,15 +1,19 @@
 import React from 'react';
 import Messages, {MessageProps} from "./Messages";
 import Members from "./Members";
-import UserServiceImpl from "../../services/user/UserServiceImpl";
-import MessageServiceImpl from "../../services/message/MessageServiceImpl";
 import UserDTO from "../../services/user/model/UserDTO";
 import MessageDTO from "../../services/message/model/MessageDTO";
+import MessageServiceMock from "../../services/mock/MessageServiceMock";
+import UserServiceMock from "../../services/mock/UserServiceMock";
+import {Rooms} from "./Room";
+import RoomServiceMock from "../../services/room/RoomServiceMock";
+import RoomDTO from "../../services/room/model/RoomDTO";
 
 const DEFAULT_NAME = "Hugo Boss";
 
-const messageService = new MessageServiceImpl();
-const userService = new UserServiceImpl();
+const messageService = new MessageServiceMock();
+const userService = new UserServiceMock();
+const roomService = new RoomServiceMock();
 
 interface ChatState {
     name: string,
@@ -17,7 +21,8 @@ interface ChatState {
     onlineMembers: string[],
     messages: MessageProps[],
     oldestMessageId: string | undefined,
-    windowWidth: number
+    windowWidth: number,
+    rooms: RoomDTO[]
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -31,7 +36,8 @@ class Chat extends React.Component<{}, ChatState> {
             onlineMembers: [],
             messages: [],
             oldestMessageId: undefined,
-            windowWidth: 0
+            windowWidth: 0,
+            rooms: []
         }
     }
 
@@ -43,6 +49,10 @@ class Chat extends React.Component<{}, ChatState> {
         const messageGet = messageService.getLatestMessages("main", 20).then(msg => {
             return msg;
         });
+
+        roomService.getAll().then(rooms => this.setState({
+            rooms
+        }))
 
         userService.createUser({
             username: DEFAULT_NAME
@@ -160,6 +170,14 @@ class Chat extends React.Component<{}, ChatState> {
     render() {
         return (
             <div className="parent">
+                <Rooms rooms={this.state.rooms.map(dto => {
+                    return {
+                        id: dto.id,
+                        name: dto.name,
+                        roomChangeHandler: () => {
+                        }
+                    }
+                })}/>
                 <Messages messages={this.state.messages}
                           sendHandler={this.handleSend}
                           loadMessageHandler={this.handleMessageLoad}

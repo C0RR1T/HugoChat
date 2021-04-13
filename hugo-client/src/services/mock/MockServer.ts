@@ -10,7 +10,7 @@ interface Room {
 
 
 class MockServer {
-    rooms: Record<string, Room>;
+    rooms: { [k: string]: Room };
 
     constructor() {
         this.rooms = rooms;

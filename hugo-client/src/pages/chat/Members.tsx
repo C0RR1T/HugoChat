@@ -1,5 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
-import {BASE_URL} from "../../services/AxiosUtility";
+import React, {useRef, useState} from "react";
 
 type NameChangeHandler = (nam: string) => void
 type SSEHandler = (event: MessageEvent) => void
@@ -16,7 +15,7 @@ const Members = (props: MembersProps) => {
     const [listening, setListening] = useState(false);
     let eventSource: EventSource;
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (!listening) {
             eventSource = new EventSource(BASE_URL + "/update");
 
@@ -32,7 +31,7 @@ const Members = (props: MembersProps) => {
         }
 
         return () => eventSource.close();
-    }, [])
+    }, [])*/
 
 
     return (
