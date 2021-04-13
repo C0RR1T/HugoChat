@@ -28,7 +28,7 @@ public class EventHandlerImpl implements EventHandler {
 
     @GetMapping("/update")
     public SseEmitter streamUpdates() {
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(-1L);
         emitters.add(emitter);
         emitter.onCompletion(() -> this.emitters.remove(emitter));
         emitter.onTimeout(() -> this.emitters.remove(emitter));
