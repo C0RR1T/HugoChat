@@ -5,6 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
+/**
+ * The User class is the internal representatino of a User in the DB
+ */
 @Entity
 @Table(name = "users")
 public class User {
