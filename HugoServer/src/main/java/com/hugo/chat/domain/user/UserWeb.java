@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/users")
 public class UserWeb {
     private final UserService service;
 
@@ -32,11 +32,6 @@ public class UserWeb {
         return ResponseEntity.ok().body("Hugo Boss");
     }
 
-    @GetMapping("")
-    public ResponseEntity<Collection<UserDTO>> getActiveUsers() {
-        return ResponseEntity.ok().body(service.getUsers());
-    }
-
     @PutMapping("")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         try {
@@ -46,6 +41,11 @@ public class UserWeb {
         } catch (IllegalArgumentException i) {
             return new ResponseEntity<>("Length of the username must be <= 255", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Collection<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok().body(service.getUsers());
     }
 
     @PatchMapping("/active/{userId}")

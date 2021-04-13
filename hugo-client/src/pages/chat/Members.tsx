@@ -1,14 +1,44 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {MessageProps} from "./Messages";
 
 type NameChangeHandler = (nam: string) => void
+type SSEHandler = (event: MessageEvent) => void
 
 interface MembersProps {
     selfName: string,
     members: string[],
-    nameChangeHandler: NameChangeHandler
+    nameChangeHandler: NameChangeHandler,
+    sseHandler: SSEHandler
 }
 
 const Members = (props: MembersProps) => {
+
+    const [listening, setListening] = useState(false);
+    let eventSource: EventSource;
+
+    useEffect(() => {
+        if (!listening) {
+            eventSource = new EventSource("http://localhost:8080/update");
+
+            eventSource.onmessage = (event) => {
+                props.sseHandler(event);
+            }
+
+            eventSource.onerror = (_) => {
+                eventSource.close();
+            }
+
+            setListening(true);
+        }
+
+        return () => {
+            eventSource.close();
+            console.log("eventsource closed")
+        }
+
+    }, [])
+
+
     return (
         <div className="members">
             <SelfMember name={props.selfName} nameChangeHandler={props.nameChangeHandler}/>
@@ -41,7 +71,6 @@ const SelfMember = (props: SelfMemberProps) => {
 
     const editing =
         <input onKeyPress={event => {
-            console.log(event.key);
             if (event.key === "Enter") {
                 setIsEditing(false);
                 props.nameChangeHandler(content);

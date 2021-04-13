@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Modifying
     @Query(value = "DELETE FROM User u WHERE u.lastActive < :allowedTime ")
     void deleteInactiveUsers(@Param("allowedTime") long allowedTime);
+
 }

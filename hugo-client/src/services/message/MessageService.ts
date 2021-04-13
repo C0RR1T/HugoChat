@@ -11,5 +11,4 @@ export default interface MessageService {
     createMessage(msg: MessageDTO): Promise<MessageDTO>;
 
     dtoToProps(dtos: MessageDTO[], ownId: string): MessageProps[];
-
 }

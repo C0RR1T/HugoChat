@@ -1,9 +1,11 @@
 import "../../App.scss"
 import React, {useEffect, useRef, useState} from "react";
+import ReactMarkdown from "react-markdown";
 
 interface MessagesProps {
     messages: MessageProps[],
-    sendHandler: SubmitHandler;
+    sendHandler: SubmitHandler,
+    loadMessageHandler: (() => void)
 }
 
 const Messages = (props: MessagesProps) => {
@@ -17,16 +19,19 @@ const Messages = (props: MessagesProps) => {
         }
     });
 
-
-    const messages = props.messages.map(msg => <Message {...msg} key={msg.timestamp + msg.author}/>);
+    const messages = props.messages.map((msg, i) => <Message {...msg} key={i}/>);
 
     return (
         <div className="text-chat">
             <div className="messages">
+                <LoadMoreButton loadHandler={props.loadMessageHandler}/>
                 {messages}
                 <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {
+                if (messageRef.current) {
+                    messageRef.current.scrollIntoView();
+                }
                 props.sendHandler(content);
             }}/>
         </div>
@@ -44,24 +49,39 @@ const Message = (props: MessageProps) =>
     <div className={props.own ? "message own-message" : "message"}>
         <div className="author">{props.author}</div>
         <div className="time">{formatDateTime(new Date(props.timestamp))}</div>
-        <div className="content">{props.content}</div>
+        <ReactMarkdown className="content">{props.content}</ReactMarkdown>
     </div>
 
 function formatDateTime(d: Date): string {
     let string = "";
     if (d.getDate() === new Date().getDate()) {
-        string += "Today ";
+        string += "Today";
     } else if (d.getDate() === new Date().getDate() - 1) {
-        string += "Yesterday "
+        string += "Yesterday"
     } else {
         string += d.toLocaleDateString();
     }
-    string += formatZero(d.getHours()) + ":" + formatZero(d.getMinutes());
+    string += " " + formatZero(d.getHours()) + ":" + formatZero(d.getMinutes());
     return string;
 }
 
 function formatZero(n: number): string {
-    return `${n < 10 ? "0" : "" + n}`;
+    return `${(n < 10 ? "0" : "") + n}`;
+}
+
+interface LoadMoreButtonProps {
+    loadHandler: (() => void)
+}
+
+const LoadMoreButton = (props: LoadMoreButtonProps) => {
+
+    return (
+        <div className="button-wrapper">
+            <button className="load-button" onClick={props.loadHandler}>
+                Load More
+            </button>
+        </div>
+    )
 }
 
 type SubmitHandler = (content: string) => void

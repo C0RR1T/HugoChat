@@ -28,7 +28,7 @@ input {
 
 .parent {
   display: grid;
-  grid-template-columns: auto 20%;
+  grid-template-columns: 80% auto;
 }
 
 .text-chat {
@@ -40,11 +40,34 @@ input {
     height: 90vh;
     overflow-y: scroll;
 
+
+    .button-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 10px;
+
+      height: 50px;
+
+      .load-button {
+        height: 100%;
+        width: 100%;
+        font-size: 20px;
+
+        background-color: $color2;
+        color: $color5;
+        border: none;
+      }
+    }
+
+
     .message {
       background-color: $color1;
       margin-top: 10px;
       margin-right: 10px;
       padding: 5px;
+
+      overflow-x: hidden;
 
       .author {
         display: inline-block;
@@ -68,6 +91,13 @@ input {
         .time {
           color: $color3
         }
+      }
+
+      p {
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        word-wrap: anywhere;
       }
     }
 
@@ -107,6 +137,23 @@ input {
   .self {
     background-color: $blue;
   }
+}
+
+.name-set {
+  background-color: red;
+  padding: 40px;
+  position: absolute;
+  transform: translate(100%, 50%);
+  z-index: 1;
+}
+
+a {
+  color: #299bc7;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 ::-webkit-scrollbar {
