@@ -1,5 +1,5 @@
-import UserService from "./UserService";
-import UserDTO from "./model/UserDTO";
+import UserService from "../user/UserService";
+import UserDTO from "../user/model/UserDTO";
 
 export default class UserServiceMock implements UserService {
 

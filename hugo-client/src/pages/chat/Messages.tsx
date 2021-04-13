@@ -6,7 +6,7 @@ interface MessagesProps {
     messages: MessageProps[],
     sendHandler: SubmitHandler,
     loadMessageHandler: (() => void),
-    scroll: boolean
+    scroll: boolean,
 }
 
 const Messages = (props: MessagesProps) => {
@@ -27,7 +27,7 @@ const Messages = (props: MessagesProps) => {
         }
     });
 
-    const messages = props.messages.map((msg, i) => <Message {...msg} key={i}/>);
+    const messages = props.messages.map(msg => <Message {...msg} key={msg.id}/>);
 
     return (
         <div className="text-chat">
@@ -50,7 +50,8 @@ interface MessageProps {
     author: string,
     content: string,
     timestamp: number
-    own?: boolean
+    own?: boolean,
+    id: string
 }
 
 const Message = (props: MessageProps) =>

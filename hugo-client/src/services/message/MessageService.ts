@@ -2,11 +2,11 @@ import MessageDTO from "./model/MessageDTO";
 import {MessageProps} from "../../pages/chat/Messages";
 
 export default interface MessageService {
-    getNewMessages(after: string): Promise<MessageDTO[]>;
+    getLatestMessages(roomId: string, amount: number): Promise<MessageDTO[]>;
 
-    getOldMessages(before: string, amount: number): Promise<MessageDTO[]>;
+    getMessagesBefore(roomId: string, beforeMessage: string, amount: number): Promise<MessageDTO[]>;
 
-    getLatestMessages(amount: number): Promise<MessageDTO[]>;
+    getMessagesAfter(roomId: string, afterMessage: string): Promise<MessageDTO[]>;
 
     createMessage(msg: MessageDTO): Promise<MessageDTO>;
 

@@ -4,27 +4,27 @@ import axiosAPI from "../AxiosUtility";
 import {MessageProps} from "../../pages/chat/Messages";
 
 export default class MessageServiceImpl implements MessageService {
-    async getOldMessages(before: string, amount: number = 100): Promise<MessageDTO[]> {
+    async getLatestMessages(roomId: string, amount: number): Promise<MessageDTO[]> {
         try {
-            const {data} = await axiosAPI.get<MessageDTO[]>(`/messages/old/${before}?amount=${amount}`);
+            const {data} = await axiosAPI.get<MessageDTO[]>(`/rooms/${roomId}/messages/latest?amount=${amount}`);
             return data;
         } catch (e) {
             throw new Error(e);
         }
     }
 
-    async getLatestMessages(amount: number): Promise<MessageDTO[]> {
+    async getMessagesBefore(roomId: string, beforeMessage: string, amount: number): Promise<MessageDTO[]> {
         try {
-            const {data} = await axiosAPI.get<MessageDTO[]>(`/messages/old?amount=${amount}`);
+            const {data} = await axiosAPI.get<MessageDTO[]>(`/rooms/${roomId}/messages/before/${beforeMessage}?amount=${amount}`);
             return data;
         } catch (e) {
             throw new Error(e);
         }
     }
 
-    async getNewMessages(after: string): Promise<MessageDTO[]> {
+    async getMessagesAfter(roomId: string, afterMessage: string): Promise<MessageDTO[]> {
         try {
-            const {data} = await axiosAPI.get<MessageDTO[]>(`/messages/new/${after}`)
+            const {data} = await axiosAPI.get<MessageDTO[]>(`/rooms/${roomId}/messages/after/${afterMessage}`)
             return data;
         } catch (e) {
             throw new Error(e);
@@ -33,7 +33,7 @@ export default class MessageServiceImpl implements MessageService {
 
     async createMessage(msg: MessageDTO): Promise<MessageDTO> {
         try {
-            const {data} = await axiosAPI.post<MessageDTO>("/messages", msg)
+            const {data} = await axiosAPI.post<MessageDTO>(`/rooms/${msg.roomId}/messages`, msg)
             return data;
         } catch (e) {
             throw new Error(e);
@@ -46,9 +46,9 @@ export default class MessageServiceImpl implements MessageService {
                 author: dto.sentBy,
                 own: dto.sentByID === ownId,
                 timestamp: dto.sentOn,
-                content: dto.body
+                content: dto.body,
+                id: dto.id
             }
         });
     }
-
 }

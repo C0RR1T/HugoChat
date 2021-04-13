@@ -13,16 +13,18 @@ Base Route: `/api/v2`
 | sentById      | string (uuid)  |  user id        |
 | sentBy        | string         |  user name      |
 | sentOn        | number (long)  |  UNIX-timestamp |
+| roomId        | string (uuid)  |  room id        |
 
 Example:
 
 ```json
-  {
-  "sentBy": "hugo",
-  "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+{
+  "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3",
   "body": "hallo leut",
+  "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+  "sentBy": "hugo",
   "sentOn": 4382759627480,
-  "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
+  "roomId": "88115729-c3fb-425d-9ea7-a9f4d82980d3"
 }
 ```
 
@@ -143,15 +145,21 @@ No request or response body
 
 ## Messages
 
+### Get the latest messages
+
+`GET` `/rooms/{roomId}/messages/latest?amount={n}`
+
+Response: `MessageDTO`
+
 ### Get n messages before a specific message
 
-`GET` `/rooms/{roomId}/messages/old/{messageid}?amount={n}`
+`GET` `/rooms/{roomId}/messages/before/{messageId}?amount={n}`
 
 Response: `MessageDTO`
 
 ### Get all message after a specific message
 
-`GET` `/rooms/{roomId}/messages/new/{messageid}`
+`GET` `/rooms/{roomId}/messages/after/{messageId}`
 
 Response Body: `MessageDTO[]`
 
@@ -168,4 +176,3 @@ Example body: `MessageDTO` without id
   "sentOn": 5590432785885
 }
 ```
-

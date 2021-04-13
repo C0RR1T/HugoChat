@@ -40,7 +40,7 @@ class Chat extends React.Component<{}, ChatState> {
         window.addEventListener("resize", this.updateDimensions);
 
         const userGet = userService.getUsers();
-        const messageGet = messageService.getLatestMessages(20).then(msg => {
+        const messageGet = messageService.getLatestMessages("main", 20).then(msg => {
             return msg;
         });
 
@@ -128,7 +128,8 @@ class Chat extends React.Component<{}, ChatState> {
             sentByID: this.state.userID,
             body: content,
             id: "",
-            sentOn: 0
+            sentOn: 0,
+            roomId: "main"
         }).catch(_ => alert("You are writing too fast"));
     }
 
@@ -136,7 +137,7 @@ class Chat extends React.Component<{}, ChatState> {
         if (!this.state.oldestMessageId) {
             return;
         }
-        const olderMessagesDTOs = await messageService.getOldMessages(this.state.oldestMessageId);
+        const olderMessagesDTOs = await messageService.getMessagesBefore("main", this.state.oldestMessageId, 50);
 
         if (olderMessagesDTOs.length === 0) {
             return;
