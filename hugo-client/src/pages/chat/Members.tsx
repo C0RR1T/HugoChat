@@ -20,12 +20,7 @@ const Members = (props: MembersProps) => {
         if (!listening) {
             eventSource = new EventSource("http://localhost:8080/update");
 
-            eventSource.onopen = (event) => {
-                console.log("connection opened")
-            }
-
             eventSource.onmessage = (event) => {
-                console.log("result", event.data);
                 props.sseHandler(event);
             }
 
@@ -76,7 +71,6 @@ const SelfMember = (props: SelfMemberProps) => {
 
     const editing =
         <input onKeyPress={event => {
-            console.log(event.key);
             if (event.key === "Enter") {
                 setIsEditing(false);
                 props.nameChangeHandler(content);

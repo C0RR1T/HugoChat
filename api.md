@@ -1,11 +1,15 @@
 # API Routes
+
 Base route: `/api/v1`
 
 ## User
+
 ### Log in
-`POST` `/users`  
+
+`POST` `/users`
 
 Example Body
+
 ```json
 {
   "name": "corsin"
@@ -13,6 +17,7 @@ Example Body
 ```
 
 Response:
+
 ```json
 {
   "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
@@ -25,6 +30,7 @@ Response:
 `GET` `/users`
 
 Response:
+
 ```json
 [
   {
@@ -43,9 +49,11 @@ Response:
 ```
 
 ### Change name
+
 `PUT` `/users`
 
 Example Body:
+
 ```json
 {
   "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
@@ -54,6 +62,7 @@ Example Body:
 ```
 
 Example Response:
+
 ```json
 {
   "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
@@ -62,66 +71,69 @@ Example Response:
 ```
 
 ### Send still here
+
 `PATCH` `/users/active/{uuid}`
 
 No request or response body
 
 ## Messages
-### x Messages before a time
+
+### x Messages before the last message
+
 `GET` `/messages/old/{messageid}?amount={n}`
 
 Response:
+
 ```json
-{
-  "messages": [
-    {
-      "sentBy": "corsin",
-      "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-      "body": "hallo",
-      "sentOn": 2643578034265,
-      "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
-    },
-    {
-      "sentBy": "hugo",
-      "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
-      "body": "hallo leut",
-      "sentOn": 4382759627480,
-      "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
-    }
-  ]
-}
+[
+  {
+    "sentBy": "corsin",
+    "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+    "body": "hallo",
+    "sentOn": 2643578034265,
+    "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
+  },
+  {
+    "sentBy": "hugo",
+    "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+    "body": "hallo leut",
+    "sentOn": 4382759627480,
+    "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
+  }
+]
 ```
 
-### New Messages since a time
+### New Messages since the last message
+
 `GET` `/messages/new/{messageid}`
 
-Response: 
-```json
-{
-  "messages": [
-    {
-      "sentBy": "corsin",
-      "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-      "body": "hallo",
-      "sentOn": 2643578034265,
-      "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
+Response:
 
-    },
-    {
-      "sentBy": "hugo",
-      "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
-      "body": "hallo leut",
-      "sentOn": 4382759627480,
-      "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
-    }
-  ]
-}
+```json
+[
+  {
+    "sentBy": "corsin",
+    "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+    "body": "hallo",
+    "sentOn": 2643578034265,
+    "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
+  },
+  {
+    "sentBy": "hugo",
+    "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+    "body": "hallo leut",
+    "sentOn": 4382759627480,
+    "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
+  }
+]
 ```
 
 ### Send Message
+
 `POST` `/messages/`
 
 Example body:
+
 ```json
 {
   "sentBy": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",

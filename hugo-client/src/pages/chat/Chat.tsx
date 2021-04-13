@@ -9,7 +9,7 @@ import UserDTO from "../../services/user/model/UserDTO";
 import MessageDTO from "../../services/message/model/MessageDTO";
 import {receiveMessageOnPort} from "worker_threads";
 
-const DEFAULT_NAME = "corsin";
+const DEFAULT_NAME = "Hugo Boss";
 
 const messageService = new MessageServiceImpl();
 const userService = new UserServiceImpl();
@@ -19,7 +19,7 @@ interface ChatState {
     userID: string,
     onlineMembers: string[],
     messages: MessageProps[],
-    lastCheckedMessage: string | undefined
+    oldestMessageId: string | undefined
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -32,7 +32,7 @@ class Chat extends React.Component<{}, ChatState> {
             name: DEFAULT_NAME,
             onlineMembers: [],
             messages: [],
-            lastCheckedMessage: undefined
+            oldestMessageId: undefined
         }
     }
 
@@ -58,7 +58,7 @@ class Chat extends React.Component<{}, ChatState> {
                     });
                     if (messages.length > 0) {
                         this.setState({
-                            lastCheckedMessage: messages[messages.length - 1].id
+                            oldestMessageId: messages[0].id
                         });
                     }
                 }
@@ -73,52 +73,88 @@ class Chat extends React.Component<{}, ChatState> {
         });
     }
 
-    handleSSE(event: MessageEvent) {
-        const eventType: string = event.data.type;
+    handleSSE = (event: MessageEvent) => {
+        const eventData = JSON.parse(event.data);
+        const eventType: string = eventData.type;
 
         if (eventType === "message") {
-            const data: MessageDTO = event.data.data;
+            const data: MessageDTO = eventData.data;
+            console.log(data);
             const messageProps = messageService.dtoToProps([data], this.state.userID)[0];
             const messages1 = [...this.state.messages, messageProps];
 
             this.setState({
                 messages: messages1,
-                lastCheckedMessage: data.id
             });
         } else if (eventType === "users") {
-            const data: UserDTO[] = event.data.data;
+            const data: UserDTO[] = eventData.data;
             this.setState({
-                onlineMembers: data.map(u => u.username)
+                onlineMembers: data.filter(u => u.id !== this.state.userID).map(u => u.username)
             });
-
         }
     }
+
+    handleNameChange = (name: string) => {
+        if (name.length < 255) {
+            userService.changeName({
+                id: this.state.userID,
+                username: name
+            }).then(r => this.setState({name}));
+        } else {
+            alert(`Name too long: ${name.length}. Must be less than 255 characters`)
+        }
+
+    }
+
+    handleSend = (content: string) => {
+        if (content === "") {
+            return;
+        }
+        if (content.length > 1000) {
+            alert("Message too long, must be less than 1000 characters");
+            return;
+        }
+        messageService.createMessage({
+            sentBy: this.state.name,
+            sentByID: this.state.userID,
+            body: content,
+            id: "",
+            sentOn: 0
+        }).catch(_ => alert("You are writing too fast"));
+    }
+
+    handleMessageLoad = async () => {
+        if (!this.state.oldestMessageId){
+            return;
+        }
+        const olderMessagesDTOs = await messageService.getOldMessages(this.state.oldestMessageId);
+
+        if (olderMessagesDTOs.length === 0){
+            return;
+        }
+
+        this.setState({
+            oldestMessageId: olderMessagesDTOs[0].id
+        });
+
+        const olderMessages = messageService.dtoToProps(olderMessagesDTOs, this.state.userID);
+
+        const messages = [...olderMessages, ...this.state.messages];
+
+        this.setState({
+            messages
+        });
+    }
+
 
     render() {
         return (
             <div className="parent">
-                <Messages messages={this.state.messages} sendHandler={content => {
-                    if (content !== "") {
-                        messageService.createMessage({
-                            sentBy: this.state.name,
-                            sentByID: this.state.userID,
-                            body: content,
-                            id: "",
-                            sentOn: 0
-                        }).catch(r => alert("You are writing too fast"));
-                    }
-                }}/>
+                <Messages messages={this.state.messages}
+                          sendHandler={this.handleSend}
+                          loadMessageHandler={this.handleMessageLoad}/>
                 <Members selfName={this.state.name} members={this.state.onlineMembers}
-                         nameChangeHandler={name => {
-                             if (name.length < 255) {
-                                 userService.changeName({
-                                     id: this.state.userID,
-                                     username: name
-                                 }).then(r => this.setState({name}));
-                             } else {
-                                 alert(`Name too long: ${name.length}. Must be less than 255 characters`)
-                             }
-                         }}
+                         nameChangeHandler={this.handleNameChange}
                          sseHandler={event => this.handleSSE(event)}/>
             </div>
         );

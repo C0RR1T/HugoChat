@@ -4,7 +4,8 @@ import ReactMarkdown from "react-markdown";
 
 interface MessagesProps {
     messages: MessageProps[],
-    sendHandler: SubmitHandler;
+    sendHandler: SubmitHandler,
+    loadMessageHandler: (() => void)
 }
 
 const Messages = (props: MessagesProps) => {
@@ -21,10 +22,14 @@ const Messages = (props: MessagesProps) => {
     return (
         <div className="text-chat">
             <div className="messages">
+                <LoadMoreButton loadHandler={props.loadMessageHandler}/>
                 {messages}
                 <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {
+                if (messageRef.current) {
+                    messageRef.current.scrollIntoView();
+                }
                 props.sendHandler(content);
             }}/>
         </div>
@@ -48,18 +53,33 @@ const Message = (props: MessageProps) =>
 function formatDateTime(d: Date): string {
     let string = "";
     if (d.getDate() === new Date().getDate()) {
-        string += "Today ";
+        string += "Today";
     } else if (d.getDate() === new Date().getDate() - 1) {
-        string += "Yesterday "
+        string += "Yesterday"
     } else {
         string += d.toLocaleDateString();
     }
-    string += formatZero(d.getHours()) + ":" + formatZero(d.getMinutes());
+    string += " " + formatZero(d.getHours()) + ":" + formatZero(d.getMinutes());
     return string;
 }
 
 function formatZero(n: number): string {
-    return `${n < 10 ? "0" : "" + n}`;
+    return `${(n < 10 ? "0" : "") + n}`;
+}
+
+interface LoadMoreButtonProps {
+    loadHandler: (() => void)
+}
+
+const LoadMoreButton = (props: LoadMoreButtonProps) => {
+
+    return (
+        <div className="button-wrapper">
+            <button className="load-button" onClick={props.loadHandler}>
+                Load More
+            </button>
+        </div>
+    )
 }
 
 type SubmitHandler = (content: string) => void
