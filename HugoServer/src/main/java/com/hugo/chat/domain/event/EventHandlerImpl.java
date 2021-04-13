@@ -1,5 +1,7 @@
 package com.hugo.chat.domain.event;
 
+import com.hugo.chat.model.emitter.EmitterDTO;
+import com.hugo.chat.model.message.Message;
 import com.hugo.chat.model.message.dto.MessageDTO;
 import com.hugo.chat.model.user.User;
 import com.hugo.chat.model.user.dto.UserDTO;
@@ -34,24 +36,11 @@ public class EventHandlerImpl implements EventHandler {
     }
 
     @EventListener
-    public void newMessage(MessageDTO message) {
+    public void newEvent(EmitterDTO<?> content) {
         ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
         emitters.forEach(emitter -> {
             try {
-                emitter.send(message, MediaType.APPLICATION_JSON);
-            } catch (Exception e) {
-                deadEmitters.add(emitter);
-            }
-        });
-        emitters.remove(deadEmitters);
-    }
-
-    @EventListener
-    public void userListChanged(Collection<UserDTO> users) {
-        ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
-        emitters.forEach(emitter -> {
-            try {
-                emitter.send(users, MediaType.APPLICATION_JSON);
+                emitter.send(content, MediaType.APPLICATION_JSON);
             } catch (Exception e) {
                 deadEmitters.add(emitter);
             }
