@@ -1,13 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Messages, {MessageProps} from "./Messages";
 import Members from "./Members";
 import UserServiceImpl from "../../services/user/UserServiceImpl";
 import MessageServiceImpl from "../../services/message/MessageServiceImpl";
-import MessageServiceMock from "../../services/message/MessageServiceMock";
-import UserServiceMock from "../../services/user/UserServiceMock";
 import UserDTO from "../../services/user/model/UserDTO";
 import MessageDTO from "../../services/message/model/MessageDTO";
-import {receiveMessageOnPort} from "worker_threads";
 
 const DEFAULT_NAME = "Hugo Boss";
 
@@ -79,7 +76,6 @@ class Chat extends React.Component<{}, ChatState> {
 
         if (eventType === "message") {
             const data: MessageDTO = eventData.data;
-            console.log(data);
             const messageProps = messageService.dtoToProps([data], this.state.userID)[0];
             const messages1 = [...this.state.messages, messageProps];
 

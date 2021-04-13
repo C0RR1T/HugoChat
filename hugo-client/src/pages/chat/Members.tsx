@@ -24,18 +24,14 @@ const Members = (props: MembersProps) => {
                 props.sseHandler(event);
             }
 
-            eventSource.onerror = (_) => {
+            eventSource.onerror = () => {
                 eventSource.close();
             }
 
             setListening(true);
         }
 
-        return () => {
-            eventSource.close();
-            console.log("eventsource closed")
-        }
-
+        return () => eventSource.close();
     }, [])
 
 
