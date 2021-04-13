@@ -11,8 +11,8 @@ import {receiveMessageOnPort} from "worker_threads";
 
 const DEFAULT_NAME = "Hugo Boss";
 
-const messageService = new MessageServiceImpl();
-const userService = new UserServiceImpl();
+const messageService = new MessageServiceMock();
+const userService = new UserServiceMock();
 
 interface ChatState {
     name: string,

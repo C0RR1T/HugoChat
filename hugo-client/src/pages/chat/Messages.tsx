@@ -9,10 +9,12 @@ interface MessagesProps {
 }
 
 const Messages = (props: MessagesProps) => {
+
     const messageRef = useRef<HTMLDivElement>(null)
+
     useEffect(() => {
         const ref = messageRef.current;
-        if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight + 100) {
+        if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight) {
             ref.scrollIntoView({behavior: "smooth"});
         }
     });
