@@ -2,13 +2,97 @@
 
 Base Route: `/api/v2`
 
+## DTO
+
+### MessageDTO
+
+| Field Name    | Type           | Description     |
+| ------------- |--------------- | -------------   |
+| id            | string (uuid)  |  message id     |
+| body          | string         |  message body   |
+| sentById      | string (uuid)  |  user id        |
+| sentBy        | string         |  user name      |
+| sentOn        | number (long)  |  UNIX-timestamp |
+
+Example:
+
+```json
+  {
+  "sentBy": "hugo",
+  "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+  "body": "hallo leut",
+  "sentOn": 4382759627480,
+  "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
+}
+```
+
+### UserDTO
+
+| Field Name    | Type           | Description     |
+| ------------- |--------------- | -------------   |
+| id            | string (uuid)  |  user id        |
+| name          | string         |  user name      |
+
+Example:
+
+```json
+{
+  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+  "name": "corsin"
+}
+```
+
+### RoomDTO
+
+| Field Name    | Type           | Description     |
+| ------------- |--------------- | -------------   |
+| id            | string (uuid)  |  room id        |
+| name          | string         |  room name      |
+
+Example:
+
+```json
+{
+  "id": "8b343b07-83bd-48e0-b317-7dbb8e3985a8",
+  "name": "main"
+}
+```
+
+---
+
+## Rooms
+
+### Create Room
+
+`POST` `/rooms/{roomId}/messages`
+
+Room names have to be unique.  
+`400` if room name is already taken
+
+Request body: `RoomDTO` without id
+
+```json
+{
+  "name": "room name"
+}
+```
+
+Response body: `RoomDTO`
+
+### Get all Rooms
+
+`GET` `/rooms`
+
+Response body: `RoomDTO[]`
+
 ## User
 
 ### Log in
 
 `POST` `/users`
 
-Example Body
+Request body: `UserDTO` without id  
+Example:
 
 ```json
 {
@@ -16,123 +100,47 @@ Example Body
 }
 ```
 
-Response:
+Response body: `UserDTO`
 
-```json
-{
-  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-  "name": "corsin"
-}
-```
-
-### Get active users
-
-`GET` `/{roomId}/users`
-
-Response:
-
-```json
-[
-  {
-    "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-    "name": "corsin"
-  },
-  {
-    "id": "6b343b07-83bd-47e0-b317-7dbb8e3985a8",
-    "name": "timo"
-  },
-  {
-    "id": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
-    "name": "hugo"
-  }
-]
-```
-
-### Change name
+### Change username
 
 `PUT` `/users`
 
-Example Body:
+Request body: `UserDTO`
 
-```json
-{
-  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-  "name": "corsin"
-}
-```
+Response body: `UserDTO`
 
-Example Response:
+### Get active users in a room
 
-```json
-{
-  "id": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-  "name": "corsin"
-}
-```
+`GET` `/rooms/{roomId}/users`
+
+Response body: `UserDTO[]`
 
 ### Send still here
 
-`PATCH` `/{roomId}/users/active/{uuid}`
+`PATCH` `/rooms/{roomId}/users/active/{uuid}`
 
 No request or response body
 
 ## Messages
 
-### x Messages before the last message
+### Get n messages before a specific message
 
-`GET` `/{roomId}/messages/old/{messageid}?amount={n}`
+`GET` `/rooms/{roomId}/messages/old/{messageid}?amount={n}`
 
-Response:
+Response: `MessageDTO`
 
-```json
-[
-  {
-    "sentBy": "corsin",
-    "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-    "body": "hallo",
-    "sentOn": 2643578034265,
-    "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
-  },
-  {
-    "sentBy": "hugo",
-    "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
-    "body": "hallo leut",
-    "sentOn": 4382759627480,
-    "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
-  }
-]
-```
+### Get all message after a specific message
 
-### New Messages since the last message
+`GET` `/rooms/{roomId}/messages/new/{messageid}`
 
-`GET` `/{roomId}/messages/new/{messageid}`
+Response Body: `MessageDTO[]`
 
-Response:
+### Send a Message
 
-```json
-[
-  {
-    "sentBy": "corsin",
-    "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
-    "body": "hallo",
-    "sentOn": 2643578034265,
-    "id": "881f5729-c3fb-425d-9ea7-a7f4d82980d3"
-  },
-  {
-    "sentBy": "hugo",
-    "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
-    "body": "hallo leut",
-    "sentOn": 4382759627480,
-    "id": "881f5729-c3fb-425d-9ea7-a9f4d82980d3"
-  }
-]
-```
+`POST` `/rooms/{roomId}/messages`
 
-### Send Message
-
-`POST` `/{roomId}/messages`
-
-Example body:
+Example body: `MessageDTO` without id
 
 ```json
 {
@@ -141,3 +149,4 @@ Example body:
   "sentOn": 5590432785885
 }
 ```
+
