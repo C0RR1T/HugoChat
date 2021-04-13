@@ -1,5 +1,6 @@
 import "../../App.scss"
 import React, {useEffect, useRef, useState} from "react";
+import ReactMarkdown from "react-markdown";
 
 interface MessagesProps {
     messages: MessageProps[],
@@ -41,7 +42,7 @@ const Message = (props: MessageProps) =>
     <div className={props.own ? "message own-message" : "message"}>
         <div className="author">{props.author}</div>
         <div className="time">{formatDateTime(new Date(props.timestamp))}</div>
-        <div className="content">{props.content}</div>
+        <ReactMarkdown className="content">{props.content}</ReactMarkdown>
     </div>
 
 function formatDateTime(d: Date): string {
