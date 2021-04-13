@@ -85,7 +85,26 @@ Response body: `RoomDTO`
 
 Response body: `RoomDTO[]`
 
-## User
+### Listen for room changes
+
+`GET` `/rooms/update`
+
+Returns an SseEmitter that sends an event when there is a room change
+
+Event body: `RoomDTO[]` All current rooms
+
+### Listen for changes in room
+
+`GET` `/rooms/{roomId}/update`
+
+Returns an SseEmitter that sends an event when there is a message, or a user change.
+
+Event body
+
+| Field name | Type                     | Description                      |
+| ---------- | ------------------------ | -------------------------------- |
+| type       | string                   | "message" or "users"             |
+| data       | MessageDTO or UserDTO[]  | The message or the new user list | 
 
 ### Log in
 
