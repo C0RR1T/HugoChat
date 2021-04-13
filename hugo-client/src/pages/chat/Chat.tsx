@@ -5,6 +5,9 @@ import UserServiceImpl from "../../services/user/UserServiceImpl";
 import MessageServiceImpl from "../../services/message/MessageServiceImpl";
 import MessageServiceMock from "../../services/message/MessageServiceMock";
 import UserServiceMock from "../../services/user/UserServiceMock";
+import UserDTO from "../../services/user/model/UserDTO";
+import MessageDTO from "../../services/message/model/MessageDTO";
+import {receiveMessageOnPort} from "worker_threads";
 
 const DEFAULT_NAME = "corsin";
 
@@ -71,35 +74,21 @@ class Chat extends React.Component<{}, ChatState> {
     }
 
     handleSSE(event: MessageEvent) {
-        console.log(event.data);
-        if (event.data === "new messages") {
-            if (this.state.lastCheckedMessage) {
-                messageService.getNewMessages(this.state.lastCheckedMessage).then(newMessages => {
-                    if (newMessages.length > 0) {
-                        const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, this.state.userID));
-                        this.setState({
-                            messages,
-                            lastCheckedMessage: newMessages[newMessages.length - 1].id
-                        });
-                    }
-                });
-            } else {
-                messageService.getLatestMessages(50).then(newMessages => {
-                    if (newMessages.length > 0) {
-                        const messages = this.state.messages.concat(messageService.dtoToProps(newMessages, this.state.userID));
-                        this.setState({
-                            messages,
-                            lastCheckedMessage: newMessages[newMessages.length - 1].id
-                        });
-                    }
-                })
-            }
-        } else if (event.data === "userlist changed") {
-            userService.getUsers().then(users => {
-                const members = userService.userDTOtoString(users, this.state.userID);
-                this.setState({
-                    onlineMembers: members
-                });
+        const eventType: string = event.data.type;
+
+        if (eventType === "message") {
+            const data: MessageDTO = event.data.data;
+            const messageProps = messageService.dtoToProps([data], this.state.userID)[0];
+            const messages1 = [...this.state.messages, messageProps];
+
+            this.setState({
+                messages: messages1,
+                lastCheckedMessage: data.id
+            });
+        } else if (eventType === "users") {
+            const data: UserDTO[] = event.data.data;
+            this.setState({
+                onlineMembers: data.map(u => u.username)
             });
 
         }
