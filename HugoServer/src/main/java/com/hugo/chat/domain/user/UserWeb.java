@@ -10,7 +10,6 @@ import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/users")
 public class UserWeb {
     private final UserService service;
 
@@ -18,7 +17,7 @@ public class UserWeb {
         this.service = service;
     }
 
-    @PostMapping("")
+    @PostMapping("/users")
     public ResponseEntity<?> newUser(@RequestBody UserDTO user) {
         try {
             return ResponseEntity.ok().body(service.createUser(user));
@@ -27,12 +26,12 @@ public class UserWeb {
         }
     }
 
-    @GetMapping("/hugo")
+    @GetMapping("users/hugo")
     public ResponseEntity<String> hugo() {
         return ResponseEntity.ok().body("Hugo Boss");
     }
 
-    @PutMapping("")
+    @PutMapping("/users")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         try {
             return ResponseEntity.ok().body(service.updateUser(user));
@@ -43,15 +42,15 @@ public class UserWeb {
         }
     }
 
-    @GetMapping("")
-    public ResponseEntity<Collection<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok().body(service.getUsers());
+    @GetMapping("/rooms/{roomId}/users")
+    public ResponseEntity<Collection<UserDTO>> getAllUsers(@PathVariable("roomId") String roomId) {
+        return ResponseEntity.ok().body(service.getUsers(roomId));
     }
 
-    @PatchMapping("/active/{userId}")
-    public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id) {
+    @PatchMapping("/rooms/{roomId}/active/{userId}")
+    public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
         try {
-            service.setUserActive(id);
+            service.setUserActive(id, roomId);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException n) {
             return ResponseEntity.notFound().build();

@@ -1,4 +1,4 @@
-package com.hugo.chat.model.emitter;
+package com.hugo.chat.model.emitter.dto;
 
 public class EmitterDTO<T> {
     public String type;

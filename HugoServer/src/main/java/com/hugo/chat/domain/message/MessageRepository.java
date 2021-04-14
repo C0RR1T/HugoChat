@@ -15,8 +15,8 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     @Query(value = "SELECT m FROM Message m WHERE m.sentOn > :lastChecked ORDER BY m.sentOn DESC")
     List<Message> getNewMessage(@Param("lastChecked") long lastTimeChecked);
 
-    @Query(value = "SELECT m FROM Message m WHERE m.sentOn < :timestamp ORDER BY m.sentOn DESC")
-    List<Message> getOldMessage(@Param("timestamp") long timeStamp);
+    @Query(value = "SELECT m FROM Message m WHERE m.sentOn < :timestamp AND m.roomId = :roomId ORDER BY m.sentOn DESC")
+    List<Message> getOldMessage(@Param("timestamp") long timeStamp, @Param("roomId") UUID roomId);
 
     @Query(value = "SELECT COUNT(*) FROM Message m WHERE m.userID = :userID AND m.sentOn > :timestamp")
     long getNewestMessageFromUser(@Param("userID") UUID id, @Param("timestamp") long currentTime);

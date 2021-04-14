@@ -1,14 +1,14 @@
 package com.hugo.chat.domain.event;
 
-import com.hugo.chat.model.emitter.EmitterDTO;
-import com.hugo.chat.model.message.dto.MessageDTO;
-import com.hugo.chat.model.user.dto.UserDTO;
+import com.hugo.chat.model.emitter.dto.EmitterDTO;
+import com.hugo.chat.model.room.dto.RoomDTO;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.UUID;
 
 public interface EventHandler {
-    SseEmitter streamUpdates();
-    void newEvent(EmitterDTO<?> content);
+    SseEmitter streamUpdates(String id);
+    SseEmitter streamRoomsUpdate();
+    void roomEvents(EmitterDTO<RoomDTO> content);
+    void newEvent(EmitterDTO<?> content, UUID roomId);
 }

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class UserDTO {
     private UUID id;
-    private String username;
+    private String name;
 
     public UserDTO() {
     }
@@ -15,13 +15,13 @@ public class UserDTO {
     public boolean equals(Object obj) {
         if(obj instanceof UserDTO) {
             UserDTO dto = (UserDTO) obj;
-            return dto.getId().equals(this.getId()) && dto.getUsername().equals(this.getUsername());
+            return dto.getId().equals(this.getId()) && dto.getName().equals(this.getName());
         } return false;
     }
 
-    public UserDTO(UUID id, String username) {
+    public UserDTO(UUID id, String name) {
         this.id = id;
-        this.username = username;
+        this.name = name;
     }
 
     public UUID getId() {
@@ -32,17 +32,17 @@ public class UserDTO {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public static User toUser(UserDTO user) {
         User u = new User();
-        u.setName(user.getUsername());
+        u.setName(user.getName());
         u.setId(user.getId());
         return u;
     }
