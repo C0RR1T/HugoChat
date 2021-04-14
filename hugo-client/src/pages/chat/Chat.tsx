@@ -6,6 +6,7 @@ import UserServiceMock from "../../services/mock/UserServiceMock";
 import {Rooms} from "./Room";
 import RoomServiceMock from "../../services/room/RoomServiceMock";
 import RoomDTO from "../../services/room/model/RoomDTO";
+import UserDTO from "../../services/user/model/UserDTO";
 
 const DEFAULT_NAME = "Hugo Boss";
 
@@ -14,9 +15,7 @@ const userService = new UserServiceMock();
 const roomService = new RoomServiceMock();
 
 interface ChatState {
-    name: string,
-    userID: string,
-    oldestMessageId: string | undefined,
+    user: UserDTO
     windowWidth: number,
     rooms: RoomDTO[],
     currentRoom: string
@@ -28,9 +27,10 @@ class Chat extends React.Component<{}, ChatState> {
         super(props);
 
         this.state = {
-            userID: "",
-            name: DEFAULT_NAME,
-            oldestMessageId: undefined,
+            user: {
+                name: DEFAULT_NAME,
+                id: ""
+            },
             windowWidth: 0,
             rooms: [],
             currentRoom: "00000000-0000-0000-0000-000000000000"
@@ -45,16 +45,9 @@ class Chat extends React.Component<{}, ChatState> {
             rooms
         }));
 
-        userService.createUser({
-            name: DEFAULT_NAME,
-            id: ""
-        }).then(r => {
-            this.setState({
-                userID: r.id || ""
-            });
-            return r.id || "";
-        }).then(selfId => {
-            setInterval(() => userService.keepActive(this.state.currentRoom, selfId), 5000);
+        userService.createUser(DEFAULT_NAME).then(user => {
+            this.setState({user});
+            setInterval(() => userService.keepActive(this.state.currentRoom, user.id), 5000);
         });
     }
 
@@ -70,31 +63,13 @@ class Chat extends React.Component<{}, ChatState> {
     handleNameChange = (name: string) => {
         if (name.length < 255) {
             userService.changeName({
-                id: this.state.userID,
+                id: this.state.user.id,
                 name: name
-            }).then(r => this.setState({name}));
+            }).then(user => this.setState({user}));
         } else {
-            alert(`Name too long: ${name.length}. Must be less than 255 characters`)
+            alert(`Name too long: '${name.length}'. Must be less than 255 characters`)
         }
 
-    }
-
-    handleSend = (content: string) => {
-        if (content === "") {
-            return;
-        }
-        if (content.length > 1000) {
-            alert("Message too long, must be less than 1000 characters");
-            return;
-        }
-        messageService.createMessage({
-            sentBy: this.state.name,
-            sentByID: this.state.userID,
-            body: content,
-            id: "",
-            sentOn: 0,
-            roomId: "00000000-0000-0000-0000-000000000000"
-        }).catch(_ => alert("You are writing too fast"));
     }
 
     handleRoomChange = async (roomId: string) => {
@@ -119,15 +94,14 @@ class Chat extends React.Component<{}, ChatState> {
                     })}
                     current={this.state.currentRoom}
                 />
-                <Messages sendHandler={this.handleSend}
-                          scroll={this.state.windowWidth > 768}
-                          userId={this.state.userID}
+                <Messages scroll={this.state.windowWidth > 768}
+                          user={this.state.user}
                           roomId={this.state.currentRoom}
                 />
                 <Users
                     selfUser={{
-                        id: this.state.userID,
-                        name: this.state.name
+                        id: this.state.user.name,
+                        name: this.state.user.id
                     }}
                     nameChangeHandler={this.handleNameChange}
                     roomId={this.state.currentRoom}

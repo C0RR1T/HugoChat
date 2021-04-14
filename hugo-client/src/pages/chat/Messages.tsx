@@ -1,14 +1,14 @@
 import "../../App.scss"
-import React, {useEffect, useRef, useState} from "react";
+import React, {RefObject, useEffect, useRef, useState} from "react";
 import ReactMarkdown from "react-markdown";
 import MessageServiceMock from "../../services/mock/MessageServiceMock";
 import MessageDTO from "../../services/message/model/MessageDTO";
+import UserDTO from "../../services/user/model/UserDTO";
 
 const messageService = new MessageServiceMock();
 
 interface MessagesProps {
-    sendHandler: SubmitHandler,
-    userId: string,
+    user: UserDTO
     roomId: string
     scroll: boolean,
 }
@@ -46,17 +46,36 @@ const Messages = (props: MessagesProps) => {
                         setMessages(msg);
                     })
                 }}/>
-                {messageService.dtoToProps(messages, props.userId).map(msg => <Message {...msg} key={msg.id}/>)}
+                {messageService.dtoToProps(messages, props.user.id).map(msg => <Message {...msg} key={msg.id}/>)}
                 <div ref={messageRef}/>
             </div>
-            <InputField submitHandler={content => {
-                if (messageRef.current && props.scroll) {
-                    messageRef.current.scrollIntoView();
-                }
-                props.sendHandler(content);
-            }}/>
+            <InputField submitHandler={content => submitHandler(content, messageRef, props)}/>
         </div>
     );
+}
+
+
+const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, props: MessagesProps) => {
+    console.log(content)
+    if (content.length > 1000) {
+        alert("Message too long, must be less than 1000 characters");
+        return;
+    }
+    if (messageRef.current && props.scroll) {
+        messageRef.current.scrollIntoView();
+    }
+    messageService.createMessage({
+        sentBy: props.user.name,
+        sentByID: props.user.id,
+        body: content,
+        id: "",
+        sentOn: 0,
+        roomId: "00000000-0000-0000-0000-000000000000"
+    }).catch(err => {
+        console.log(err);
+        //TODO better error messages
+        alert("You are writing too fast");
+    });
 }
 
 interface MessageProps {
@@ -106,10 +125,8 @@ const LoadMoreButton = (props: LoadMoreButtonProps) => {
     )
 }
 
-type SubmitHandler = (content: string) => void
-
 interface InputFieldProps {
-    submitHandler: SubmitHandler
+    submitHandler: ((content: string) => void),
 }
 
 const InputField = (props: InputFieldProps) => {
@@ -117,7 +134,7 @@ const InputField = (props: InputFieldProps) => {
 
     return (
         <input onKeyPress={event => {
-            if (event.key === "Enter") {
+            if (event.key === "Enter" && content != "") {
                 props.submitHandler(content);
                 setContent("");
             }

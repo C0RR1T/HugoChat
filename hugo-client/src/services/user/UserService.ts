@@ -1,8 +1,8 @@
 import UserDTO from "./model/UserDTO";
 
 export default interface UserService {
-    //TODO not userDTO
-    createUser(user: UserDTO): Promise<UserDTO>;
+
+    createUser(name: string): Promise<UserDTO>;
 
     keepActive(roomId: string, uuid: string): Promise<void>;
 
