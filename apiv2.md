@@ -13,7 +13,6 @@ Base Route: `/api/v2`
 | sentById      | string (uuid)  |  user id        |
 | sentBy        | string         |  user name      |
 | sentOn        | number (long)  |  UNIX-timestamp |
-| roomId        | string (uuid)  |  room id        |
 
 Example:
 
