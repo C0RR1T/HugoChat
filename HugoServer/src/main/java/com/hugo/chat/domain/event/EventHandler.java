@@ -4,11 +4,12 @@ import com.hugo.chat.model.emitter.dto.EmitterDTO;
 import com.hugo.chat.model.room.dto.RoomDTO;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface EventHandler {
     SseEmitter streamUpdates(String id);
     SseEmitter streamRoomsUpdate();
-    void roomEvents(EmitterDTO<RoomDTO> content);
+    void roomEvents(EmitterDTO<Collection<RoomDTO>> content);
     void newEvent(EmitterDTO<?> content, UUID roomId);
 }

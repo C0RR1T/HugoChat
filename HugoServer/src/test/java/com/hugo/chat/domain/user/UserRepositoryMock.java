@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserRepositoryMock implements UserRepository {
+public class UserRepositoryMock {
+    /*
 
     private List<User> users = List.of(
             new User(UUID.fromString("e9615009-d873-4b0a-a9a1-d0d751cab2ed"), "Hugo Boss", System.currentTimeMillis()),
@@ -141,4 +142,5 @@ public class UserRepositoryMock implements UserRepository {
     public <S extends User> boolean exists(Example<S> example) {
         return false;
     }
+    */
 }

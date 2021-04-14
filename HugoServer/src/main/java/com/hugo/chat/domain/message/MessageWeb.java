@@ -1,10 +1,12 @@
 package com.hugo.chat.domain.message;
 
 import com.hugo.chat.model.message.dto.MessageDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -18,11 +20,22 @@ public class MessageWeb {
 
     @GetMapping("/latest")
     public ResponseEntity<Collection<MessageDTO>> getOldMessages(@PathVariable("roomId") String roomId, @RequestParam("amout") int amount) {
-        return ResponseEntity.ok().body(service.getOldMessages(String.valueOf(amount), roomId));
+        return ResponseEntity.ok().body(service.getOldMessages(amount, roomId));
     }
 
     @GetMapping("/before/{messageId}")
-    public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @RequestParam("amount") int amount) {
-        return ResponseEntity.ok().body(service.get);
+    public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @PathVariable("messageId") String messageId ,@RequestParam("amount") int amount) {
+        return ResponseEntity.ok().body(service.getOldMessages(messageId, amount, roomId));
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> createMessage(@RequestBody MessageDTO message, @PathVariable("roomId") String roomId) {
+        try {
+            return ResponseEntity.ok().body(service.createMessage(message, roomId));
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>(i.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

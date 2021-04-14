@@ -11,7 +11,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class MessageRepositoryMock implements MessageRepository {
+public class MessageRepositoryMock {
+    /*
     List<Message> messages = List.of(
             new Message(UUID.fromString("bf29b945-1a31-4ea6-a608-24118605522d"), "Hallol Leut", 12L, UUID.fromString("e9615009-d873-4b0a-a9a1-d0d751cab2ed"), "Hugo Boss"),
             new Message(UUID.fromString("70bf827e-a8a8-4257-abc7-d1a192bc7993"), "Wie geht es euch?", 24L, UUID.fromString("e9615009-d873-4b0a-a9a1-d0d751cab2ed"), "Hugo Boss"),
@@ -154,5 +155,5 @@ public class MessageRepositoryMock implements MessageRepository {
     @Override
     public <S extends Message> boolean exists(Example<S> example) {
         return false;
-    }
+    } */
 }
