@@ -1,6 +1,6 @@
 {
-  "main": {
-    "id": "main",
+  "00000000-0000-0000-0000-000000000000": {
+    "id": "00000000-0000-0000-0000-000000000000",
     "name": "main",
     "messages": [
       {
@@ -9,7 +9,7 @@
         "sentByID": "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
         "sentBy": "hugo",
         "sentOn": 4382759627480,
-        "roomId": "main"
+        "roomId": "00000000-0000-0000-0000-000000000000"
       },
       {
         "id": "881ff729-c3fb-425d-9ea7-a9f4d82980d3",
@@ -17,7 +17,7 @@
         "sentByID": "8b34fb07-83ff-47e0-b317-7dbb8e3985a8",
         "sentBy": "hugo2",
         "sentOn": 4382759627481,
-        "roomId": "main"
+        "roomId": "00000000-0000-0000-0000-000000000000"
       },
       {
         "id": "881ff7f9-c3fb-425d-9ea7-a9f4d82980d3",
@@ -25,7 +25,7 @@
         "sentByID": "8b34fb07-83ff-47e0-b317-7dbb8e3d85a8",
         "sentBy": "hugo4",
         "sentOn": 4382759637481,
-        "roomId": "main"
+        "roomId": "00000000-0000-0000-0000-000000000000"
       },
       {
         "id": "881ff729-cffb-425d-9ea7-a9f4d82980d3",
@@ -33,7 +33,7 @@
         "sentByID": "8b34fff7-83ff-47e0-b317-7dbb8e3985a8",
         "sentBy": "hugo5",
         "sentOn": 4382759638481,
-        "roomId": "main"
+        "roomId": "00000000-0000-0000-0000-000000000000"
       },
       {
         "id": "881ff729-c3fb-425d-9ea7-a9fff82980d3",
@@ -41,7 +41,7 @@
         "sentByID": "8b34fbdd-83ff-47e0-b317-7dbb8e39d5a8",
         "sentBy": "hugo5",
         "sentOn": 4382759727481,
-        "roomId": "main"
+        "roomId": "00000000-0000-0000-0000-000000000000"
       }
     ],
     "users": [

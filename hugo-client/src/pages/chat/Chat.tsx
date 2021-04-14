@@ -1,8 +1,6 @@
 import React from 'react';
-import Messages, {MessageProps} from "./Messages";
+import Messages from "./Messages";
 import Users from "./Users";
-import UserDTO from "../../services/user/model/UserDTO";
-import MessageDTO from "../../services/message/model/MessageDTO";
 import MessageServiceMock from "../../services/mock/MessageServiceMock";
 import UserServiceMock from "../../services/mock/UserServiceMock";
 import {Rooms} from "./Room";
@@ -18,7 +16,6 @@ const roomService = new RoomServiceMock();
 interface ChatState {
     name: string,
     userID: string,
-    messages: MessageProps[],
     oldestMessageId: string | undefined,
     windowWidth: number,
     rooms: RoomDTO[],
@@ -33,21 +30,16 @@ class Chat extends React.Component<{}, ChatState> {
         this.state = {
             userID: "",
             name: DEFAULT_NAME,
-            messages: [],
             oldestMessageId: undefined,
             windowWidth: 0,
             rooms: [],
-            currentRoom: "main"
+            currentRoom: "00000000-0000-0000-0000-000000000000"
         }
     }
 
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-
-        const messageGet = messageService.getLatestMessages(this.state.currentRoom, 20).then(msg => {
-            return msg;
-        });
 
         roomService.getAll().then(rooms => this.setState({
             rooms
@@ -62,19 +54,6 @@ class Chat extends React.Component<{}, ChatState> {
             });
             return r.id || "";
         }).then(selfId => {
-
-            messageGet.then(messages => {
-                    this.setState({
-                        messages: messageService.dtoToProps(messages, selfId),
-                    });
-                    if (messages.length > 0) {
-                        this.setState({
-                            oldestMessageId: messages[0].id
-                        });
-                    }
-                }
-            );
-
             setInterval(() => userService.keepActive(this.state.currentRoom, selfId), 5000);
         });
     }
@@ -86,21 +65,6 @@ class Chat extends React.Component<{}, ChatState> {
     updateDimensions = () => {
         const windowWidth = window !== undefined ? window.innerWidth : 0;
         this.setState({windowWidth});
-    }
-
-    handleSSE = (event: MessageEvent) => {
-        const eventData = JSON.parse(event.data);
-        const eventType: string = eventData.type;
-
-        if (eventType === "message") {
-            const data: MessageDTO = eventData.data;
-            const messageProps = messageService.dtoToProps([data], this.state.userID)[0];
-            const messages1 = [...this.state.messages, messageProps];
-
-            this.setState({
-                messages: messages1,
-            });
-        }
     }
 
     handleNameChange = (name: string) => {
@@ -129,40 +93,13 @@ class Chat extends React.Component<{}, ChatState> {
             body: content,
             id: "",
             sentOn: 0,
-            roomId: "main"
+            roomId: "00000000-0000-0000-0000-000000000000"
         }).catch(_ => alert("You are writing too fast"));
-    }
-
-    handleMessageLoad = async () => {
-        if (!this.state.oldestMessageId) {
-            return;
-        }
-        const olderMessagesDTOs = await messageService.getMessagesBefore("main", this.state.oldestMessageId, 50);
-
-        if (olderMessagesDTOs.length === 0) {
-            return;
-        }
-
-        this.setState({
-            oldestMessageId: olderMessagesDTOs[0].id
-        });
-
-        const olderMessages = messageService.dtoToProps(olderMessagesDTOs, this.state.userID);
-
-        const messages = [...olderMessages, ...this.state.messages];
-
-        this.setState({
-            messages
-        });
     }
 
     handleRoomChange = async (roomId: string) => {
         this.setState({
             currentRoom: roomId
-        });
-        const messages = await messageService.getLatestMessages(roomId, 20);
-        this.setState({
-            messages: messageService.dtoToProps(messages, this.state.userID)
         });
     }
 
@@ -182,10 +119,10 @@ class Chat extends React.Component<{}, ChatState> {
                     })}
                     current={this.state.currentRoom}
                 />
-                <Messages messages={this.state.messages}
-                          sendHandler={this.handleSend}
-                          loadMessageHandler={this.handleMessageLoad}
+                <Messages sendHandler={this.handleSend}
                           scroll={this.state.windowWidth > 768}
+                          userId={this.state.userID}
+                          roomId={this.state.currentRoom}
                 />
                 <Users
                     selfUser={{
@@ -199,6 +136,5 @@ class Chat extends React.Component<{}, ChatState> {
         );
     }
 }
-
 
 export default Chat;

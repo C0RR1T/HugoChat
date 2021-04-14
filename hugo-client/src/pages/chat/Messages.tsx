@@ -1,20 +1,24 @@
 import "../../App.scss"
 import React, {useEffect, useRef, useState} from "react";
 import ReactMarkdown from "react-markdown";
+import MessageServiceMock from "../../services/mock/MessageServiceMock";
+import MessageDTO from "../../services/message/model/MessageDTO";
+
+const messageService = new MessageServiceMock();
 
 interface MessagesProps {
-    messages: MessageProps[],
     sendHandler: SubmitHandler,
-    loadMessageHandler: (() => void),
+    userId: string,
+    roomId: string
     scroll: boolean,
 }
 
 const Messages = (props: MessagesProps) => {
 
     const [firstScroll, setFirstScroll] = useState(false);
+    const [messages, setMessages] = useState<MessageDTO[]>([]);
 
-    const messageRef = useRef<HTMLDivElement>(null)
-
+    const messageRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const ref = messageRef.current;
         if (ref && ref.getBoundingClientRect().bottom <= window.innerHeight && props.scroll) {
@@ -27,13 +31,22 @@ const Messages = (props: MessagesProps) => {
         }
     });
 
-    const messages = props.messages.map(msg => <Message {...msg} key={msg.id}/>);
+    useEffect(() => {
+        messageService.getLatestMessages(props.roomId, 20).then(
+            msg => setMessages(msg)
+        );
+    }, [props.roomId]);
 
     return (
         <div className="text-chat">
             <div className="messages">
-                <LoadMoreButton loadHandler={props.loadMessageHandler}/>
-                {messages}
+                <LoadMoreButton loadHandler={() => {
+                    messageService.getMessagesBefore(props.roomId, messages[0].id, 20).then(msg => {
+                        msg.push(...messages);
+                        setMessages(msg);
+                    })
+                }}/>
+                {messageService.dtoToProps(messages, props.userId).map(msg => <Message {...msg} key={msg.id}/>)}
                 <div ref={messageRef}/>
             </div>
             <InputField submitHandler={content => {

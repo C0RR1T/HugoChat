@@ -15,7 +15,7 @@ interface UsersProps {
 
 const Users = (props: UsersProps) => {
 
-    const [users, setUsers] = useState([props.selfUser]);
+    const [users, setUsers] = useState<UserDTO[]>([]);
 
     useEffect(() => {
         userService.getUsers(props.roomId).then(users => {

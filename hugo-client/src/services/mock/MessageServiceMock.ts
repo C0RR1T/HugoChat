@@ -25,9 +25,9 @@ export default class MessageServiceMock implements MessageService {
             body: msg.body,
             sentByID: msg.sentByID,
             id: uuid(),
-            roomId: uuid()
+            roomId: msg.roomId
         };
-        this.server.rooms[msg.roomId].messages.push(message);
+        this.server.addMessage(message);
         return Promise.resolve(message);
     }
 
