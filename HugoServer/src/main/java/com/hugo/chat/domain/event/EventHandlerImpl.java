@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -47,7 +48,7 @@ public class EventHandlerImpl implements EventHandler {
     }
 
     @Override
-    public void roomEvents(EmitterDTO<RoomDTO> content) {
+    public void roomEvents(EmitterDTO<Collection<RoomDTO>> content) {
         ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
         roomEmitters.forEach(emitter -> {
             try {

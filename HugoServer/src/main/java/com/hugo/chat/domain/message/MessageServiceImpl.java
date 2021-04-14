@@ -27,7 +27,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageDTO createMessage(MessageDTO messagedto) {
+    public MessageDTO createMessage(MessageDTO messagedto, String roomId) {
         if (messagedto.getBody().length() > 1000)
             throw new IllegalArgumentException("Message can't be longer than 1000 characters");
 
@@ -42,19 +42,18 @@ public class MessageServiceImpl implements MessageService {
             throw new IllegalArgumentException("Message Body can't be blank.");
         if (repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) > 10)
             throw new IllegalArgumentException("You're sending messages to fast.");
-        if (!roomRepo.existsById(UUID.fromString(messagedto.getRoomId())))
+        if (!roomRepo.existsById(UUID.fromString(roomId)))
             throw new NoSuchElementException("Room ID not found.");
 
         message.setUserID(UUID.fromString(messagedto.getSentByID()));
-        message.setRoomId(UUID.fromString(messagedto.getRoomId()));
+        message.setRoomId(UUID.fromString(roomId));
         MessageDTO messageSaved = MessageDTO.toMessageDTO(repository.saveAndFlush(message));
         eventHandler.newEvent(new EmitterDTO<>("message", messageSaved), message.getRoomId());
         return messageSaved;
     }
 
     @Override
-    public Collection<MessageDTO> getOldMessages(String messageID, String amountString, String roomId) throws IllegalArgumentException {
-        int amount = Integer.parseInt(amountString);
+    public Collection<MessageDTO> getOldMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
         if (m.isPresent()) {
             return getMessagesBefore(m.get().getSentOn(), amount, roomId);
@@ -62,8 +61,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Collection<MessageDTO> getOldMessages(String amountString, String roomId) {
-        int amount = Integer.parseInt(amountString);
+    public Collection<MessageDTO> getOldMessages(int amount, String roomId) {
         return getMessagesBefore(System.currentTimeMillis(), amount, roomId);
     }
 

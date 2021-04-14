@@ -1,23 +1,45 @@
 package com.hugo.chat.domain.room;
 
 import com.hugo.chat.model.room.dto.RoomDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/rooms")
 public class RoomWeb {
+    private final RoomService service;
 
-    @PostMapping
-    public ResponseEntity<RoomDTO> newRoom(@RequestBody RoomDTO dto) {
-        return null;
+    public RoomWeb(RoomService service) {
+        this.service = service;
     }
 
-    @GetMapping
+    @PostMapping("")
+    public ResponseEntity<?> newRoom(@RequestBody RoomDTO dto) {
+        try {
+            return ResponseEntity.ok().body(service.createMessage(dto));
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>(i.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("")
     public ResponseEntity<Collection<RoomDTO>> getAllRooms() {
-        return null;
+        return ResponseEntity.ok().body(service.getAllRooms());
+    }
+
+    @PutMapping("")
+    public ResponseEntity<?> updateRoom(@RequestBody RoomDTO dto) {
+        try {
+            return ResponseEntity.ok().body(service.updateRoom(dto));
+        } catch (NoSuchElementException n) {
+            return new ResponseEntity<>(n.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException i) {
+            return new ResponseEntity<>(i.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

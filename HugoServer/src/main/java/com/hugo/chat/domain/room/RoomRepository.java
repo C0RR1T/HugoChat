@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
-    @Query(value = "SELECT r.id FROM Room r WHERE r.name = \"main\"")
+    @Query(value = "SELECT r.id FROM Room r WHERE r.name = 'main'")
     Optional<UUID> getMainRoom();
+
+    boolean existsByName(String name);
 }

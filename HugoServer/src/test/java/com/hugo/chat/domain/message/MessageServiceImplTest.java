@@ -23,10 +23,11 @@ class MessageServiceImplTest {
     @InjectMocks
     private MessageServiceImpl impl;
 
+    /*
     @BeforeAll
     public void setUp() {
         impl = new MessageServiceImpl(repository, userRepo, roomRepo, handler);
-    }
+    } */
 
     @Test
     void createMessage() {
