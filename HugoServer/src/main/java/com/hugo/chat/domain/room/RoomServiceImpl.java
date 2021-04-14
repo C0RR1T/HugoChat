@@ -34,7 +34,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomDTO createMessage(RoomDTO dto) {
+    public RoomDTO createRoom(RoomDTO dto) {
         if (repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Name already exists");
         Room room = RoomDTO.toRoom(dto);

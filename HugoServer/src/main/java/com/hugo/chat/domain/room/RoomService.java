@@ -6,7 +6,7 @@ import java.util.Collection;
 
 
 public interface RoomService {
-    RoomDTO createMessage(RoomDTO dto);
+    RoomDTO createRoom(RoomDTO dto);
     Collection<RoomDTO> getAllRooms();
     RoomDTO updateRoom(RoomDTO dto);
 
