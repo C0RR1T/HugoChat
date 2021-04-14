@@ -18,7 +18,6 @@ const roomService = new RoomServiceMock();
 interface ChatState {
     name: string,
     userID: string,
-    users: string[],
     messages: MessageProps[],
     oldestMessageId: string | undefined,
     windowWidth: number,
@@ -34,7 +33,6 @@ class Chat extends React.Component<{}, ChatState> {
         this.state = {
             userID: "",
             name: DEFAULT_NAME,
-            users: [],
             messages: [],
             oldestMessageId: undefined,
             windowWidth: 0,
@@ -47,17 +45,17 @@ class Chat extends React.Component<{}, ChatState> {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
 
-        const userGet = userService.getUsers(this.state.currentRoom);
         const messageGet = messageService.getLatestMessages(this.state.currentRoom, 20).then(msg => {
             return msg;
         });
 
         roomService.getAll().then(rooms => this.setState({
             rooms
-        }))
+        }));
 
         userService.createUser({
-            name: DEFAULT_NAME
+            name: DEFAULT_NAME,
+            id: ""
         }).then(r => {
             this.setState({
                 userID: r.id || ""
@@ -75,11 +73,6 @@ class Chat extends React.Component<{}, ChatState> {
                         });
                     }
                 }
-            );
-            userGet.then(users =>
-                this.setState({
-                    users: userService.userDTOtoString(users, selfId || "")
-                })
             );
 
             setInterval(() => userService.keepActive(this.state.currentRoom, selfId), 5000);
@@ -106,11 +99,6 @@ class Chat extends React.Component<{}, ChatState> {
 
             this.setState({
                 messages: messages1,
-            });
-        } else if (eventType === "users") {
-            const data: UserDTO[] = eventData.data;
-            this.setState({
-                users: data.filter(u => u.id !== this.state.userID).map(u => u.name)
             });
         }
     }
@@ -173,37 +161,40 @@ class Chat extends React.Component<{}, ChatState> {
             currentRoom: roomId
         });
         const messages = await messageService.getLatestMessages(roomId, 20);
-        console.log(messages);
         this.setState({
             messages: messageService.dtoToProps(messages, this.state.userID)
         });
-        const users = await userService.getUsers(roomId);
-        this.setState({
-            users: userService.userDTOtoString(users, this.state.userID)
-        })
     }
 
 
     render() {
         return (
             <div className="parent">
-                <Rooms rooms={this.state.rooms.map(dto => {
-                    return {
-                        id: dto.id,
-                        name: dto.name,
-                        roomChangeHandler: (id) => {
-                            this.handleRoomChange(id);
+                <Rooms
+                    rooms={this.state.rooms.map(dto => {
+                        return {
+                            id: dto.id,
+                            name: dto.name,
+                            roomChangeHandler: (id) => {
+                                this.handleRoomChange(id);
+                            }
                         }
-                    }
-                })}
-                current={this.state.currentRoom}/>
+                    })}
+                    current={this.state.currentRoom}
+                />
                 <Messages messages={this.state.messages}
                           sendHandler={this.handleSend}
                           loadMessageHandler={this.handleMessageLoad}
-                          scroll={this.state.windowWidth > 768}/>
-                <Users selfName={this.state.name} users={this.state.users}
-                       nameChangeHandler={this.handleNameChange}
-                       sseHandler={event => this.handleSSE(event)}/>
+                          scroll={this.state.windowWidth > 768}
+                />
+                <Users
+                    selfUser={{
+                        id: this.state.userID,
+                        name: this.state.name
+                    }}
+                    nameChangeHandler={this.handleNameChange}
+                    roomId={this.state.currentRoom}
+                />
             </div>
         );
     }

@@ -27,7 +27,7 @@ export default class UserServiceMock implements UserService {
         return Promise.resolve();
     }
 
-    userDTOtoString(data: UserDTO[], selfId: string): string[] {
-        return data.filter(user => user.id !== selfId).map(user => user.name)
+    filterUserDTO(data: UserDTO[], selfId: string): UserDTO[] {
+        return data.filter(user => user.id !== selfId);
     }
 }
