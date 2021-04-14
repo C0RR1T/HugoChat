@@ -108,6 +108,8 @@ Event body
 | type       | string                   | "message" or "users"             |
 | data       | MessageDTO or UserDTO[]  | The message or the new user list | 
 
+## Users
+
 ### Log in
 
 `POST` `/users`
