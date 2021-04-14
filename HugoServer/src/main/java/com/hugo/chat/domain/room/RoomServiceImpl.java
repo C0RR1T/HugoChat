@@ -40,7 +40,7 @@ public class RoomServiceImpl implements RoomService {
         Room room = RoomDTO.toRoom(dto);
         room.setId(null);
         RoomDTO finished = RoomDTO.toDTO(repository.saveAndFlush(room));
-        handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
+        handler.roomEvents(getAllRooms());
         return finished;
     }
 
@@ -59,7 +59,7 @@ public class RoomServiceImpl implements RoomService {
         if (!repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Room Name already exists.");
         repository.saveAndFlush(RoomDTO.toRoom(dto));
-        handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
+        handler.roomEvents(getAllRooms());
         return null;
     }
 }

@@ -49,7 +49,7 @@ public class EventHandlerImpl implements EventHandler {
     }
 
     @Override
-    public void roomEvents(EmitterDTO<Collection<RoomDTO>> content) {
+    public void roomEvents(Collection<RoomDTO> content) {
         ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
         roomEmitters.forEach(emitter -> {
             try {

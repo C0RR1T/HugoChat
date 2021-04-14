@@ -176,6 +176,10 @@ input {
 
     text-align: center;
     background-color: $lightBlue;
+
+    input {
+      width: 90%;
+    }
   }
 }
 

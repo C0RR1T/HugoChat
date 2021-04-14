@@ -28,7 +28,7 @@ const Users = (props: UsersProps) => {
             const data: {type: string, data: any} = JSON.parse(event.data);
 
             if (data.type === "users") {
-                setUsers(data.data);
+                setUsers((data.data as UserDTO[]).filter(user => user.id !== props.user.id));
             }
         }
 
