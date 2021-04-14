@@ -1,16 +1,12 @@
 import React from 'react';
 import Messages from "./Messages";
 import Users from "./Users";
-import UserServiceMock from "../../services/_mock/UserServiceMock";
 import {Rooms} from "./Room";
-import RoomServiceMock from "../../services/room/RoomServiceMock";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import UserDTO from "../../services/user/model/UserDTO";
+import {roomService, userService} from "../../services/Services";
 
 const DEFAULT_NAME = "Hugo Boss";
-
-const userService = new UserServiceMock();
-const roomService = new RoomServiceMock();
 
 interface ChatState {
     user: UserDTO
