@@ -18,24 +18,21 @@ public class UserServiceImpl implements UserService {
     private final EventHandlerImpl eventHandler;
     private final long USER_TIMEOUT = 10_000;
     private final UUID MAIN_CHANNEL;
+    private final long MAX_USERNAME_LENGTH = 255;
 
     public UserServiceImpl(UserRepository repository, RoomRepository roomRepo, EventHandlerImpl eventHandler) {
         this.repository = repository;
         this.roomRepo = roomRepo;
         this.eventHandler = eventHandler;
-        MAIN_CHANNEL = getMainChannel();
+        MAIN_CHANNEL = Room.MAIN_ROOM_ID;
         deleteInactiveUser();
     }
 
-    private UUID getMainChannel() {
-        return roomRepo.getMainRoom()
-                .orElseGet(() -> roomRepo.saveAndFlush(new Room(Room.MAIN_ROOM_ID, "main"))
-                        .getId());
-    }
+
 
     @Override
     public UserDTO createUser(UserDTO user) {
-        if (user.getName().length() <= 255) {
+        if (user.getName().length() <= MAX_USERNAME_LENGTH) {
             user.setId(null);
             User u = UserDTO.toUser(user);
             u.setCurrentRoom(MAIN_CHANNEL);
@@ -77,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(UserDTO user) {
-        if (user.getName().length() <= 255) {
+        if (user.getName().length() <= MAX_USERNAME_LENGTH) {
             Optional<User> opt = repository.findById(user.getId());
             if (opt.isPresent()) {
                 User u = opt.get();

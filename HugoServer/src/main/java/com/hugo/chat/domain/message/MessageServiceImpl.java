@@ -19,6 +19,8 @@ public class MessageServiceImpl implements MessageService {
     private final RoomRepository roomRepo;
     private final EventHandler eventHandler;
 
+    private final long MAX_MESSAGE_LENGTH = 1000;
+
     public MessageServiceImpl(MessageRepository repository, UserRepository userRepo, RoomRepository roomRepo, EventHandler eventHandler) {
         this.repository = repository;
         this.userRepo = userRepo;
@@ -28,7 +30,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDTO createMessage(MessageDTO messagedto, String roomId) {
-        if (messagedto.getBody().length() > 1000)
+        if (messagedto.getBody().length() > MAX_MESSAGE_LENGTH)
             throw new IllegalArgumentException("Message can't be longer than 1000 characters");
 
         messagedto.setId(null);

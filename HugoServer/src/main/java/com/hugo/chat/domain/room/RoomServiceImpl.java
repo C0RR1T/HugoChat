@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,11 +21,21 @@ public class RoomServiceImpl implements RoomService {
     public RoomServiceImpl(RoomRepository repository, EventHandler handler) {
         this.repository = repository;
         this.handler = handler;
+        setMainChannel();
+    }
+
+    private void setMainChannel() {
+        if (!repository.existsByName("main")) {
+            System.err.println("No Main detected");
+            repository.saveAndFlush(new Room(UUID.randomUUID(), "main"));
+            repository.setMainRoom(Room.MAIN_ROOM_ID);
+        }
+        System.out.println(repository.findAll().get(0).getId());
     }
 
     @Override
     public RoomDTO createMessage(RoomDTO dto) {
-        if(repository.existsByName(dto.getName()))
+        if (repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Name already exists");
         Room room = RoomDTO.toRoom(dto);
         room.setId(null);
@@ -43,9 +54,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDTO updateRoom(RoomDTO dto) {
-        if(!repository.existsById(dto.getId()))
+        if (!repository.existsById(dto.getId()))
             throw new NoSuchElementException("Room ID doesn't exist.");
-        if(!repository.existsByName(dto.getName()))
+        if (!repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Room Name already exists.");
         repository.saveAndFlush(RoomDTO.toRoom(dto));
         handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
