@@ -1,9 +1,10 @@
 import "../../App.scss"
 import React, {RefObject, useEffect, useRef, useState} from "react";
 import ReactMarkdown from "react-markdown";
-import MessageServiceMock from "../../services/mock/MessageServiceMock";
+import MessageServiceMock from "../../services/_mock/MessageServiceMock";
 import MessageDTO from "../../services/message/model/MessageDTO";
 import UserDTO from "../../services/user/model/UserDTO";
+import formatDateTime from "../../util/FormatDateTime";
 
 const messageService = new MessageServiceMock();
 
@@ -29,7 +30,7 @@ const Messages = (props: MessagesProps) => {
             ref.scrollIntoView();
             setFirstScroll(true);
         }
-    });
+    }, [props.scroll, firstScroll]);
 
     useEffect(() => {
         messageService.getLatestMessages(props.roomId, 20).then(
@@ -92,22 +93,6 @@ const Message = (props: MessageProps) =>
         <ReactMarkdown className="content">{props.content}</ReactMarkdown>
     </div>
 
-function formatDateTime(d: Date): string {
-    let string = "";
-    if (d.getDate() === new Date().getDate()) {
-        string += "Today";
-    } else if (d.getDate() === new Date().getDate() - 1) {
-        string += "Yesterday"
-    } else {
-        string += d.toLocaleDateString();
-    }
-    string += " " + formatZero(d.getHours()) + ":" + formatZero(d.getMinutes());
-    return string;
-}
-
-function formatZero(n: number): string {
-    return `${(n < 10 ? "0" : "") + n}`;
-}
 
 interface LoadMoreButtonProps {
     loadHandler: (() => void)
@@ -133,7 +118,7 @@ const InputField = (props: InputFieldProps) => {
 
     return (
         <input onKeyPress={event => {
-            if (event.key === "Enter" && content != "") {
+            if (event.key === "Enter" && content !== "") {
                 props.submitHandler(content);
                 setContent("");
             }

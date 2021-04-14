@@ -1,8 +1,7 @@
 import React from 'react';
 import Messages from "./Messages";
 import Users from "./Users";
-import MessageServiceMock from "../../services/mock/MessageServiceMock";
-import UserServiceMock from "../../services/mock/UserServiceMock";
+import UserServiceMock from "../../services/_mock/UserServiceMock";
 import {Rooms} from "./Room";
 import RoomServiceMock from "../../services/room/RoomServiceMock";
 import RoomDTO from "../../services/room/model/RoomDTO";
@@ -10,7 +9,6 @@ import UserDTO from "../../services/user/model/UserDTO";
 
 const DEFAULT_NAME = "Hugo Boss";
 
-const messageService = new MessageServiceMock();
 const userService = new UserServiceMock();
 const roomService = new RoomServiceMock();
 
@@ -99,10 +97,7 @@ class Chat extends React.Component<{}, ChatState> {
                           roomId={this.state.currentRoom}
                 />
                 <Users
-                    selfUser={{
-                        id: this.state.user.name,
-                        name: this.state.user.id
-                    }}
+                    user={this.state.user}
                     nameChangeHandler={this.handleNameChange}
                     roomId={this.state.currentRoom}
                 />

@@ -1,14 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
-import UserServiceMock from "../../services/mock/UserServiceMock";
+import UserServiceMock from "../../services/_mock/UserServiceMock";
 import UserDTO from "../../services/user/model/UserDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
 
-type NameChangeHandler = (nam: string) => void
 
 const userService = new UserServiceMock();
 
 interface UsersProps {
-    selfUser: UserDTO,
+    user: UserDTO,
     nameChangeHandler: NameChangeHandler,
     roomId: string
 }
@@ -19,14 +18,13 @@ const Users = (props: UsersProps) => {
 
     useEffect(() => {
         userService.getUsers(props.roomId).then(users => {
-            setUsers(userService.filterUserDTO(users, props.selfUser.id));
+            setUsers(userService.filterUserDTO(users, props.user.id));
         });
-    }, [props.roomId]);
+    }, [props.roomId, props.user.id]);
 
-    let eventSource: EventSource;
 
     useEffect(() => {
-        eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
+        let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
 
         eventSource.onmessage = (event: MessageEvent<UserDTO[]>) => {
             setUsers(event.data);
@@ -36,11 +34,11 @@ const Users = (props: UsersProps) => {
             eventSource.close();
         }
         return () => eventSource.close();
-    }, [])
+    }, [props.roomId])
 
     return (
         <div className="users">
-            <SelfUser name={props.selfUser.name} nameChangeHandler={props.nameChangeHandler}/>
+            <SelfUser user={props.user} nameChangeHandler={props.nameChangeHandler}/>
             {users.map(n => <User name={n.name} key={n.id}/>)}
         </div>
     )
@@ -57,8 +55,10 @@ const User = (props: UserProps) =>
         <div className="name">{props.name}</div>
     </div>
 
+type NameChangeHandler = (nam: string) => void
+
 interface SelfUserProps {
-    name: string,
+    user: UserDTO,
     nameChangeHandler: NameChangeHandler
 }
 
@@ -84,7 +84,7 @@ const SelfUser = (props: SelfUserProps) => {
         />;
 
     const showing = <div className="name">
-        {props.name}
+        {props.user.name}
     </div>;
 
     const inner = isEditing ? editing : showing;
@@ -92,7 +92,7 @@ const SelfUser = (props: SelfUserProps) => {
     return (
         <div className="user self" onClick={_ => {
             setIsEditing(true);
-            setContent(props.name);
+            setContent(props.user.name);
         }}>
             {inner}
         </div>

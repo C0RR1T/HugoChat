@@ -4,12 +4,6 @@ import {MessageProps} from "../../pages/chat/Messages";
 import {v4 as uuid} from 'uuid';
 import mockServer, {MockServer} from "./MockServer";
 
-interface Room {
-    id: string,
-    name: string,
-    messages: MessageDTO[]
-}
-
 export default class MessageServiceMock implements MessageService {
 
     private server: MockServer;
