@@ -19,10 +19,8 @@ interface RoomProps {
 }
 
 const Room = (props: RoomProps) =>
-    <div className="room">
-        <button onClick={() => props.roomChangeHandler(props.id)}>
-            {props.name}
-        </button>
+    <div className="room" onClick={() => props.roomChangeHandler(props.id)}>
+        {props.name}
     </div>
 
 export {Room, Rooms};

@@ -136,15 +136,40 @@ input {
 
   .self {
     background-color: $blue;
+    
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
-.name-set {
-  background-color: red;
-  padding: 40px;
-  position: absolute;
-  transform: translate(100%, 50%);
-  z-index: 1;
+.rooms {
+  overflow-y: scroll;
+  height: 90vh;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+
+  .room {
+    overflow-x: hidden;
+    background-color: $color-1;
+
+    margin: 10px;
+    padding: 10px;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $color2;
+    }
+  }
+
+  .current {
+    background-color: $blue;
+
+    &:hover {
+      cursor: default;
+    }
+  }
 }
 
 a {
@@ -156,7 +181,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* CORSIN-MOBILE */
 @media only screen and (max-width: 786px) {
   .parent {
     grid-template-columns: auto;
