@@ -4,12 +4,6 @@ import {MessageProps} from "../../pages/chat/Messages";
 import {v4 as uuid} from 'uuid';
 import mockServer, {MockServer} from "./MockServer";
 
-interface Room {
-    id: string,
-    name: string,
-    messages: MessageDTO[]
-}
-
 export default class MessageServiceMock implements MessageService {
 
     private server: MockServer;
@@ -18,16 +12,15 @@ export default class MessageServiceMock implements MessageService {
         this.server = mockServer;
     }
 
-    async createMessage(msg: MessageDTO): Promise<MessageDTO> {
+    async createMessage(roomId: string, msg: MessageDTO): Promise<MessageDTO> {
         const message = {
             sentBy: msg.sentBy,
             sentOn: Date.now(),
             body: msg.body,
             sentByID: msg.sentByID,
             id: uuid(),
-            roomId: uuid()
         };
-        this.server.rooms[msg.roomId].messages.push(message);
+        this.server.addMessage(message, roomId);
         return Promise.resolve(message);
     }
 

@@ -9,8 +9,8 @@ const Rooms = (props: RoomsProps) => {
         <div className="rooms">
             {props.rooms.map(room =>
                 (room.id === props.current) ?
-                <CurrentRoom {...room} id={room.id}/> :
-                <Room {...room} id={room.id}/>)}
+                <CurrentRoom {...room} key={room.id}/> :
+                <Room {...room} key={room.id}/>)}
         </div>
     )
 }
