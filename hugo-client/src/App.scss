@@ -116,14 +116,14 @@ input {
   }
 }
 
-.members {
+.users {
   overflow-y: scroll;
   height: 90vh;
   margin-top: 10px;
   margin-right: 10px;
   margin-left: 10px;
 
-  .member {
+  .user {
     overflow-x: hidden;
     background-color: $color-1;
     margin: 10px;

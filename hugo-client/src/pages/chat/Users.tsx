@@ -3,14 +3,14 @@ import React, {useRef, useState} from "react";
 type NameChangeHandler = (nam: string) => void
 type SSEHandler = (event: MessageEvent) => void
 
-interface MembersProps {
+interface UsersProps {
     selfName: string,
-    members: string[],
+    users: string[],
     nameChangeHandler: NameChangeHandler,
     sseHandler: SSEHandler
 }
 
-const Members = (props: MembersProps) => {
+const Users = (props: UsersProps) => {
 
     const [listening, setListening] = useState(false);
     let eventSource: EventSource;
@@ -35,30 +35,30 @@ const Members = (props: MembersProps) => {
 
 
     return (
-        <div className="members">
-            <SelfMember name={props.selfName} nameChangeHandler={props.nameChangeHandler}/>
-            {props.members.map((n, i) => <Member name={n} key={i}/>)}
+        <div className="users">
+            <SelfUser name={props.selfName} nameChangeHandler={props.nameChangeHandler}/>
+            {props.users.map((n, i) => <User name={n} key={i}/>)}
         </div>
     )
 }
 
 
-interface MemberProps {
+interface UserProps {
     name: string,
 }
 
 
-const Member = (props: MemberProps) =>
-    <div className="member">
+const User = (props: UserProps) =>
+    <div className="user">
         <div className="name">{props.name}</div>
     </div>
 
-interface SelfMemberProps {
+interface SelfUserProps {
     name: string,
     nameChangeHandler: NameChangeHandler
 }
 
-const SelfMember = (props: SelfMemberProps) => {
+const SelfUser = (props: SelfUserProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [content, setContent] = useState("");
 
@@ -86,7 +86,7 @@ const SelfMember = (props: SelfMemberProps) => {
     const inner = isEditing ? editing : showing;
 
     return (
-        <div className="member self" onClick={_ => {
+        <div className="user self" onClick={_ => {
             setIsEditing(true);
             setContent(props.name);
         }}>
@@ -95,5 +95,5 @@ const SelfMember = (props: SelfMemberProps) => {
     );
 }
 
-export default Members;
-export type {MemberProps};
+export default Users;
+export type {UserProps};
