@@ -44,7 +44,7 @@ export default class MessageServiceMock implements MessageService {
     }
 
     getLatestMessages(roomId: string, amount: number): Promise<MessageDTO[]> {
-        const messages = this.server.rooms[roomId].messages
+        const messages = [...this.server.rooms[roomId].messages]
             .reverse()
             .filter((_, i) => i < amount)
             .reverse();

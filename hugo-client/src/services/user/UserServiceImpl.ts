@@ -13,17 +13,17 @@ export default class UserServiceImpl implements UserService {
         }
     }
 
-    async keepActive(uuid: string): Promise<void> {
+    async keepActive(roomId: string, uuid: string): Promise<void> {
         try {
-            await axiosAPI.patch<UserDTO>(`/users/active/${uuid}`)
+            await axiosAPI.patch<UserDTO>(`rooms/${roomId}/users/active/${uuid}`)
         } catch (e) {
             throw new Error(e);
         }
     }
 
-    async getUsers(): Promise<UserDTO[]> {
+    async getUsers(roomId: string): Promise<UserDTO[]> {
         try {
-            const {data} = await axiosAPI.get<UserDTO[]>("/users");
+            const {data} = await axiosAPI.get<UserDTO[]>(`/rooms/${roomId}/users`);
             return data;
         } catch (e) {
             throw new Error(e);
@@ -39,7 +39,7 @@ export default class UserServiceImpl implements UserService {
         }
     }
 
-    userDTOtoString(data: UserDTO[], selfId: string): string[] {
-        return data.filter(user => user.id !== selfId).map(user => user.username);
+    filterUserDTO(data: UserDTO[], selfId: string): UserDTO[] {
+        return data.filter(user => user.id !== selfId);
     }
 }

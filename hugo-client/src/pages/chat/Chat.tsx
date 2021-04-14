@@ -1,6 +1,6 @@
 import React from 'react';
 import Messages, {MessageProps} from "./Messages";
-import Members from "./Members";
+import Users from "./Users";
 import UserDTO from "../../services/user/model/UserDTO";
 import MessageDTO from "../../services/message/model/MessageDTO";
 import MessageServiceMock from "../../services/mock/MessageServiceMock";
@@ -18,11 +18,11 @@ const roomService = new RoomServiceMock();
 interface ChatState {
     name: string,
     userID: string,
-    onlineMembers: string[],
     messages: MessageProps[],
     oldestMessageId: string | undefined,
     windowWidth: number,
-    rooms: RoomDTO[]
+    rooms: RoomDTO[],
+    currentRoom: string
 }
 
 class Chat extends React.Component<{}, ChatState> {
@@ -33,11 +33,11 @@ class Chat extends React.Component<{}, ChatState> {
         this.state = {
             userID: "",
             name: DEFAULT_NAME,
-            onlineMembers: [],
             messages: [],
             oldestMessageId: undefined,
             windowWidth: 0,
-            rooms: []
+            rooms: [],
+            currentRoom: "main"
         }
     }
 
@@ -45,17 +45,17 @@ class Chat extends React.Component<{}, ChatState> {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
 
-        const userGet = userService.getUsers();
-        const messageGet = messageService.getLatestMessages("main", 20).then(msg => {
+        const messageGet = messageService.getLatestMessages(this.state.currentRoom, 20).then(msg => {
             return msg;
         });
 
         roomService.getAll().then(rooms => this.setState({
             rooms
-        }))
+        }));
 
         userService.createUser({
-            username: DEFAULT_NAME
+            name: DEFAULT_NAME,
+            id: ""
         }).then(r => {
             this.setState({
                 userID: r.id || ""
@@ -74,13 +74,8 @@ class Chat extends React.Component<{}, ChatState> {
                     }
                 }
             );
-            userGet.then(users =>
-                this.setState({
-                    onlineMembers: userService.userDTOtoString(users, selfId || "")
-                })
-            );
 
-            setInterval(() => userService.keepActive(selfId), 5000);
+            setInterval(() => userService.keepActive(this.state.currentRoom, selfId), 5000);
         });
     }
 
@@ -105,11 +100,6 @@ class Chat extends React.Component<{}, ChatState> {
             this.setState({
                 messages: messages1,
             });
-        } else if (eventType === "users") {
-            const data: UserDTO[] = eventData.data;
-            this.setState({
-                onlineMembers: data.filter(u => u.id !== this.state.userID).map(u => u.username)
-            });
         }
     }
 
@@ -117,7 +107,7 @@ class Chat extends React.Component<{}, ChatState> {
         if (name.length < 255) {
             userService.changeName({
                 id: this.state.userID,
-                username: name
+                name: name
             }).then(r => this.setState({name}));
         } else {
             alert(`Name too long: ${name.length}. Must be less than 255 characters`)
@@ -166,25 +156,45 @@ class Chat extends React.Component<{}, ChatState> {
         });
     }
 
+    handleRoomChange = async (roomId: string) => {
+        this.setState({
+            currentRoom: roomId
+        });
+        const messages = await messageService.getLatestMessages(roomId, 20);
+        this.setState({
+            messages: messageService.dtoToProps(messages, this.state.userID)
+        });
+    }
+
 
     render() {
         return (
             <div className="parent">
-                <Rooms rooms={this.state.rooms.map(dto => {
-                    return {
-                        id: dto.id,
-                        name: dto.name,
-                        roomChangeHandler: () => {
+                <Rooms
+                    rooms={this.state.rooms.map(dto => {
+                        return {
+                            id: dto.id,
+                            name: dto.name,
+                            roomChangeHandler: (id) => {
+                                this.handleRoomChange(id);
+                            }
                         }
-                    }
-                })}/>
+                    })}
+                    current={this.state.currentRoom}
+                />
                 <Messages messages={this.state.messages}
                           sendHandler={this.handleSend}
                           loadMessageHandler={this.handleMessageLoad}
-                          scroll={this.state.windowWidth > 768}/>
-                <Members selfName={this.state.name} members={this.state.onlineMembers}
-                         nameChangeHandler={this.handleNameChange}
-                         sseHandler={event => this.handleSSE(event)}/>
+                          scroll={this.state.windowWidth > 768}
+                />
+                <Users
+                    selfUser={{
+                        id: this.state.userID,
+                        name: this.state.name
+                    }}
+                    nameChangeHandler={this.handleNameChange}
+                    roomId={this.state.currentRoom}
+                />
             </div>
         );
     }

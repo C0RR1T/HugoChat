@@ -66,7 +66,7 @@ Example:
 
 ### Create Room
 
-`POST` `/rooms/{roomId}/messages`
+`POST` `/rooms`
 
 Room names have to be unique.  
 `400` if room name is already taken
@@ -107,6 +107,8 @@ Event body
 | ---------- | ------------------------ | -------------------------------- |
 | type       | string                   | "message" or "users"             |
 | data       | MessageDTO or UserDTO[]  | The message or the new user list | 
+
+## Users
 
 ### Log in
 

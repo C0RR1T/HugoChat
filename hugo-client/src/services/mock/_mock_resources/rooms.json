@@ -43,6 +43,20 @@
         "sentOn": 4382759727481,
         "roomId": "main"
       }
+    ],
+    "users": [
+      {
+        "id":  "8b34fbdd-83ff-47e0-b317-7dbb8e39d5a8",
+        "name": "hugo5"
+      },
+      {
+        "id":  "8b34fb07-83ff-47e0-b317-7dbb8e3d85a8",
+        "name": "hugo4"
+      },
+      {
+        "id":  "8b34fb07-83bd-47e0-b317-7dbb8e3985a8",
+        "name": "hugo"
+      }
     ]
   },
   "a7938940-9c67-11eb-a8b3-0242ac130003": {
@@ -89,6 +103,16 @@
         "sentOn": 4382759727481,
         "roomId": "a7938940-9c67-11eb-a8b3-0242ac130003"
       }
+    ],
+    "users": [
+      {
+        "id": "8b34fb07-83ff-47e0-b317-7dbb8e3985a8",
+        "name": "hugo2"
+      },
+      {
+        "id": "8b34fb07-83ff-47e0-b317-7dbb8e3d85a8",
+        "name": "hugo4 #gamers"
+      }
     ]
   },
   "e5a20072-9c67-11eb-a8b3-0242ac130003": {
@@ -126,6 +150,36 @@
         "sentBy": "hugo art lover",
         "sentOn": 4382759638481,
         "roomId": "e5a20072-9c67-11eb-a8b3-0242ac130003"
+      }
+    ],
+    "users": [
+      {
+        "id": "8b34fff7-83ff-47e0-b317-7dbb8e3985a8",
+        "name": "hugo art lover"
+      },
+      {
+        "id": "8b34fb07-83ff-47e0-b317-7dbb8e3985a8",
+        "name": "hugo the real"
+      }
+    ]
+  },
+  "e5a20072-9c67-11eb-a8b3-0242ac130004": {
+    "id": "e5a20072-9c67-11eb-a8b3-0242ac130004",
+    "name": "hugo",
+    "messages": [
+      {
+        "id": "8b34ddf7-83ff-47e0-b317-7dbb8e398590",
+        "body": "# dead chat",
+        "sentByID": "8b34fff7-83ff-47e0-b317-7dbb8e398590",
+        "sentBy": "der originale hugo",
+        "sentOn": 4382759627458,
+        "roomId": "e5a20072-9c67-11eb-a8b3-0242ac130004"
+      }
+    ],
+    "users": [
+      {
+        "id": "8b34fff7-83ff-47e0-b317-7dbb8e398590",
+        "name": "der originale hugo"
       }
     ]
   }

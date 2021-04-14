@@ -9,7 +9,8 @@ export default class RoomServiceMock implements RoomService {
         return Promise.resolve(mockServer.rooms[id] = {
             name,
             id,
-            messages: []
+            messages: [],
+            users: []
         });
     }
 
