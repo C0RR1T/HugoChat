@@ -170,6 +170,13 @@ input {
       cursor: default;
     }
   }
+
+  .new-room {
+    @extend .room;
+
+    text-align: center;
+    background-color: $lightBlue;
+  }
 }
 
 a {

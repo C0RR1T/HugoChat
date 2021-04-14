@@ -1,3 +1,6 @@
+import {roomService} from "../../services/Services";
+import {v4} from "uuid";
+
 interface RoomsProps {
     rooms: RoomProps[]
     current: string
@@ -11,6 +14,7 @@ const Rooms = (props: RoomsProps) => {
                 (room.id === props.current) ?
                 <CurrentRoom {...room} key={room.id}/> :
                 <Room {...room} key={room.id}/>)}
+            <NewRoomButton/>
         </div>
     )
 }
@@ -35,6 +39,15 @@ const CurrentRoom = (props: RoomProps) =>
             {props.name}
         </div>
     </div>
+
+
+const NewRoomButton = () => {
+    return (
+        <div className="new-room" onClick={() => roomService.create(v4())}>
+            Create new room!
+        </div>
+    )
+}
 
 export {Room, Rooms};
 export type {RoomsProps, RoomProps};

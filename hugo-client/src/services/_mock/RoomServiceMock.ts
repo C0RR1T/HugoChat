@@ -1,6 +1,6 @@
-import RoomService from "./RoomService";
-import RoomDTO from "./model/RoomDTO";
-import mockServer from "../_mock/MockServer";
+import RoomService from "../room/RoomService";
+import RoomDTO from "../room/model/RoomDTO";
+import mockServer from "./MockServer";
 import {v4} from "uuid";
 
 export default class RoomServiceMock implements RoomService {
