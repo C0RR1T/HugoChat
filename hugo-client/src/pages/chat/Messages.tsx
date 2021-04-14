@@ -64,13 +64,12 @@ const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, p
     if (messageRef.current && props.scroll) {
         messageRef.current.scrollIntoView();
     }
-    messageService.createMessage({
+    messageService.createMessage(props.roomId, {
         sentBy: props.user.name,
         sentByID: props.user.id,
         body: content,
         id: "",
         sentOn: 0,
-        roomId: "00000000-0000-0000-0000-000000000000"
     }).catch(err => {
         console.log(err);
         //TODO better error messages

@@ -27,10 +27,10 @@ class MockServer {
         }, 1600)
     }
 
-    addMessage(message: MessageDTO) {
-        this.rooms[message.roomId].messages.push(message);
+    addMessage(message: MessageDTO, roomId: string) {
+        this.rooms[roomId].messages.push(message);
         new MockEvent({
-            url: `/rooms/${message.roomId}/update`,
+            url: `/rooms/${roomId}/update`,
             responses: [
                 {type: "message", data: message}
             ]

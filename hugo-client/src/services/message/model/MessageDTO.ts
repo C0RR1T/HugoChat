@@ -4,5 +4,4 @@ export default interface MessageDTO {
     sentByID: string,
     sentBy: string,
     sentOn: number,
-    roomId: string
 }

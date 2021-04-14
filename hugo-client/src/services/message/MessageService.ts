@@ -8,7 +8,7 @@ export default interface MessageService {
 
     getMessagesAfter(roomId: string, afterMessage: string): Promise<MessageDTO[]>;
 
-    createMessage(msg: MessageDTO): Promise<MessageDTO>;
+    createMessage(roomId: string, msg: MessageDTO): Promise<MessageDTO>;
 
     dtoToProps(dtos: MessageDTO[], ownId: string): MessageProps[];
 }

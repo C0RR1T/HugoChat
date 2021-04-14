@@ -18,16 +18,15 @@ export default class MessageServiceMock implements MessageService {
         this.server = mockServer;
     }
 
-    async createMessage(msg: MessageDTO): Promise<MessageDTO> {
+    async createMessage(roomId: string, msg: MessageDTO): Promise<MessageDTO> {
         const message = {
             sentBy: msg.sentBy,
             sentOn: Date.now(),
             body: msg.body,
             sentByID: msg.sentByID,
             id: uuid(),
-            roomId: msg.roomId
         };
-        this.server.addMessage(message);
+        this.server.addMessage(message, roomId);
         return Promise.resolve(message);
     }
 
