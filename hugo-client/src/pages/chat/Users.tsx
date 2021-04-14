@@ -1,10 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
-import UserServiceMock from "../../services/_mock/UserServiceMock";
 import UserDTO from "../../services/user/model/UserDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
+import {userService} from "../../services/Services";
 
-
-const userService = new UserServiceMock();
 
 interface UsersProps {
     user: UserDTO,
@@ -27,7 +25,9 @@ const Users = (props: UsersProps) => {
         let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
 
         eventSource.onmessage = (event: MessageEvent<UserDTO[]>) => {
-            setUsers(event.data);
+            console.log(event);
+            if (event.type === "users") {
+            }
         }
 
         eventSource.onerror = () => {

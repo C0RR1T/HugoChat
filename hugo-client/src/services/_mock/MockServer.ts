@@ -3,8 +3,6 @@ import rooms from "./_mock_resources/rooms.json"
 import UserDTO from "../user/model/UserDTO";
 import {v4} from "uuid";
 
-const {MockEvent} = require("mocksse");
-
 interface Room {
     id: string,
     name: string,
@@ -29,22 +27,10 @@ class MockServer {
 
     addMessage(message: MessageDTO, roomId: string) {
         this.rooms[roomId].messages.push(message);
-        new MockEvent({
-            url: `/rooms/${roomId}/update`,
-            responses: [
-                {type: "message", data: message}
-            ]
-        })
     }
 
     addUser(user: UserDTO, roomId: string) {
         this.rooms[roomId].users.push(user);
-        new MockEvent({
-            url: `/rooms/${roomId}/update`,
-            responses: [
-                {type: "users", data: this.rooms[roomId].users}
-            ]
-        })
     }
 }
 

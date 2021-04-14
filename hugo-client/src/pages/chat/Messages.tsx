@@ -1,12 +1,11 @@
 import "../../App.scss"
 import React, {RefObject, useEffect, useRef, useState} from "react";
 import ReactMarkdown from "react-markdown";
-import MessageServiceMock from "../../services/_mock/MessageServiceMock";
 import MessageDTO from "../../services/message/model/MessageDTO";
 import UserDTO from "../../services/user/model/UserDTO";
 import formatDateTime from "../../util/FormatDateTime";
-
-const messageService = new MessageServiceMock();
+import {BASE_URL} from "../../services/AxiosUtility";
+import {messageService} from "../../services/Services";
 
 interface MessagesProps {
     user: UserDTO
@@ -37,6 +36,23 @@ const Messages = (props: MessagesProps) => {
             msg => setMessages(msg)
         );
     }, [props.roomId]);
+
+    useEffect(() => {
+        let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
+
+
+        eventSource.onmessage = (event: MessageEvent<MessageDTO>) => {
+            if (event.type === "message") {
+                messages.push(event.data);
+                setMessages(messages);
+            }
+        }
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        }
+        return () => eventSource.close();
+    }, [props.roomId])
 
     return (
         <div className="text-chat">
