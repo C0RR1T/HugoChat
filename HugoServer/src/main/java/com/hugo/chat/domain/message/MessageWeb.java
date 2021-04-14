@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin
 @RestController
 @RequestMapping("/rooms/{roomId}/messages")
 public class MessageWeb {
@@ -19,7 +19,7 @@ public class MessageWeb {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<Collection<MessageDTO>> getOldMessages(@PathVariable("roomId") String roomId, @RequestParam("amout") int amount) {
+    public ResponseEntity<Collection<MessageDTO>> getOldMessages(@PathVariable("roomId") String roomId, @RequestParam("amount") int amount) {
         return ResponseEntity.ok().body(service.getOldMessages(amount, roomId));
     }
 
@@ -30,6 +30,7 @@ public class MessageWeb {
 
     @PostMapping("")
     public ResponseEntity<?> createMessage(@RequestBody MessageDTO message, @PathVariable("roomId") String roomId) {
+        System.out.println("hey i better save that new message " + message.getBody());
         try {
             return ResponseEntity.ok().body(service.createMessage(message, roomId));
         } catch (NoSuchElementException e) {

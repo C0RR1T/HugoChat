@@ -88,7 +88,7 @@ class Chat extends React.Component<{}, ChatState> {
                     })}
                     current={this.state.currentRoom}
                 />
-                <Messages scroll={this.state.windowWidth > 768}
+                <Messages scroll={true}
                           user={this.state.user}
                           roomId={this.state.currentRoom}
                 />

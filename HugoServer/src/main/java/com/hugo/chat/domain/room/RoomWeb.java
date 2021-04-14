@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/rooms")
 public class RoomWeb {
@@ -17,21 +18,21 @@ public class RoomWeb {
         this.service = service;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<?> newRoom(@RequestBody RoomDTO dto) {
         try {
-            return ResponseEntity.ok().body(service.createMessage(dto));
+            return ResponseEntity.ok().body(service.createRoom(dto));
         } catch (IllegalArgumentException i) {
             return new ResponseEntity<>(i.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Collection<RoomDTO>> getAllRooms() {
         return ResponseEntity.ok().body(service.getAllRooms());
     }
 
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<?> updateRoom(@RequestBody RoomDTO dto) {
         try {
             return ResponseEntity.ok().body(service.updateRoom(dto));

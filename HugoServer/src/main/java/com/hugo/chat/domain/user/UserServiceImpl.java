@@ -92,8 +92,12 @@ public class UserServiceImpl implements UserService {
         if (optUser.isPresent()) {
             User user = optUser.get();
             user.setLastActive(System.currentTimeMillis());
-            if (user.getCurrentRoom() != UUID.fromString(roomId))
+            if (user.getCurrentRoom() != UUID.fromString(roomId)) {
+                UUID oldRoom = user.getCurrentRoom();
                 user.setCurrentRoom(UUID.fromString(roomId));
+                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(oldRoom)), oldRoom);
+                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(user.getCurrentRoom())), user.getCurrentRoom());
+            }
             repository.saveAndFlush(optUser.get());
         } else throw new NoSuchElementException();
     }
