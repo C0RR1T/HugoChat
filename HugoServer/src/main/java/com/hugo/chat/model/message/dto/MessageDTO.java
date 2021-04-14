@@ -2,10 +2,6 @@ package com.hugo.chat.model.message.dto;
 
 import com.hugo.chat.model.message.Message;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.TimeZone;
 import java.util.UUID;
 
 public class MessageDTO {
@@ -14,16 +10,18 @@ public class MessageDTO {
     private String sentByID;
     private String sentBy;
     private long sentOn;
+    private String roomId;
 
     public MessageDTO() {
     }
 
-    public MessageDTO(String body, String id, String sentByID, String sentBy, long sentOn) {
+    public MessageDTO(String body, String id, String sentByID, String sentBy, long sentOn, String roomId) {
         this.body = body;
         this.id = id;
         this.sentByID = sentByID;
         this.sentBy = sentBy;
         this.sentOn = sentOn;
+        this.roomId = roomId;
     }
 
     public String getBody() {
@@ -66,6 +64,14 @@ public class MessageDTO {
         this.sentOn = sentOn;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
     public static Message toMessage(MessageDTO message) {
         Message m = new Message();
         m.setBody(message.getBody());
@@ -77,6 +83,6 @@ public class MessageDTO {
     }
 
     public static MessageDTO toMessageDTO(Message message) {
-        return new MessageDTO(message.getBody(), message.getId().toString(), message.getUserID().toString(), message.getUsername(), message.getSentOn());
+        return new MessageDTO(message.getBody(), message.getId().toString(), message.getUserID().toString(), message.getUsername(), message.getSentOn(), message.getRoomId().toString());
     }
 }

@@ -9,8 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class)
 class MessageServiceImplTest {
     @Mock
@@ -27,7 +25,7 @@ class MessageServiceImplTest {
 
     @BeforeAll
     public void setUp() {
-        impl = new MessageServiceImpl(repository, userRepo, handler);
+        impl = new MessageServiceImpl(repository, userRepo, roomRepo, handler);
     }
 
     @Test

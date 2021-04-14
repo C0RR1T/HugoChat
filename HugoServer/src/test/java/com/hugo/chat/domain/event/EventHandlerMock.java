@@ -1,16 +1,28 @@
 package com.hugo.chat.domain.event;
 
-import com.hugo.chat.model.emitter.EmitterDTO;
+import com.hugo.chat.model.emitter.dto.EmitterDTO;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-public class EventHandlerMock implements EventHandler{
-    @Override
-    public SseEmitter streamUpdates() {
+import java.util.UUID;
+
+public class EventHandlerMock{
+
+    public SseEmitter streamUpdates(String id) {
         return null;
     }
 
-    @Override
-    public void newEvent(EmitterDTO<?> content) {
-        System.out.println("wow");
+
+    public SseEmitter roomEvents(String id) {
+        return null;
+    }
+
+
+    public void roomEvent() {
+
+    }
+
+
+    public void newEvent(EmitterDTO<?> content, UUID roomId) {
+
     }
 }
