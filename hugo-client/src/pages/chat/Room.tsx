@@ -2,7 +2,6 @@ import {roomService} from "../../services/Services";
 import React, {useEffect, useRef, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
-import UserDTO from "../../services/user/model/UserDTO";
 
 interface RoomsProps {
     current: string
@@ -22,8 +21,6 @@ const Rooms = (props: RoomsProps) => {
 
         eventSource.onmessage = (event: MessageEvent<string>) => {
             const data: RoomDTO[] = JSON.parse(event.data);
-            console.log(event.data);
-            console.log(data);
             setRooms(data);
         }
 
@@ -81,6 +78,7 @@ const NewRoomButton = (props: NewRoomButtonProps) => {
         <input onKeyPress={event => {
             if (event.key === "Enter") {
                 setIsEditing(false);
+                setContent("");
                 roomService.create(content).then(room => {
                     props.roomChangeHandler(room.id);
                 });
