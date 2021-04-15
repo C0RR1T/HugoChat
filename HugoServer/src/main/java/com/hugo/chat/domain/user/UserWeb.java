@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -17,6 +18,9 @@ public class UserWeb {
         this.service = service;
     }
 
+    /**
+     * Create a new User
+     */
     @PostMapping("/users")
     public ResponseEntity<?> newUser(@RequestBody UserDTO user) {
         try {
@@ -26,11 +30,17 @@ public class UserWeb {
         }
     }
 
+    /**
+     * Get Hugo - Test route
+     */
     @GetMapping("/users/hugo")
     public ResponseEntity<String> hugo() {
         return ResponseEntity.ok().body("Hugo Boss");
     }
 
+    /**
+     * Update a user
+     */
     @PutMapping("/users")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         try {
@@ -42,11 +52,17 @@ public class UserWeb {
         }
     }
 
+    /**
+     * Get all users in a room
+     */
     @GetMapping("/rooms/{roomId}/users")
     public ResponseEntity<Collection<UserDTO>> getAllUsers(@PathVariable("roomId") String roomId) {
-        return ResponseEntity.ok().body(service.getUsers(roomId));
+        return ResponseEntity.ok().body(service.getUsers(UUID.fromString(roomId)));
     }
 
+    /**
+     * Send a signal that the user is still active in a room
+     */
     @PatchMapping("/rooms/{roomId}/users/active/{userId}")
     public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
         try {

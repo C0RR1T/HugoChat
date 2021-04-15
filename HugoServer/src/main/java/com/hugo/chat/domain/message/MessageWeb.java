@@ -20,12 +20,12 @@ public class MessageWeb {
 
     @GetMapping("/latest")
     public ResponseEntity<Collection<MessageDTO>> getOldMessages(@PathVariable("roomId") String roomId, @RequestParam("amount") int amount) {
-        return ResponseEntity.ok().body(service.getOldMessages(amount, roomId));
+        return ResponseEntity.ok().body(service.getLatestMessages(amount, roomId));
     }
 
     @GetMapping("/before/{messageId}")
     public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @PathVariable("messageId") String messageId, @RequestParam("amount") int amount) {
-        return ResponseEntity.ok().body(service.getOldMessages(messageId, amount, roomId));
+        return ResponseEntity.ok().body(service.getLatestMessages(messageId, amount, roomId));
     }
 
     @PostMapping("")

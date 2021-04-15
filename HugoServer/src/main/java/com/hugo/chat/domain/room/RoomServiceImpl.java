@@ -23,6 +23,10 @@ public class RoomServiceImpl implements RoomService {
         setMainChannel();
     }
 
+    /**
+     * Create a main room if no main channel has been created yet.
+     * The main room has a uuid consisting of only 0s and is the default room called by the client
+     */
     private void setMainChannel() {
         if (!repository.existsByName("main")) {
             System.err.println("No Main detected");
@@ -32,6 +36,10 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
+    /**
+     * Create a new room that can be unlisted
+     * The name has to be unique
+     */
     @Override
     public RoomDTO createRoom(RoomDTO dto, boolean isListed) {
         if (repository.existsByName(dto.getName()))
@@ -46,6 +54,9 @@ public class RoomServiceImpl implements RoomService {
         return finished;
     }
 
+    /**
+     * Get all listed rooms, sorted by their names, main is always first
+     */
     @Override
     public Collection<RoomDTO> getAllRooms() {
         return repository.findAll().stream()
@@ -62,6 +73,9 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Updates a room. The name still has to be unique
+     */
     @Override
     public RoomDTO updateRoom(RoomDTO dto) {
         if (!repository.existsById(dto.getId()))

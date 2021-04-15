@@ -16,25 +16,27 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final RoomRepository roomRepo;
     private final EventHandlerImpl eventHandler;
-    private final long USER_TIMEOUT = 10_000;
-    private final UUID MAIN_CHANNEL;
-    private final long MAX_USERNAME_LENGTH = 255;
+    private static final long USER_TIMEOUT = 10_000;
+    private static final long MAX_USERNAME_LENGTH = 255;
+
 
     public UserServiceImpl(UserRepository repository, RoomRepository roomRepo, EventHandlerImpl eventHandler) {
         this.repository = repository;
         this.roomRepo = roomRepo;
         this.eventHandler = eventHandler;
-        MAIN_CHANNEL = Room.MAIN_ROOM_ID;
         deleteInactiveUser();
     }
 
 
+    /**
+     * Creates a new user in the main room and sends an SSE to the main room
+     */
     @Override
     public UserDTO createUser(UserDTO user) {
         if (user.getName().length() <= MAX_USERNAME_LENGTH) {
             user.setId(null);
             User u = UserDTO.toUser(user);
-            u.setCurrentRoom(MAIN_CHANNEL);
+            u.setCurrentRoom(Room.MAIN_ROOM_ID);
             u.setLastActive(System.currentTimeMillis());
             u = repository.saveAndFlush(u);
             eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
@@ -49,11 +51,9 @@ public class UserServiceImpl implements UserService {
                 .map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
     }
 
-    @Override
-    public Collection<UserDTO> getUsers(String roomId) {
-        return getUsers(UUID.fromString(roomId));
-    }
-
+    /**
+     * Delete all users that have not sent their active signal for longer than 10s and send an SSE to the affected rooms
+     */
     @Override
     public void deleteInactiveUser() {
         Timer timer = new Timer();
@@ -71,6 +71,9 @@ public class UserServiceImpl implements UserService {
         }, 10000, 10000);
     }
 
+    /**
+     * Update a user and send an SSE to their room
+     */
     @Override
     public UserDTO updateUser(UserDTO user) {
         if (user.getName().length() <= MAX_USERNAME_LENGTH) {
@@ -85,6 +88,10 @@ public class UserServiceImpl implements UserService {
         } else throw new IllegalArgumentException();
     }
 
+    /**
+     * Set a users last active field to the current time and check whether they have changed their rooms
+     * If they have, send an SSE to the affected rooms
+     */
     @Override
     public void setUserActive(String id, String roomId) {
         Optional<User> optUser = repository.findById(UUID.fromString(id));

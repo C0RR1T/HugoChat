@@ -18,6 +18,11 @@ public class RoomWeb {
         this.service = service;
     }
 
+    /**
+     * Create a new room
+     * @param dto the room
+     * @param isListed whether the room will be listed
+     */
     @PostMapping
     public ResponseEntity<?> newRoom(@RequestBody RoomDTO dto, @RequestParam("listed") Boolean isListed) {
         try {
@@ -27,11 +32,17 @@ public class RoomWeb {
         }
     }
 
+    /**
+     * Get all listed rooms
+     */
     @GetMapping
     public ResponseEntity<Collection<RoomDTO>> getAllRooms() {
         return ResponseEntity.ok().body(service.getAllRooms());
     }
 
+    /**
+     * Update a room
+     */
     @PutMapping
     public ResponseEntity<?> updateRoom(@RequestBody RoomDTO dto) {
         try {
