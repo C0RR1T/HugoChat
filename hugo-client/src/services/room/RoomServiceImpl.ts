@@ -9,7 +9,6 @@ export default class RoomServiceImpl implements RoomService {
             console.log("Created room with id " + data.id);
             return data;
         } catch (e) {
-            console.log(e);
             throw new Error(e);
         }
     }

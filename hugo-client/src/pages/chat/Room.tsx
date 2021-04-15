@@ -52,8 +52,6 @@ const Rooms = (props: RoomsProps) => {
         return () => eventSource.close();
     }, []);
 
-    console.log(showRooms);
-
     const trueRooms = showRooms.map(room =>
         (room.id === props.current) ?
             <CurrentRoom {...room} roomChangeHandler={() => {
