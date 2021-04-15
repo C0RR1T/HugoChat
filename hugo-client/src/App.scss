@@ -136,7 +136,7 @@ input {
 
   .self {
     background-color: $blue;
-    
+
     &:hover {
       cursor: pointer;
     }
@@ -169,6 +169,15 @@ input {
     &:hover {
       cursor: default;
     }
+  }
+
+  .room-search {
+    padding: 10px 10px 0;
+
+
+    .room-search-input {
+    width: 95%;
+  }
   }
 
   .new-room {

@@ -2,6 +2,7 @@ import {roomService, userService} from "../../services/Services";
 import React, {useEffect, useRef, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
+import {getQueriesForElement} from "@testing-library/react";
 
 interface RoomsProps {
     current: string
@@ -11,6 +12,16 @@ interface RoomsProps {
 const Rooms = (props: RoomsProps) => {
 
     const [rooms, setRooms] = useState<RoomDTO[]>([]);
+    const [showRooms, setShowRooms] = useState(rooms);
+    const [query, setQuery] = useState("");
+
+    useEffect(() => {
+        if (query === "") {
+            setShowRooms(rooms);
+        } else {
+            setShowRooms(rooms.filter(room => room.name.indexOf(query) !== -1))
+        }
+    }, [query, rooms]);
 
     useEffect(() => {
         roomService.getAll().then(rooms => setRooms(rooms));
@@ -28,11 +39,14 @@ const Rooms = (props: RoomsProps) => {
             eventSource.close();
         }
         return () => eventSource.close();
-    }, [])
+    }, []);
 
     return (
         <div className="rooms">
-            {rooms.map(room =>
+            <RoomSearch changeHandler={query => {
+                setQuery(query);
+            }}/>
+            {showRooms.map(room =>
                 (room.id === props.current) ?
                     <CurrentRoom {...room} roomChangeHandler={() => {
                     }} key={room.id}/> :
@@ -62,6 +76,24 @@ const CurrentRoom = (props: RoomProps) =>
             {props.name}
         </div>
     </div>
+
+
+interface RoomSearchProps {
+    changeHandler: (query: string) => void
+}
+
+const RoomSearch = (props: RoomSearchProps) => {
+    const [value, setValue] = useState("");
+
+    return (
+        <div className="room-search">
+            <input className="room-search-input" value={value} onChange={e => {
+                setValue(e.target.value);
+                props.changeHandler(e.target.value);
+            }}/>
+        </div>
+    )
+}
 
 
 interface NewRoomButtonProps {
