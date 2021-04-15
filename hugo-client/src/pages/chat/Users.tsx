@@ -20,7 +20,6 @@ const Users = (props: UsersProps) => {
         });
     }, [props.roomId, props.user.id]);
 
-
     useEffect(() => {
         let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
 
@@ -36,7 +35,7 @@ const Users = (props: UsersProps) => {
             eventSource.close();
         }
         return () => eventSource.close();
-    }, [props.roomId])
+    }, [props.roomId, props.user.id])
 
     return (
         <div className="users">

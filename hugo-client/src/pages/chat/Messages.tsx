@@ -29,7 +29,7 @@ const Messages = (props: MessagesProps) => {
             ref.scrollIntoView();
             setFirstScroll(true);
         }
-    });
+    }, [firstScroll]);
 
     useEffect(() => {
         messageService.getLatestMessages(props.roomId, 20).then(
