@@ -73,7 +73,7 @@ public class MessageServiceImpl implements MessageService {
      * @throws IllegalArgumentException When the MessageID isn't found
      */
     @Override
-    public Collection<MessageDTO> getLatestMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
+    public Collection<MessageDTO> getOlderMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
         if (m.isEmpty())
             throw new NoSuchElementException();
