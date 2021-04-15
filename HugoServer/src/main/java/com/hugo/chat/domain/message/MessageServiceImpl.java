@@ -53,7 +53,7 @@ public class MessageServiceImpl implements MessageService {
         if (message.getBody().isBlank())
             throw new IllegalArgumentException("Message Body can't be blank.");
         if (repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - MESSAGE_PER_SECONDS * 1000) > MESSAGE_PER_SECONDS)
-            throw new IllegalArgumentException("You're sending messages to fast.");
+            throw new IllegalArgumentException("You're sending messages too fast.");
         if (!roomRepo.existsById(UUID.fromString(roomId)))
             throw new NoSuchElementException("Room ID not found.");
 
