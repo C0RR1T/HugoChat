@@ -1,22 +1,41 @@
 # HugoChat
-figma
-[figma](https://www.figma.com/file/50LPnzsXi{nein}yuAFFxgQnlHzO/Untitled?node-id=0%3A1) (auf jeden fall up to date das ui sieht genau so aus)
 
+## What is HugoChat?
 
-postgres-pw: "huGO123.corsBOSS"
+HugoChat is a simple chat platform for everyone.  
+There is no need to create an account, just open it and start. You can change your name by clicking on yourself on the
+right side.
 
-default time zone utc
+There are many rooms where you can write, and you can even create new rooms.  
+You can also create an unlisted room that can only be accessed directly by entering the url.
 
+Your user account is stored temporarily in session storage and gets deleted from the server when you remain offline for
+more than 10 seconds.
 
-link zum react frontend: [haha](http://localhost:3000/)
+*HugoChat stores all its messages forever, but the messages get partly anonymized after the sender user account was
+deleted. Content, username (not uniquely identifiable) and timestamp are stored.*
 
+*HugoChat is also **not** very secure, one can easily do things as if they were another user. This is not a very big
+problem though because all userId info is only temporary.*
 
+## How to run HugoChat
 
-Docker Container run: 
+What you need:
 
+- Java (to run the backend)
+- Docker (postgres image for the database)
+- NodeJS (for the frontend)
+- Yarn (frontend package manager)
+
+Clone the repository.
+
+### Database
+
+Docker Container run:  
 `docker run -d -p 5432:5432 --name HugoChat -e POSTGRES_PASSWORD=huGO123.corsBOSS postgres`
 
-batch file wenn alles kaputt geht:
+to reset the db:
+
 ```bat
 docker stop HugoChat
 docker rm HugoChat
@@ -24,13 +43,20 @@ docker run -d -p 5432:5432 --name HugoChat -e POSTGRES_PASSWORD=huGO123.corsBOSS
 docker attach HugoChat
 ```
 
-main room uuid:
-00000000-0000-0000-0000-000000000000
+### Backend
 
+Then, build and run the Spring Boot backend.  
+`gradlew bootRun`
 
-### TODO:
-* message received add message
-* user added event
-* user removed event
-* user renamed event
-* (user list changed event)
+### Frontend
+
+Lastly, either run the react app with  
+`yarn start`
+
+or build it first with  
+`yarn build`
+
+and then serve it on a webserver or locally with  
+`serve -s build`
+
+**Make sure that the url in hugo-client/src/services/AxiosUtility.ts leads to the backend and the ports are open**
