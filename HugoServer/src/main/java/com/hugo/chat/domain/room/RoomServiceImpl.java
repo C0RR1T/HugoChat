@@ -48,7 +48,14 @@ public class RoomServiceImpl implements RoomService {
     public Collection<RoomDTO> getAllRooms() {
         return repository.findAll().stream()
                 .map(RoomDTO::toDTO)
-                .sorted((Comparator.comparing(RoomDTO::getName)))
+                .sorted(((o1, o2) -> {
+                    if (o1.getName().equals("main"))
+                        return 1;
+                    else if (o2.getName().equals("main"))
+                        return -1;
+                    else
+                        return o1.getName().compareTo(o2.getName());
+                }))
                 .collect(Collectors.toList());
     }
 

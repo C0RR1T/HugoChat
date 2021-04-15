@@ -28,11 +28,11 @@ public class EventHandlerImpl implements EventHandler {
     @CrossOrigin
     @GetMapping("/rooms/{roomId}/update")
     public SseEmitter streamUpdates(@PathVariable String id) {
-        SseEmitterWrap emitter = new SseEmitterWrap(new SseEmitter(-1L), UUID.fromString(id));
-        emitters.add(emitter);
-        emitter.getEmitter().onCompletion(() -> this.emitters.remove(emitter));
-        emitter.getEmitter().onTimeout(() -> this.emitters.remove(emitter));
-        return emitter.getEmitter();
+        SseEmitterWrap emitterWrap = new SseEmitterWrap(new SseEmitter(-1L), UUID.fromString(id));
+        emitters.add(emitterWrap);
+        emitterWrap.getEmitter().onCompletion(() -> this.emitters.remove(emitterWrap));
+        emitterWrap.getEmitter().onTimeout(() -> this.emitters.remove(emitterWrap));
+        return emitterWrap.getEmitter();
     }
 
 

@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public UserDTO createUser(UserDTO user) {
         if (user.getName().length() <= MAX_USERNAME_LENGTH) {
@@ -65,8 +64,8 @@ public class UserServiceImpl implements UserService {
                 roomRepo.findAll().forEach(room -> roomCounts.put(room.getId(), repository.getUserCountInRoom(room.getId())));
                 repository.deleteInactiveUsers(System.currentTimeMillis() - USER_TIMEOUT);
                 roomRepo.findAll().forEach(room -> {
-                    if(roomCounts.get(room.getId()) > repository.getUserCountInRoom(room.getId()))
-                    eventHandler.newEvent(new EmitterDTO<>("users", getUsers(room.getId())), room.getId());
+                    if (roomCounts.get(room.getId()) > repository.getUserCountInRoom(room.getId()))
+                        eventHandler.newEvent(new EmitterDTO<>("users", getUsers(room.getId())), room.getId());
                 });
             }
         }, 10000, 10000);
@@ -92,8 +91,12 @@ public class UserServiceImpl implements UserService {
         if (optUser.isPresent()) {
             User user = optUser.get();
             user.setLastActive(System.currentTimeMillis());
-            if (user.getCurrentRoom() != UUID.fromString(roomId))
+            if (user.getCurrentRoom() != UUID.fromString(roomId)) {
+                UUID oldId = user.getCurrentRoom();
                 user.setCurrentRoom(UUID.fromString(roomId));
+                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(oldId)), oldId);
+                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(user.getCurrentRoom())), user.getCurrentRoom());
+            }
             repository.saveAndFlush(optUser.get());
         } else throw new NoSuchElementException();
     }

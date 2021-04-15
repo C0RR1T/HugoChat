@@ -20,6 +20,7 @@ public class MessageServiceImpl implements MessageService {
     private final EventHandler eventHandler;
 
     private final long MAX_MESSAGE_LENGTH = 1000;
+    private final long MESSAGE_PER_SECONDS = 10;
 
     public MessageServiceImpl(MessageRepository repository, UserRepository userRepo, RoomRepository roomRepo, EventHandler eventHandler) {
         this.repository = repository;
@@ -33,7 +34,6 @@ public class MessageServiceImpl implements MessageService {
         if (messagedto.getBody().length() > MAX_MESSAGE_LENGTH)
             throw new IllegalArgumentException("Message can't be longer than 1000 characters");
 
-        messagedto.setId(null);
         Message message = MessageDTO.toMessage(messagedto);
         message.setSentOn(System.currentTimeMillis()); // The server sets the time so that everything is sync
         message.setId(null); // Just to be sure, Im not crazy
@@ -42,7 +42,7 @@ public class MessageServiceImpl implements MessageService {
             throw new NoSuchElementException("UserID not found.");
         if (message.getBody().isBlank())
             throw new IllegalArgumentException("Message Body can't be blank.");
-        if (repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - 10000) > 10)
+        if (repository.getNewestMessageFromUser(message.getUserID(), System.currentTimeMillis() - MESSAGE_PER_SECONDS * 1000) > MESSAGE_PER_SECONDS)
             throw new IllegalArgumentException("You're sending messages to fast.");
         if (!roomRepo.existsById(UUID.fromString(roomId)))
             throw new NoSuchElementException("Room ID not found.");
