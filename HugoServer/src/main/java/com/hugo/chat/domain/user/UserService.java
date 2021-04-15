@@ -11,8 +11,6 @@ public interface UserService {
 
     Collection<UserDTO> getUsers(UUID roomId);
 
-    Collection<UserDTO> getUsers(String roomId);
-
     void deleteInactiveUser();
 
     UserDTO updateUser(UserDTO user);

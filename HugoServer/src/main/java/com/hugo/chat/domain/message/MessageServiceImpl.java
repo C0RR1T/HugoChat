@@ -19,8 +19,8 @@ public class MessageServiceImpl implements MessageService {
     private final RoomRepository roomRepo;
     private final EventHandler eventHandler;
 
-    private final long MAX_MESSAGE_LENGTH = 1000;
-    private final long MESSAGE_PER_SECONDS = 10;
+    private static final long MAX_MESSAGE_LENGTH = 1000;
+    private static final long MESSAGE_PER_SECONDS = 10;
 
     public MessageServiceImpl(MessageRepository repository, UserRepository userRepo, RoomRepository roomRepo, EventHandler eventHandler) {
         this.repository = repository;
@@ -73,15 +73,18 @@ public class MessageServiceImpl implements MessageService {
      * @throws IllegalArgumentException When the MessageID isn't found
      */
     @Override
-    public Collection<MessageDTO> getOldMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
+    public Collection<MessageDTO> getLatestMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
         if (m.isEmpty())
             throw new NoSuchElementException();
         return getMessagesBefore(m.get().getSentOn(), amount, roomId);
     }
 
+    /**
+     * Get the latest few messages in a channel
+     */
     @Override
-    public Collection<MessageDTO> getOldMessages(int amount, String roomId) {
+    public Collection<MessageDTO> getLatestMessages(int amount, String roomId) {
         return getMessagesBefore(System.currentTimeMillis(), amount, roomId);
     }
 

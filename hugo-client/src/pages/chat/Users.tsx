@@ -2,26 +2,28 @@ import React, {useEffect, useRef, useState} from "react";
 import UserDTO from "../../services/user/model/UserDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
 import {userService} from "../../services/Services";
+import {useParams} from "react-router-dom";
 
 
 interface UsersProps {
     user: UserDTO,
     nameChangeHandler: NameChangeHandler,
-    roomId: string
 }
 
 const Users = (props: UsersProps) => {
 
     const [users, setUsers] = useState<UserDTO[]>([]);
 
-    useEffect(() => {
-        userService.getUsers(props.roomId).then(users => {
-            setUsers(userService.filterUserDTO(users, props.user.id));
-        });
-    }, [props.roomId, props.user.id]);
+    const {roomId} = useParams() as any;
 
     useEffect(() => {
-        let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
+        userService.getUsers(roomId).then(users => {
+            setUsers(userService.filterUserDTO(users, props.user.id));
+        });
+    }, [roomId, props.user.id]);
+
+    useEffect(() => {
+        let eventSource = new EventSource(BASE_URL + `/rooms/${roomId}/update`);
 
         eventSource.onmessage = (event: MessageEvent<string>) => {
             const data: {type: string, data: any} = JSON.parse(event.data);
@@ -35,7 +37,7 @@ const Users = (props: UsersProps) => {
             eventSource.close();
         }
         return () => eventSource.close();
-    }, [props.roomId, props.user.id])
+    }, [roomId, props.user.id])
 
     return (
         <div className="users">

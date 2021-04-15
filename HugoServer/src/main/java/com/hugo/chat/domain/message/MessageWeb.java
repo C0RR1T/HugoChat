@@ -18,19 +18,27 @@ public class MessageWeb {
         this.service = service;
     }
 
+    /**
+     * Get the latest messages in a room
+     */
     @GetMapping("/latest")
-    public ResponseEntity<Collection<MessageDTO>> getOldMessages(@PathVariable("roomId") String roomId, @RequestParam("amount") int amount) {
-        return ResponseEntity.ok().body(service.getOldMessages(amount, roomId));
+    public ResponseEntity<Collection<MessageDTO>> getLatestMessages(@PathVariable("roomId") String roomId, @RequestParam("amount") int amount) {
+        return ResponseEntity.ok().body(service.getLatestMessages(amount, roomId));
     }
 
+    /**
+     * Get an amount of messages sent before a specific message in a room
+     */
     @GetMapping("/before/{messageId}")
     public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @PathVariable("messageId") String messageId, @RequestParam("amount") int amount) {
-        return ResponseEntity.ok().body(service.getOldMessages(messageId, amount, roomId));
+        return ResponseEntity.ok().body(service.getLatestMessages(messageId, amount, roomId));
     }
 
-    @PostMapping("")
+    /**
+     * Create a new message in a room
+     */
+    @PostMapping
     public ResponseEntity<?> createMessage(@RequestBody MessageDTO message, @PathVariable("roomId") String roomId) {
-        System.out.println("hey i better save that new message " + message.getBody());
         try {
             return ResponseEntity.ok().body(service.createMessage(message, roomId));
         } catch (NoSuchElementException e) {

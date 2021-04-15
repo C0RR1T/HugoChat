@@ -2,18 +2,15 @@ import {roomService} from "../../services/Services";
 import React, {useEffect, useRef, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
-import {type} from "os";
+import {Link, useParams} from "react-router-dom";
 
-interface RoomsProps {
-    current: string
-    roomChangeHandler: (id: string) => void
-}
-
-const Rooms = (props: RoomsProps) => {
+const Rooms = () => {
 
     const [rooms, setRooms] = useState<RoomDTO[]>([]);
     const [showRooms, setShowRooms] = useState<RoomDTO[]>([]);
     const [query, setQuery] = useState("");
+
+    const {roomId} = useParams() as any;
 
     useEffect(() => {
         if (query === "") {
@@ -52,19 +49,16 @@ const Rooms = (props: RoomsProps) => {
         return () => eventSource.close();
     }, []);
 
-    const trueRooms = showRooms.map(room =>
-        (room.id === props.current) ?
-            <CurrentRoom {...room} roomChangeHandler={() => {
-            }} key={room.id}/> :
-            <Room {...room} roomChangeHandler={props.roomChangeHandler} key={room.id}/>)
-
     return (
         <div className="rooms">
             <RoomSearch changeHandler={query => {
                 setQuery(query);
             }}/>
-            {trueRooms}
-            <NewRoomButton roomChangeHandler={props.roomChangeHandler}/>
+            {showRooms.map(room =>
+                (room.id === roomId) ?
+                    <CurrentRoom {...room} key={room.id}/> :
+                    <Room {...room} key={room.id}/>)}
+            <NewRoomButton/>
         </div>
     )
 }
@@ -73,13 +67,12 @@ const Rooms = (props: RoomsProps) => {
 interface RoomProps {
     id: string,
     name: string,
-    roomChangeHandler: (id: string) => void
 }
 
 const Room = (props: RoomProps) =>
-    <div className="room" onClick={() => props.roomChangeHandler(props.id)}>
+    <Link to={`/${props.id}`} className="room">
         {props.name}
-    </div>
+    </Link>
 
 
 const CurrentRoom = (props: RoomProps) =>
@@ -109,40 +102,47 @@ const RoomSearch = (props: RoomSearchProps) => {
 }
 
 
-interface NewRoomButtonProps {
-    roomChangeHandler: (id: string) => void
-}
-
-const NewRoomButton = (props: NewRoomButtonProps) => {
+const NewRoomButton = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [content, setContent] = useState("");
-
-    const inputRef = useRef<HTMLInputElement>(null)
+    const [isUnlisted, setIsUnlisted] = useState(false);
 
     const editing =
-        <input onKeyPress={event => {
-            if (event.key === "Enter") {
-                if (content === "") {
-                    return;
-                }
-                setIsEditing(false);
-                setContent("");
-                roomService.create(content).then(room => {
-                    props.roomChangeHandler(room.id);
-                });
+        <form onSubmit={e => {
+            e.preventDefault();
+            if (content === "") {
+                return;
             }
-        }}
-               ref={inputRef}
-               onChange={event => setContent(event.target.value)}
-               type="text"
-               value={content}
-               onBlur={_ => setIsEditing(false)}
-               autoFocus={true}
-        />;
+            setIsEditing(false);
+            setContent("");
+            roomService.create(content, isUnlisted).then(room => {
+                alert(`Roomid: ${room.id}`);
+                //TODO redirect to new room i guess
+            });
+        }} onReset={e => {
+            setIsEditing(false);
+        }}>
+            <h4 className="title">Create new Room</h4>
+            <label htmlFor="new-room-name">name</label>
+            <input id="new-room-name"
+                   onChange={event => setContent(event.target.value)}
+                   type="text"
+                   value={content}
+                   autoFocus={true}
+            />
+            <label htmlFor="new-room-isUnlisted">unlisted</label>
+            <input id="new-room-isUnlisted" type="checkbox" checked={isUnlisted} onChange={e => {
+                setIsUnlisted(e.target.checked)
+            }}/>
+            <br/>
+            <input type="reset" className="button" value="cancel"/>
+            <input type="submit" className="button" value="create"/>
+        </form>
 
-    const showing = <div className="name">
-        Create a new Room!
-    </div>;
+    const showing =
+        <div className="name">
+            Create a new Room!
+        </div>;
 
     const inner = isEditing ? editing : showing;
 
@@ -156,4 +156,4 @@ const NewRoomButton = (props: NewRoomButtonProps) => {
 }
 
 export {Room, Rooms};
-export type {RoomsProps, RoomProps};
+export type {RoomProps};

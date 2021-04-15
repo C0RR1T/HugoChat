@@ -1,6 +1,7 @@
 import "../../App.scss"
 import React, {RefObject, useEffect, useRef, useState} from "react";
 import ReactMarkdown from "react-markdown";
+import {useParams} from "react-router-dom";
 import MessageDTO from "../../services/message/model/MessageDTO";
 import UserDTO from "../../services/user/model/UserDTO";
 import formatDateTime from "../../util/FormatDateTime";
@@ -9,7 +10,6 @@ import {messageService} from "../../services/Services";
 
 interface MessagesProps {
     user: UserDTO
-    roomId: string
     scroll: boolean,
 }
 
@@ -17,6 +17,8 @@ const Messages = (props: MessagesProps) => {
 
     const [firstScroll, setFirstScroll] = useState(false);
     const [messages, setMessages] = useState<MessageDTO[]>([]);
+
+    const {roomId} = useParams() as any;
 
     const messageRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -29,19 +31,19 @@ const Messages = (props: MessagesProps) => {
             ref.scrollIntoView();
             setFirstScroll(true);
         }
-    }, [firstScroll]);
+    }, [firstScroll, props.scroll]);
 
     useEffect(() => {
-        messageService.getLatestMessages(props.roomId, 20).then(
+        messageService.getLatestMessages(roomId, 20).then(
             msg => setMessages(msg)
         );
-    }, [props.roomId]);
+    }, [roomId]);
 
     useEffect(() => {
-        let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
+        let eventSource = new EventSource(BASE_URL + `/rooms/${roomId}/update`);
 
         eventSource.onmessage = (event: MessageEvent<string>) => {
-            const data: {type: string, data: any} = JSON.parse(event.data);
+            const data: { type: string, data: any } = JSON.parse(event.data);
 
             if (data.type === "message") {
                 const newMsg = [...messages, data.data];
@@ -53,14 +55,14 @@ const Messages = (props: MessagesProps) => {
             eventSource.close();
         }
         return () => eventSource.close();
-    }, [props.roomId, messages])
+    }, [roomId, messages])
 
     return (
         <div className="text-chat">
             <div className="messages">
                 <LoadMoreButton loadHandler={() => {
                     if (messages[0]) {
-                        messageService.getMessagesBefore(props.roomId, messages[0].id, 20).then(msg => {
+                        messageService.getMessagesBefore(roomId, messages[0].id, 20).then(msg => {
                             msg.push(...messages);
                             setMessages(msg);
                         })
@@ -69,13 +71,13 @@ const Messages = (props: MessagesProps) => {
                 {messageService.dtoToProps(messages, props.user.id).map(msg => <Message {...msg} key={msg.id}/>)}
                 <div ref={messageRef}/>
             </div>
-            <InputField submitHandler={content => submitHandler(content, messageRef, props)}/>
+            <InputField submitHandler={content => submitHandler(content, messageRef, props, roomId)}/>
         </div>
     );
 }
 
 
-const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, props: MessagesProps) => {
+const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, props: MessagesProps, roomId: string) => {
     if (content.length > 1000) {
         alert("Message too long, must be less than 1000 characters");
         return;
@@ -83,7 +85,7 @@ const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, p
     if (messageRef.current && props.scroll) {
         messageRef.current.scrollIntoView();
     }
-    messageService.createMessage(props.roomId, {
+    messageService.createMessage(roomId, {
         sentBy: props.user.name,
         sentByID: props.user.id,
         body: content,

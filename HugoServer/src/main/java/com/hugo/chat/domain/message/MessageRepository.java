@@ -12,12 +12,18 @@ import java.util.UUID;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, UUID> {
-    @Query(value = "SELECT m FROM Message m WHERE m.sentOn > :lastChecked ORDER BY m.sentOn DESC")
-    List<Message> getNewMessage(@Param("lastChecked") long lastTimeChecked);
 
+    /**
+     * Get all messages sent before timeStamp that are in a room with the id roomId
+     * Ordered by sentOn descending
+     */
     @Query(value = "SELECT m FROM Message m WHERE m.sentOn < :timestamp AND m.roomId = :roomId ORDER BY m.sentOn DESC")
     List<Message> getOldMessage(@Param("timestamp") long timeStamp, @Param("roomId") UUID roomId);
 
+    /**
+     * Get the amount of messages by a user that were sent after timeStamp
+     * Used for ratelimiting.
+     */
     @Query(value = "SELECT COUNT(*) FROM Message m WHERE m.userID = :userID AND m.sentOn > :timestamp")
-    long getNewestMessageFromUser(@Param("userID") UUID id, @Param("timestamp") long currentTime);
+    long getNewestMessageFromUser(@Param("userID") UUID id, @Param("timestamp") long timeStamp);
 }
