@@ -24,7 +24,7 @@ public class MessageWeb {
     }
 
     @GetMapping("/before/{messageId}")
-    public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @PathVariable("messageId") String messageId ,@RequestParam("amount") int amount) {
+    public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @PathVariable("messageId") String messageId, @RequestParam("amount") int amount) {
         return ResponseEntity.ok().body(service.getOldMessages(messageId, amount, roomId));
     }
 

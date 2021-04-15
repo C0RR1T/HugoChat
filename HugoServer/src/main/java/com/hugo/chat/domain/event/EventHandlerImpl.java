@@ -36,7 +36,6 @@ public class EventHandlerImpl implements EventHandler {
     }
 
 
-
     @CrossOrigin
     @GetMapping("/rooms/update")
     public SseEmitter streamRoomsUpdate() {

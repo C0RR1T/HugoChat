@@ -36,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
 
         Message message = MessageDTO.toMessage(messagedto);
         message.setSentOn(System.currentTimeMillis()); // The server sets the time so that everything is sync
-        message.setId(null); // Just to be sure, Im not crazy
+        message.setId(null);
 
         if (!userRepo.existsById(UUID.fromString(messagedto.getSentByID())))
             throw new NoSuchElementException("UserID not found.");
@@ -57,9 +57,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Collection<MessageDTO> getOldMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
-        if (m.isPresent()) {
-            return getMessagesBefore(m.get().getSentOn(), amount, roomId);
-        } else throw new NoSuchElementException();
+        if (m.isEmpty())
+            throw new NoSuchElementException();
+        return getMessagesBefore(m.get().getSentOn(), amount, roomId);
     }
 
     @Override

@@ -6,8 +6,10 @@ import java.util.Collection;
 
 
 public interface RoomService {
-    RoomDTO createRoom(RoomDTO dto);
+    RoomDTO createRoom(RoomDTO dto, boolean isListed);
+
     Collection<RoomDTO> getAllRooms();
+
     RoomDTO updateRoom(RoomDTO dto);
 
 

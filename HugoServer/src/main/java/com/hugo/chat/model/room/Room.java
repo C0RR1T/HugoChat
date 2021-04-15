@@ -26,6 +26,7 @@ public class Room {
     )
     private UUID id;
     private String name;
+    private boolean isListed;
 
     public Room() {
     }
@@ -49,5 +50,21 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static UUID getMainRoomId() {
+        return MAIN_ROOM_ID;
+    }
+
+    public static void setMainRoomId(UUID mainRoomId) {
+        MAIN_ROOM_ID = mainRoomId;
+    }
+
+    public boolean isListed() {
+        return isListed;
+    }
+
+    public void setListed(boolean listed) {
+        isListed = listed;
     }
 }
