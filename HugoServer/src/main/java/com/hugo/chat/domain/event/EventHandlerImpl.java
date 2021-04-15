@@ -12,30 +12,29 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 public class EventHandlerImpl implements EventHandler {
-    private final CopyOnWriteArrayList<SseEmitterWrap> emitters;
-    private final CopyOnWriteArrayList<SseEmitter> roomEmitters;
+    private final ArrayList<SseEmitterWrap> emitters;
+    private final ArrayList<SseEmitter> roomEmitters;
 
-    public EventHandlerImpl() {
-        this.roomEmitters = new CopyOnWriteArrayList<>();
-        this.emitters = new CopyOnWriteArrayList<>();
+    public EventHandlerImpl(ArrayList<SseEmitter> roomEmitters) {
+        this.roomEmitters = roomEmitters;
+        this.emitters = new ArrayList<>();
     }
 
     @CrossOrigin
     @GetMapping("/rooms/{roomId}/update")
-    public SseEmitter streamUpdates(@PathVariable("roomId") String id) {
-        SseEmitterWrap emitter = new SseEmitterWrap(new SseEmitter(-1L), UUID.fromString(id));
-        emitters.add(emitter);
-        emitter.getEmitter().onCompletion(() -> this.emitters.remove(emitter));
-        emitter.getEmitter().onTimeout(() -> this.emitters.remove(emitter));
-        return emitter.getEmitter();
+    public SseEmitter streamUpdates(@PathVariable String id) {
+        SseEmitterWrap emitterWrap = new SseEmitterWrap(new SseEmitter(-1L), UUID.fromString(id));
+        emitters.add(emitterWrap);
+        emitterWrap.getEmitter().onCompletion(() -> this.emitters.remove(emitterWrap));
+        emitterWrap.getEmitter().onTimeout(() -> this.emitters.remove(emitterWrap));
+        return emitterWrap.getEmitter();
     }
+
 
 
     @CrossOrigin
@@ -49,7 +48,7 @@ public class EventHandlerImpl implements EventHandler {
     }
 
     @Override
-    public void roomEvents(Collection<RoomDTO> content) {
+    public void roomEvents(EmitterDTO<Collection<RoomDTO>> content) {
         ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
         roomEmitters.forEach(emitter -> {
             try {
@@ -63,8 +62,6 @@ public class EventHandlerImpl implements EventHandler {
 
 
     public void newEvent(EmitterDTO<?> content, UUID roomId) {
-
-
         ArrayList<SseEmitterWrap> deadEmitters = new ArrayList<>();
         emitters.stream().filter(emitter -> emitter.getRoomId().equals(roomId)).forEach(emitter -> {
             try {
@@ -74,6 +71,5 @@ public class EventHandlerImpl implements EventHandler {
             }
         });
         emitters.removeAll(deadEmitters);
-
     }
 }

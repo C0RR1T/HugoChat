@@ -65,7 +65,7 @@ Example:
 
 ### Create Room
 
-`POST` `/rooms`
+`POST` `/rooms?listed={isListed}`
 
 Room names have to be unique.  
 `400` if room name is already taken

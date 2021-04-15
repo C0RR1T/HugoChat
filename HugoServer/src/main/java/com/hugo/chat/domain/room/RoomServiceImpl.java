@@ -37,6 +37,8 @@ public class RoomServiceImpl implements RoomService {
     public RoomDTO createRoom(RoomDTO dto) {
         if (repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Name already exists");
+        if (dto.getName().length() > 255)
+            throw new IllegalArgumentException("Name is longer than 255. Length is: " + dto.getName().length());
         Room room = RoomDTO.toRoom(dto);
         room.setId(null);
         RoomDTO finished = RoomDTO.toDTO(repository.saveAndFlush(room));
@@ -48,7 +50,14 @@ public class RoomServiceImpl implements RoomService {
     public Collection<RoomDTO> getAllRooms() {
         return repository.findAll().stream()
                 .map(RoomDTO::toDTO)
-                .sorted((Comparator.comparing(RoomDTO::getName)))
+                .sorted(((o1, o2) -> {
+                    if (o1.getName().equals("main"))
+                        return 1;
+                    else if (o2.getName().equals("main"))
+                        return -1;
+                    else
+                        return o1.getName().compareTo(o2.getName());
+                }))
                 .collect(Collectors.toList());
     }
 
@@ -58,6 +67,8 @@ public class RoomServiceImpl implements RoomService {
             throw new NoSuchElementException("Room ID doesn't exist.");
         if (!repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Room Name already exists.");
+        if(dto.getName().length() > 255)
+            throw new IllegalArgumentException("Name is longer than 255. Length is: " + dto.getName().length());
         repository.saveAndFlush(RoomDTO.toRoom(dto));
         handler.roomEvents(getAllRooms());
         return null;
