@@ -91,9 +91,9 @@ const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, p
         body: content,
         id: "",
         sentOn: 0,
-    }).catch(_ => {
-        //TODO better error messages
-        alert("You are writing too fast");
+    }).catch(e => {
+        //this is probably 'you're sending messages too fast'
+        alert(e.message);
     });
 }
 

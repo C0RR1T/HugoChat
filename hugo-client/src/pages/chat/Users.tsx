@@ -23,7 +23,7 @@ const Users = (props: UsersProps) => {
     }, [roomId, props.user.id]);
 
     useEffect(() => {
-        let eventSource = new EventSource(BASE_URL + `/rooms/${roomId}/update`);
+        const eventSource = new EventSource(BASE_URL + `/rooms/${roomId}/update`);
 
         eventSource.onmessage = (event: MessageEvent<string>) => {
             const data: {type: string, data: any} = JSON.parse(event.data);

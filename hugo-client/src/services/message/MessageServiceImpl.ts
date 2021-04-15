@@ -33,11 +33,10 @@ export default class MessageServiceImpl implements MessageService {
 
     async createMessage(roomId: string, msg: MessageDTO): Promise<MessageDTO> {
         try {
-            const {data} = await axiosAPI.post<MessageDTO>(`/rooms/${roomId}/messages`, msg)
+            const {data} = await axiosAPI.post<MessageDTO>(`/rooms/${roomId}/messages`, msg);
             return data;
         } catch (e) {
-            throw new Error(e);
-        } finally {
+            throw new Error(e.response.data);
         }
     }
 

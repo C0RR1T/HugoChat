@@ -46,7 +46,7 @@ const Chat = () => {
         }
 
         setInterval(() => setSendRefresh(true), 5000);
-    }, [])
+    }, []);
 
 
     return (

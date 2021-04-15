@@ -36,7 +36,7 @@ const Rooms = () => {
     }, []);
 
     useEffect(() => {
-        let eventSource = new EventSource(BASE_URL + `/rooms/update`);
+        const eventSource = new EventSource(BASE_URL + `/rooms/update`);
 
         eventSource.onmessage = (event: MessageEvent<string>) => {
             const data: RoomDTO[] = JSON.parse(event.data);
