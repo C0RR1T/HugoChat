@@ -116,8 +116,7 @@ const NewRoomButton = () => {
             setIsEditing(false);
             setContent("");
             roomService.create(content, isUnlisted).then(room => {
-                if (isUnlisted) alert(`Roomid: ${room.id}`);
-                //TODO redirect to new room i guess
+                window.location.pathname = `/${room.id}`;
             });
         }} onReset={e => {
             setIsEditing(false);
