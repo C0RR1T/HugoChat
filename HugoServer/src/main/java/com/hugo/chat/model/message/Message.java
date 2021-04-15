@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 /**
- * The message class is the internal representaion of a message in the DB
+ * The message class is the internal representation of a message in the DB
  */
 @Entity
 @Table(name = "messages")

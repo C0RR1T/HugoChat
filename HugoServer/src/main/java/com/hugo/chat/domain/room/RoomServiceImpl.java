@@ -2,7 +2,6 @@ package com.hugo.chat.domain.room;
 
 
 import com.hugo.chat.domain.event.EventHandler;
-import com.hugo.chat.model.emitter.dto.EmitterDTO;
 import com.hugo.chat.model.room.Room;
 import com.hugo.chat.model.room.dto.RoomDTO;
 import org.springframework.stereotype.Service;

@@ -4,8 +4,7 @@ import Users from "./Users";
 import {Rooms} from "./Room";
 import UserDTO from "../../services/user/model/UserDTO";
 import {userService} from "../../services/Services";
-import {BrowserRouter, useParams} from "react-router-dom";
-import {Route, Redirect} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 const DEFAULT_NAME = "Hugo Boss";
 
@@ -32,7 +31,12 @@ const Chat = () => {
         const userFromStorage = sessionStorage.getItem("user");
         if (userFromStorage) {
             const userObj = JSON.parse(userFromStorage) as UserDTO;
-            userService.keepActive(roomId, userObj.id);
+            userService.keepActive(roomId, userObj.id).catch(_ => {
+                userService.createUser(DEFAULT_NAME).then(user => {
+                    setUser(user);
+                    sessionStorage.setItem("user", JSON.stringify(user));
+                });
+            });
             setUser(userObj);
         } else {
             userService.createUser(DEFAULT_NAME).then(user => {

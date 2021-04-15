@@ -1,5 +1,5 @@
 import {roomService} from "../../services/Services";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
 import {Link, useParams} from "react-router-dom";
@@ -116,10 +116,9 @@ const NewRoomButton = () => {
             setIsEditing(false);
             setContent("");
             roomService.create(content, isUnlisted).then(room => {
-                alert(`Roomid: ${room.id}`);
-                //TODO redirect to new room i guess
+                window.location.pathname = `/${room.id}`;
             });
-        }} onReset={e => {
+        }} onReset={_ => {
             setIsEditing(false);
         }}>
             <h4 className="title">Create new Room</h4>

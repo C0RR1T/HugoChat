@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
 
     /**
      * Creates new Message
-     * @param messagedto DTO to be created
+     * @param messageDto DTO to be created
      * @param roomId In which room the message should be saved in
      * @return The saved Message as DTO
      * @throws NoSuchElementException When the RoomID doesn't exists
@@ -40,15 +40,15 @@ public class MessageServiceImpl implements MessageService {
      * @throws IllegalArgumentException When the User sends messages too fast
      */
     @Override
-    public MessageDTO createMessage(MessageDTO messagedto, String roomId) {
-        if (messagedto.getBody().length() > MAX_MESSAGE_LENGTH)
+    public MessageDTO createMessage(MessageDTO messageDto, String roomId) {
+        if (messageDto.getBody().length() > MAX_MESSAGE_LENGTH)
             throw new IllegalArgumentException("Message can't be longer than 1000 characters");
 
-        Message message = MessageDTO.toMessage(messagedto);
+        Message message = MessageDTO.toMessage(messageDto);
         message.setSentOn(System.currentTimeMillis()); // The server sets the time so that everything is sync
         message.setId(null);
 
-        if (!userRepo.existsById(UUID.fromString(messagedto.getSentByID())))
+        if (!userRepo.existsById(UUID.fromString(messageDto.getSentByID())))
             throw new NoSuchElementException("UserID not found.");
         if (message.getBody().isBlank())
             throw new IllegalArgumentException("Message Body can't be blank.");
@@ -57,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
         if (!roomRepo.existsById(UUID.fromString(roomId)))
             throw new NoSuchElementException("Room ID not found.");
 
-        message.setUserID(UUID.fromString(messagedto.getSentByID()));
+        message.setUserID(UUID.fromString(messageDto.getSentByID()));
         message.setRoomId(UUID.fromString(roomId));
         MessageDTO messageSaved = MessageDTO.toMessageDTO(repository.saveAndFlush(message));
         eventHandler.newEvent(new EmitterDTO<>("message", messageSaved), message.getRoomId());
@@ -73,7 +73,7 @@ public class MessageServiceImpl implements MessageService {
      * @throws IllegalArgumentException When the MessageID isn't found
      */
     @Override
-    public Collection<MessageDTO> getLatestMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
+    public Collection<MessageDTO> getOlderMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
         if (m.isEmpty())
             throw new NoSuchElementException();

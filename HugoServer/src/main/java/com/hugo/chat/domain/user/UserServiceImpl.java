@@ -39,13 +39,14 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserDTO user) {
         if (user.getName().length() > MAX_USERNAME_LENGTH)
             throw new IllegalArgumentException("Username is too long");
-            user.setId(null);
-            User u = UserDTO.toUser(user);
-            u.setCurrentRoom(Room.MAIN_ROOM_ID);
-            u.setLastActive(System.currentTimeMillis());
-            u = repository.saveAndFlush(u);
-            eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
-            return new UserDTO(u.getId(), u.getName());
+
+        user.setId(null);
+        User u = UserDTO.toUser(user);
+        u.setCurrentRoom(Room.MAIN_ROOM_ID);
+        u.setLastActive(System.currentTimeMillis());
+        u = repository.saveAndFlush(u);
+        eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
+        return new UserDTO(u.getId(), u.getName());
     }
 
     /**
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> opt = repository.findById(user.getId());
         if (opt.isEmpty())
-         throw new NoSuchElementException();
+            throw new NoSuchElementException();
 
         User u = opt.get();
         u.setName(user.getName());
