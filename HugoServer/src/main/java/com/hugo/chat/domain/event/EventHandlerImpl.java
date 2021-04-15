@@ -28,8 +28,6 @@ public class EventHandlerImpl implements EventHandler {
 
     /**
      * Updates for every room
-     * @param id
-     * @return
      */
     @CrossOrigin
     @GetMapping("/rooms/{roomId}/update")
@@ -44,7 +42,6 @@ public class EventHandlerImpl implements EventHandler {
 
     /**
      * Emitter for Room Updates
-     * @return
      */
     @CrossOrigin
     @GetMapping("/rooms/update")
@@ -57,8 +54,7 @@ public class EventHandlerImpl implements EventHandler {
     }
 
     /**
-     * Sends the current availabe rooms
-     * @param content
+     * Sends the current available rooms
      */
     @Override
     public void roomEvents(Collection<RoomDTO> content) {
@@ -76,8 +72,6 @@ public class EventHandlerImpl implements EventHandler {
 
     /**
      * Event containing new Message or the userlist of current room
-     * @param content
-     * @param roomId
      */
     public void newEvent(EmitterDTO<?> content, UUID roomId) {
         ArrayList<SseEmitterWrap> deadEmitters = new ArrayList<>();

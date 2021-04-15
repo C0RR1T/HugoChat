@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 public class MessageServiceTest {
 
-    private static UUID roomId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private static final UUID roomId = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     @InjectMocks
     private MessageService messageService;

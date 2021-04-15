@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 /**
- * The User class is the internal representatino of a User in the DB
+ * The User class is the internal representation of a User in the DB
  */
 @Entity
 @Table(name = "users")
