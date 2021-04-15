@@ -64,12 +64,12 @@ public class UserWeb {
      * Send a signal that the user is still active in a room
      */
     @PatchMapping("/rooms/{roomId}/users/active/{userId}")
-    public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
+    public ResponseEntity<?> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
         try {
             service.setUserActive(id, roomId);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException n) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(n.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
