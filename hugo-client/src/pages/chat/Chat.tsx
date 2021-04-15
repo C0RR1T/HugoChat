@@ -28,9 +28,18 @@ const Chat = () => {
     }, [sendRefresh, roomId, user.id]);
 
     useEffect(() => {
-        userService.createUser(DEFAULT_NAME).then(user => {
-            setUser(user);
-        });
+
+        const userFromStorage = sessionStorage.getItem("user");
+        if (userFromStorage) {
+            const userObj = JSON.parse(userFromStorage) as UserDTO;
+            userService.keepActive(roomId, userObj.id);
+            setUser(userObj);
+        } else {
+            userService.createUser(DEFAULT_NAME).then(user => {
+                setUser(user);
+                sessionStorage.setItem("user", JSON.stringify(user));
+            });
+        }
 
         setInterval(() => setSendRefresh(true), 5000);
     }, [])
@@ -38,23 +47,26 @@ const Chat = () => {
 
     return (
         <div className="parent">
-                <Rooms/>
-                <Messages scroll={true}
-                          user={user}
-                />
-                <Users
-                    user={user}
-                    nameChangeHandler={name => {
-                        if (name.length < 255) {
-                            userService.changeName({
-                                id: user.id,
-                                name: name
-                            }).then(user => setUser(user));
-                        } else {
-                            alert(`Name too long: '${name.length}'. Must be less than 255 characters`)
-                        }
-                    }}
-                />
+            <Rooms/>
+            <Messages scroll={true}
+                      user={user}
+            />
+            <Users
+                user={user}
+                nameChangeHandler={name => {
+                    if (name.length < 255) {
+                        userService.changeName({
+                            id: user.id,
+                            name: name
+                        }).then(user => {
+                            setUser(user);
+                            sessionStorage.setItem("user", JSON.stringify(user));
+                        });
+                    } else {
+                        alert(`Name too long: '${name.length}'. Must be less than 255 characters`)
+                    }
+                }}
+            />
         </div>
     );
 
