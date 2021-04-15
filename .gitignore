@@ -10,4 +10,4 @@ react-app-env.d.ts
 
 # intellij
 *.iml
-.idea
+*.idea
