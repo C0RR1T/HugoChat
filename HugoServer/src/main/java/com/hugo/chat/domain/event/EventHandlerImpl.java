@@ -13,21 +13,22 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin
 @RestController
 public class EventHandlerImpl implements EventHandler {
-    private final ArrayList<SseEmitterWrap> emitters;
-    private final ArrayList<SseEmitter> roomEmitters;
+    private final CopyOnWriteArrayList<SseEmitterWrap> emitters;
+    private final CopyOnWriteArrayList<SseEmitter> roomEmitters;
 
-    public EventHandlerImpl(ArrayList<SseEmitter> roomEmitters) {
-        this.roomEmitters = roomEmitters;
-        this.emitters = new ArrayList<>();
+    public EventHandlerImpl() {
+        this.roomEmitters = new CopyOnWriteArrayList<>();
+        this.emitters = new CopyOnWriteArrayList<>();
     }
 
     @CrossOrigin
     @GetMapping("/rooms/{roomId}/update")
-    public SseEmitter streamUpdates(@PathVariable String id) {
+    public SseEmitter streamUpdates(@PathVariable("roomId") String id) {
         SseEmitterWrap emitterWrap = new SseEmitterWrap(new SseEmitter(-1L), UUID.fromString(id));
         emitters.add(emitterWrap);
         emitterWrap.getEmitter().onCompletion(() -> this.emitters.remove(emitterWrap));

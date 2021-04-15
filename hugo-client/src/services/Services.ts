@@ -8,7 +8,7 @@ import UserService from "./user/UserService";
 import MessageService from "./message/MessageService";
 import RoomService from "./room/RoomService";
 
-const mocking = true;
+const mocking = false;
 
 const userService: UserService = mocking ? new UserServiceMock() : new UserServiceImpl();
 const messageService: MessageService = mocking ? new MessageServiceMock() : new MessageServiceImpl();

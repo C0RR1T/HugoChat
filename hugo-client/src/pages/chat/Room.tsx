@@ -1,8 +1,8 @@
-import {roomService, userService} from "../../services/Services";
+import {roomService} from "../../services/Services";
 import React, {useEffect, useRef, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
-import {getQueriesForElement} from "@testing-library/react";
+import {type} from "os";
 
 interface RoomsProps {
     current: string
@@ -12,15 +12,26 @@ interface RoomsProps {
 const Rooms = (props: RoomsProps) => {
 
     const [rooms, setRooms] = useState<RoomDTO[]>([]);
-    const [showRooms, setShowRooms] = useState(rooms);
+    const [showRooms, setShowRooms] = useState<RoomDTO[]>([]);
     const [query, setQuery] = useState("");
 
     useEffect(() => {
         if (query === "") {
             setShowRooms(rooms);
-        } else {
-            setShowRooms(rooms.filter(room => room.name.indexOf(query) !== -1))
+            return;
         }
+
+        if (query.match(/\/.*\//)) {
+            const queryNoSlash = query.replaceAll(/^\/|\/$/g, "");
+            try {
+                const regexp = new RegExp(queryNoSlash);
+                setShowRooms(rooms.filter(room => room.name.match(regexp)));
+            } catch (_) {
+            }
+        } else {
+            setShowRooms(rooms.filter(room => room.name.indexOf(query) !== -1));
+        }
+
     }, [query, rooms]);
 
     useEffect(() => {
@@ -41,16 +52,20 @@ const Rooms = (props: RoomsProps) => {
         return () => eventSource.close();
     }, []);
 
+    console.log(showRooms);
+
+    const trueRooms = showRooms.map(room =>
+        (room.id === props.current) ?
+            <CurrentRoom {...room} roomChangeHandler={() => {
+            }} key={room.id}/> :
+            <Room {...room} roomChangeHandler={props.roomChangeHandler} key={room.id}/>)
+
     return (
         <div className="rooms">
             <RoomSearch changeHandler={query => {
                 setQuery(query);
             }}/>
-            {showRooms.map(room =>
-                (room.id === props.current) ?
-                    <CurrentRoom {...room} roomChangeHandler={() => {
-                    }} key={room.id}/> :
-                    <Room {...room} roomChangeHandler={props.roomChangeHandler} key={room.id}/>)}
+            {trueRooms}
             <NewRoomButton roomChangeHandler={props.roomChangeHandler}/>
         </div>
     )
@@ -109,6 +124,9 @@ const NewRoomButton = (props: NewRoomButtonProps) => {
     const editing =
         <input onKeyPress={event => {
             if (event.key === "Enter") {
+                if (content === "") {
+                    return;
+                }
                 setIsEditing(false);
                 setContent("");
                 roomService.create(content).then(room => {
