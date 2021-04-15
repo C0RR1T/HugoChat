@@ -1,13 +1,14 @@
 import UserDTO from "./model/UserDTO";
 
 export default interface UserService {
-    createUser(user: UserDTO): Promise<UserDTO>;
 
-    keepActive(uuid: string): Promise<void>;
+    createUser(name: string): Promise<UserDTO>;
 
-    getUsers(selfId: string): Promise<UserDTO[]>;
+    keepActive(roomId: string, uuid: string): Promise<void>;
 
-    userDTOtoString(data: UserDTO[], selfId: string): string[]
+    getUsers(roomId: string): Promise<UserDTO[]>;
 
     changeName(user: UserDTO): Promise<UserDTO>;
+
+    filterUserDTO(data: UserDTO[], selfId: string): UserDTO[]
 }

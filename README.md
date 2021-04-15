@@ -24,6 +24,9 @@ docker run -d -p 5432:5432 --name HugoChat -e POSTGRES_PASSWORD=huGO123.corsBOSS
 docker attach HugoChat
 ```
 
+main room uuid:
+00000000-0000-0000-0000-000000000000
+
 
 ### TODO:
 * message received add message

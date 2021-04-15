@@ -2,18 +2,15 @@ package com.hugo.chat.model.message.dto;
 
 import com.hugo.chat.model.message.Message;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.TimeZone;
 import java.util.UUID;
 
 public class MessageDTO {
-    private String body;
     private String id;
+    private String body;
     private String sentByID;
     private String sentBy;
     private long sentOn;
+
 
     public MessageDTO() {
     }
@@ -65,6 +62,7 @@ public class MessageDTO {
     public void setSentOn(long sentOn) {
         this.sentOn = sentOn;
     }
+
 
     public static Message toMessage(MessageDTO message) {
         Message m = new Message();

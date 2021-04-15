@@ -28,8 +28,15 @@ public class User {
     @Column(name = "username")
     private String name;
     private long lastActive;
+    private UUID currentRoom;
 
     public User() {
+    }
+
+    public User(UUID id, String name, long lastActive) {
+        this.id = id;
+        this.name = name;
+        this.lastActive = lastActive;
     }
 
     public UUID getId() {
@@ -54,6 +61,14 @@ public class User {
 
     public void setLastActive(long lastActive) {
         this.lastActive = lastActive;
+    }
+
+    public UUID getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(UUID currentRoom) {
+        this.currentRoom = currentRoom;
     }
 
     @Override

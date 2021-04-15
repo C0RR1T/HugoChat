@@ -6,8 +6,9 @@ import com.hugo.chat.model.message.dto.MessageDTO;
 import java.util.Collection;
 
 public interface MessageService {
-    MessageDTO createMessage(MessageDTO message);
-    Collection<MessageDTO> getOldMessages(String timestampString, String amountString);
-    Collection<MessageDTO> getOldMessages(String amountString);
-    Collection<MessageDTO> getNewMessages(String timestampString);
+    MessageDTO createMessage(MessageDTO message, String roomId);
+
+    Collection<MessageDTO> getOldMessages(String messageId, int amount, String roomId);
+
+    Collection<MessageDTO> getOldMessages(int amount, String roomId);
 }

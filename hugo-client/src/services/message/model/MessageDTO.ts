@@ -1,6 +1,6 @@
 export default interface MessageDTO {
-    body: string,
     id: string
+    body: string,
     sentByID: string,
     sentBy: string,
     sentOn: number,

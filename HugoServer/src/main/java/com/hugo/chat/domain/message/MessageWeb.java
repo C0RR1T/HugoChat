@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/rooms/{roomId}/messages")
 public class MessageWeb {
     private final MessageService service;
 
@@ -18,41 +18,25 @@ public class MessageWeb {
         this.service = service;
     }
 
+    @GetMapping("/latest")
+    public ResponseEntity<Collection<MessageDTO>> getOldMessages(@PathVariable("roomId") String roomId, @RequestParam("amount") int amount) {
+        return ResponseEntity.ok().body(service.getOldMessages(amount, roomId));
+    }
+
+    @GetMapping("/before/{messageId}")
+    public ResponseEntity<Collection<MessageDTO>> getMessagesBeforeMessage(@PathVariable("roomId") String roomId, @PathVariable("messageId") String messageId, @RequestParam("amount") int amount) {
+        return ResponseEntity.ok().body(service.getOldMessages(messageId, amount, roomId));
+    }
+
     @PostMapping("")
-    public ResponseEntity<?> createMessage(@RequestBody MessageDTO message) {
+    public ResponseEntity<?> createMessage(@RequestBody MessageDTO message, @PathVariable("roomId") String roomId) {
+        System.out.println("hey i better save that new message " + message.getBody());
         try {
-            return ResponseEntity.ok().body(service.createMessage(message));
-        } catch (NoSuchElementException n) {
-            return new ResponseEntity<>(n.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok().body(service.createMessage(message, roomId));
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException i) {
             return new ResponseEntity<>(i.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/old")
-    public ResponseEntity<?> getLatestMessages(@RequestParam("amount") String amount) {
-        try {
-            return ResponseEntity.ok().body(service.getOldMessages(amount));
-        } catch (IllegalArgumentException i) {
-            return new ResponseEntity<>("Amount must be positive", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/old/{messageID}")
-    public ResponseEntity<?> getAllMessages(@PathVariable("messageID") String messageID, @RequestParam("amount") String amount) {
-        try {
-            return ResponseEntity.ok().body(service.getOldMessages(messageID, amount));
-        } catch (IllegalArgumentException i) {
-            return new ResponseEntity<>("Amount must be positive", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/new/{messageID}")
-    public ResponseEntity<Collection<MessageDTO>> getNewMessages(@PathVariable("messageID") String messageID) {
-        try {
-            return ResponseEntity.ok().body(service.getNewMessages(messageID));
-        } catch (NoSuchElementException n) {
-            return ResponseEntity.notFound().build();
         }
     }
 }
