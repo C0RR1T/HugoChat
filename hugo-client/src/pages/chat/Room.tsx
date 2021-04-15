@@ -2,6 +2,7 @@ import {roomService} from "../../services/Services";
 import React, {useEffect, useRef, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
+import {type} from "os";
 
 interface RoomsProps {
     current: string
@@ -50,16 +51,21 @@ const Rooms = (props: RoomsProps) => {
         }
         return () => eventSource.close();
     }, []);
+
+    console.log(showRooms);
+
+    const trueRooms = showRooms.map(room =>
+        (room.id === props.current) ?
+            <CurrentRoom {...room} roomChangeHandler={() => {
+            }} key={room.id}/> :
+            <Room {...room} roomChangeHandler={props.roomChangeHandler} key={room.id}/>)
+
     return (
         <div className="rooms">
             <RoomSearch changeHandler={query => {
                 setQuery(query);
             }}/>
-            {showRooms.map(room =>
-                (room.id === props.current) ?
-                    <CurrentRoom {...room} roomChangeHandler={() => {
-                    }} key={room.id}/> :
-                    <Room {...room} roomChangeHandler={props.roomChangeHandler} key={room.id}/>)}
+            {trueRooms}
             <NewRoomButton roomChangeHandler={props.roomChangeHandler}/>
         </div>
     )
@@ -118,6 +124,9 @@ const NewRoomButton = (props: NewRoomButtonProps) => {
     const editing =
         <input onKeyPress={event => {
             if (event.key === "Enter") {
+                if (content === "") {
+                    return;
+                }
                 setIsEditing(false);
                 setContent("");
                 roomService.create(content).then(room => {

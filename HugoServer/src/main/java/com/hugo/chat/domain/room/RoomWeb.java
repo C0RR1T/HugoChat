@@ -19,7 +19,7 @@ public class RoomWeb {
     }
 
     @PostMapping
-    public ResponseEntity<?> newRoom(@RequestBody RoomDTO dto, @RequestParam("listed") boolean isListed) {
+    public ResponseEntity<?> newRoom(@RequestBody RoomDTO dto, @RequestParam("listed") Boolean isListed) {
         try {
             return ResponseEntity.ok().body(service.createRoom(dto, isListed));
         } catch (IllegalArgumentException i) {
