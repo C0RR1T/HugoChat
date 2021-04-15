@@ -12,7 +12,7 @@ public interface EventHandler {
 
     SseEmitter streamRoomsUpdate();
 
-    void roomEvents(EmitterDTO<Collection<RoomDTO>> content);
+    void roomEvents(Collection<RoomDTO> content);
 
     void newEvent(EmitterDTO<?> content, UUID roomId);
 }

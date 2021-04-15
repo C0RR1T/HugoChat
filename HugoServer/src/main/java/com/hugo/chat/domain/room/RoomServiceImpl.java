@@ -42,7 +42,7 @@ public class RoomServiceImpl implements RoomService {
         room.setId(null);
         room.setListed(isListed);
         RoomDTO finished = RoomDTO.toDTO(repository.saveAndFlush(room));
-        handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
+        handler.roomEvents(getAllRooms());
         return finished;
     }
 
@@ -71,7 +71,7 @@ public class RoomServiceImpl implements RoomService {
         if (dto.getName().length() > 255)
             throw new IllegalArgumentException("Name is longer than 255. Length is: " + dto.getName().length());
         RoomDTO roomToSend = RoomDTO.toDTO(repository.saveAndFlush(RoomDTO.toRoom(dto)));
-        handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
+        handler.roomEvents(getAllRooms());
         return roomToSend;
     }
 }
