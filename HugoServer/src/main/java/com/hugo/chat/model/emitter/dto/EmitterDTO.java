@@ -1,5 +1,9 @@
 package com.hugo.chat.model.emitter.dto;
 
+/**
+ * The EmitterDTO wraps data for an SSE
+ * @param <T> The Datatype
+ */
 public class EmitterDTO<T> {
     public String type;
     public T data;
