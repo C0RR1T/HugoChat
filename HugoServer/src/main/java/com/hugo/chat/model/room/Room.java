@@ -31,9 +31,10 @@ public class Room {
     public Room() {
     }
 
-    public Room(UUID id, String name) {
+    public Room(UUID id, String name, boolean isListed) {
         this.id = id;
         this.name = name;
+        this.isListed = isListed;
     }
 
     public UUID getId() {

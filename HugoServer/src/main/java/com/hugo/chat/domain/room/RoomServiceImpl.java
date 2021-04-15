@@ -26,7 +26,7 @@ public class RoomServiceImpl implements RoomService {
     private void setMainChannel() {
         if (!repository.existsByName("main")) {
             System.err.println("No Main detected");
-            repository.saveAndFlush(new Room(UUID.randomUUID(), "main"));
+            repository.saveAndFlush(new Room(UUID.randomUUID(), "main", true));
             repository.setMainRoom(Room.MAIN_ROOM_ID);
             System.out.println("Main created");
         }
@@ -53,9 +53,9 @@ public class RoomServiceImpl implements RoomService {
                 .map(RoomDTO::toDTO)
                 .sorted(((o1, o2) -> {
                     if (o1.getName().equals("main"))
-                        return 1;
-                    else if (o2.getName().equals("main"))
                         return -1;
+                    else if (o2.getName().equals("main"))
+                        return 1;
                     else
                         return o1.getName().compareTo(o2.getName());
                 }))

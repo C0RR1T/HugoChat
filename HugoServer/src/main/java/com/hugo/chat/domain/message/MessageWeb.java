@@ -30,7 +30,6 @@ public class MessageWeb {
 
     @PostMapping("")
     public ResponseEntity<?> createMessage(@RequestBody MessageDTO message, @PathVariable("roomId") String roomId) {
-        System.out.println("hey i better save that new message " + message.getBody());
         try {
             return ResponseEntity.ok().body(service.createMessage(message, roomId));
         } catch (NoSuchElementException e) {

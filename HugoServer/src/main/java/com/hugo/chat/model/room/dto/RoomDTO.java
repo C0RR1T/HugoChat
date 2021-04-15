@@ -38,6 +38,6 @@ public class RoomDTO {
     }
 
     public static Room toRoom(RoomDTO dto) {
-        return new Room(dto.getId(), dto.getName());
+        return new Room(dto.getId(), dto.getName(), true);
     }
 }

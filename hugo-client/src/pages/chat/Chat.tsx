@@ -1,94 +1,63 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Messages from "./Messages";
 import Users from "./Users";
 import {Rooms} from "./Room";
 import UserDTO from "../../services/user/model/UserDTO";
 import {userService} from "../../services/Services";
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, useParams} from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
 
 const DEFAULT_NAME = "Hugo Boss";
 
-interface ChatState {
-    user: UserDTO
-    windowWidth: number,
-    currentRoom: string
-}
+const Chat = () => {
 
-class Chat extends React.Component<{}, ChatState> {
+    const [user, setUser] = useState<UserDTO>({
+        name: DEFAULT_NAME,
+        id: ""
+    });
 
-    constructor(props: {}) {
-        super(props);
+    const {roomId} = useParams() as any;
 
-        this.state = {
-            user: {
-                name: DEFAULT_NAME,
-                id: ""
-            },
-            windowWidth: 0,
-            currentRoom: "00000000-0000-0000-0000-000000000000"
+    const [sendRefresh, setSendRefresh] = useState(false);
+
+    useEffect(() => {
+        if (sendRefresh) {
+            userService.keepActive(roomId, user.id)
         }
-    }
+        setSendRefresh(false);
+    }, [sendRefresh, roomId, user.id]);
 
-    componentDidMount() {
-        this.updateDimensions();
-        window.addEventListener("resize", this.updateDimensions);
-
+    useEffect(() => {
         userService.createUser(DEFAULT_NAME).then(user => {
-            this.setState({user});
-            setInterval(() => userService.keepActive(this.state.currentRoom, user.id), 5000);
+            setUser(user);
         });
-    }
 
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions);
-    }
-
-    updateDimensions = () => {
-        const windowWidth = window !== undefined ? window.innerWidth : 0;
-        this.setState({windowWidth});
-    }
-
-    handleNameChange = (name: string) => {
-        if (name.length < 255) {
-            userService.changeName({
-                id: this.state.user.id,
-                name: name
-            }).then(user => this.setState({user}));
-        } else {
-            alert(`Name too long: '${name.length}'. Must be less than 255 characters`)
-        }
-    }
-
-    handleRoomChange = (roomId: string) => {
-        this.setState({
-            currentRoom: roomId
-        });
-    }
+        setInterval(() => setSendRefresh(true), 5000);
+    }, [])
 
 
-    render() {
-        return (
-            <BrowserRouter>
-                <div className="parent">
-                    <Rooms
-                        current={this.state.currentRoom}
-                        roomChangeHandler={(id) => {
-                            this.handleRoomChange(id);
-                        }}
-                    />
-                    <Messages scroll={true}
-                              user={this.state.user}
-                              roomId={this.state.currentRoom}
-                    />
-                    <Users
-                        user={this.state.user}
-                        nameChangeHandler={this.handleNameChange}
-                        roomId={this.state.currentRoom}
-                    />
-                </div>
-            </BrowserRouter>
-        );
-    }
+    return (
+        <div className="parent">
+                <Rooms/>
+                <Messages scroll={true}
+                          user={user}
+                />
+                <Users
+                    user={user}
+                    nameChangeHandler={name => {
+                        if (name.length < 255) {
+                            userService.changeName({
+                                id: user.id,
+                                name: name
+                            }).then(user => setUser(user));
+                        } else {
+                            alert(`Name too long: '${name.length}'. Must be less than 255 characters`)
+                        }
+                    }}
+                />
+        </div>
+    );
+
 }
 
 export default Chat;

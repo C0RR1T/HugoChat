@@ -190,8 +190,20 @@ input {
     text-align: center;
     background-color: $lightBlue;
 
-    input {
+    .title {
+      margin: 0 0 10px;
+    }
+
+    #new-room-name {
       width: 90%;
+    }
+
+    #new-room-isUnlisted {
+      background-color: $color4;
+    }
+
+    .button {
+      margin: 2px;
     }
   }
 }

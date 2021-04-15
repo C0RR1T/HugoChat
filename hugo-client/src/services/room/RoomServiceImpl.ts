@@ -3,9 +3,9 @@ import RoomDTO from "./model/RoomDTO";
 import axiosAPI from "../AxiosUtility";
 
 export default class RoomServiceImpl implements RoomService {
-    async create(name: string): Promise<RoomDTO> {
+    async create(name: string, isUnlisted: true): Promise<RoomDTO> {
         try {
-            const {data} = await axiosAPI.post<RoomDTO>("/rooms?listed=true", {name})
+            const {data} = await axiosAPI.post<RoomDTO>(`/rooms?listed=${!isUnlisted}`, {name})
             console.log("Created room with id " + data.id);
             return data;
         } catch (e) {
@@ -21,5 +21,4 @@ export default class RoomServiceImpl implements RoomService {
             throw new Error(e);
         }
     }
-
 }
