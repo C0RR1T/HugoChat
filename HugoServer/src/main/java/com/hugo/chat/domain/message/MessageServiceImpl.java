@@ -81,7 +81,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     /**
-     * Get the latest few messages in a channel
+     * Get the latest few messages in a channel before now
+     * @return Collection of Messages as DTOs before now
      */
     @Override
     public Collection<MessageDTO> getLatestMessages(int amount, String roomId) {
