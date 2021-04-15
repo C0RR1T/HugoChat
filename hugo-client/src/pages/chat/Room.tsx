@@ -58,7 +58,7 @@ const Rooms = () => {
                 (room.id === roomId) ?
                     <CurrentRoom {...room} key={room.id}/> :
                     <Room {...room} key={room.id}/>)}
-            <NewRoomButton/>
+            <NewRoomForm/>
         </div>
     )
 }
@@ -102,7 +102,7 @@ const RoomSearch = (props: RoomSearchProps) => {
 }
 
 
-const NewRoomButton = () => {
+const NewRoomForm = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [content, setContent] = useState("");
     const [isUnlisted, setIsUnlisted] = useState(false);
@@ -122,7 +122,7 @@ const NewRoomButton = () => {
             setIsEditing(false);
         }}>
             <h4 className="title">Create new Room</h4>
-            <label htmlFor="new-room-name">name</label>
+            <label htmlFor="new-room-name">room name</label>
             <input id="new-room-name"
                    onChange={event => setContent(event.target.value)}
                    type="text"
@@ -134,14 +134,12 @@ const NewRoomButton = () => {
                 setIsUnlisted(e.target.checked)
             }}/>
             <br/>
-            <input type="reset" className="button" value="cancel"/>
-            <input type="submit" className="button" value="create"/>
+                <input type="reset" className="button" value="cancel"/>
+                <input type="submit" className="button" value="create"/>
         </form>
 
     const showing =
-        <div className="name">
-            Create a new Room!
-        </div>;
+        <div className="name">Create a new Room</div>;
 
     const inner = isEditing ? editing : showing;
 

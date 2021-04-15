@@ -190,20 +190,36 @@ input {
     text-align: center;
     background-color: $lightBlue;
 
-    .title {
-      margin: 0 0 10px;
+    &:hover {
+      background-color: $lightBlue;
     }
 
-    #new-room-name {
-      width: 90%;
-    }
+    form {
+      cursor: default;
 
-    #new-room-isUnlisted {
-      background-color: $color4;
-    }
+      .title {
+        margin: 0 0 10px;
+      }
 
-    .button {
-      margin: 2px;
+      #new-room-name {
+        width: 90%;
+        margin-bottom: 10px;
+      }
+
+      #new-room-isUnlisted {
+        background-color: $color4;
+        margin-bottom: 15px;
+      }
+
+      .button {
+        margin: 2px;
+        cursor: pointer;
+        width: 45%;
+
+        &:hover {
+          background-color: $color2;
+        }
+      }
     }
   }
 }
