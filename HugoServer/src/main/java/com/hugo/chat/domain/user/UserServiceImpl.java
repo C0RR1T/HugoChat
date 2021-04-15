@@ -37,7 +37,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO createUser(UserDTO user) {
-        if (user.getName().length() <= MAX_USERNAME_LENGTH) {
+        if (user.getName().length() > MAX_USERNAME_LENGTH)
+            throw new IllegalArgumentException("Username is too long");
             user.setId(null);
             User u = UserDTO.toUser(user);
             u.setCurrentRoom(Room.MAIN_ROOM_ID);
@@ -45,7 +46,6 @@ public class UserServiceImpl implements UserService {
             u = repository.saveAndFlush(u);
             eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
             return new UserDTO(u.getId(), u.getName());
-        } else throw new IllegalArgumentException("Username is too long");
     }
 
     /**
@@ -71,8 +71,10 @@ public class UserServiceImpl implements UserService {
             @Override
             public void run() {
                 HashMap<UUID, Long> roomCounts = new HashMap<>();
+
                 roomRepo.findAll().forEach(room -> roomCounts.put(room.getId(), repository.getUserCountInRoom(room.getId())));
                 repository.deleteInactiveUsers(System.currentTimeMillis() - USER_TIMEOUT);
+
                 roomRepo.findAll().forEach(room -> {
                     if (roomCounts.get(room.getId()) > repository.getUserCountInRoom(room.getId()))
                         eventHandler.newEvent(new EmitterDTO<>("users", getUsers(room.getId())), room.getId());
@@ -91,16 +93,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO updateUser(UserDTO user) {
-        if (user.getName().length() <= MAX_USERNAME_LENGTH) {
-            Optional<User> opt = repository.findById(user.getId());
-            if (opt.isPresent()) {
-                User u = opt.get();
-                u.setName(user.getName());
-                repository.saveAndFlush(u);
-                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
-                return new UserDTO(u.getId(), u.getName());
-            } else throw new NoSuchElementException();
-        } else throw new IllegalArgumentException();
+        if (user.getName().length() > MAX_USERNAME_LENGTH)
+            throw new IllegalArgumentException();
+
+        Optional<User> opt = repository.findById(user.getId());
+        if (opt.isEmpty())
+         throw new NoSuchElementException();
+
+        User u = opt.get();
+        u.setName(user.getName());
+        repository.saveAndFlush(u);
+        eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
+        return new UserDTO(u.getId(), u.getName());
     }
 
     /**
@@ -114,18 +118,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setUserActive(String id, String roomId) {
         Optional<User> optUser = repository.findById(UUID.fromString(id));
+
         if (optUser.isEmpty())
             throw new NoSuchElementException("UserID doesn't exist.");
-        if(!roomRepo.existsById(UUID.fromString(roomId)))
+        if (!roomRepo.existsById(UUID.fromString(roomId)))
             throw new NoSuchElementException("RoomID doesn't exist");
+
         User user = optUser.get();
         user.setLastActive(System.currentTimeMillis());
+
         if (user.getCurrentRoom() != UUID.fromString(roomId)) {
             UUID oldId = user.getCurrentRoom();
             user.setCurrentRoom(UUID.fromString(roomId));
             eventHandler.newEvent(new EmitterDTO<>("users", getUsers(oldId)), oldId);
             eventHandler.newEvent(new EmitterDTO<>("users", getUsers(user.getCurrentRoom())), user.getCurrentRoom());
         }
+
         repository.saveAndFlush(optUser.get());
     }
 }
