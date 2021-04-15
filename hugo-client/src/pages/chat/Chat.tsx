@@ -32,7 +32,12 @@ const Chat = () => {
         const userFromStorage = sessionStorage.getItem("user");
         if (userFromStorage) {
             const userObj = JSON.parse(userFromStorage) as UserDTO;
-            userService.keepActive(roomId, userObj.id);
+            userService.keepActive(roomId, userObj.id).catch(r => {
+                userService.createUser(DEFAULT_NAME).then(user => {
+                    setUser(user);
+                    sessionStorage.setItem("user", JSON.stringify(user));
+                });
+            });
             setUser(userObj);
         } else {
             userService.createUser(DEFAULT_NAME).then(user => {
