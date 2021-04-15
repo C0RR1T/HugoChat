@@ -68,7 +68,7 @@ public class RoomServiceImpl implements RoomService {
             throw new NoSuchElementException("Room ID doesn't exist.");
         if (!repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Room Name already exists.");
-        if(dto.getName().length() > 255)
+        if (dto.getName().length() > 255)
             throw new IllegalArgumentException("Name is longer than 255. Length is: " + dto.getName().length());
         RoomDTO roomToSend = RoomDTO.toDTO(repository.saveAndFlush(RoomDTO.toRoom(dto)));
         handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));

@@ -64,7 +64,6 @@ public class MessageDTO {
     }
 
 
-
     public static Message toMessage(MessageDTO message) {
         Message m = new Message();
         m.setBody(message.getBody());

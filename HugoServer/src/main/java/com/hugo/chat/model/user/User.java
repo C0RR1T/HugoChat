@@ -30,7 +30,8 @@ public class User {
     private long lastActive;
     private UUID currentRoom;
 
-    public User() { }
+    public User() {
+    }
 
     public User(UUID id, String name, long lastActive) {
         this.id = id;

@@ -9,7 +9,8 @@ public class RoomDTO {
     private UUID id;
     private String name;
 
-    public RoomDTO() {}
+    public RoomDTO() {
+    }
 
     public RoomDTO(UUID id, String name) {
         this.id = id;
