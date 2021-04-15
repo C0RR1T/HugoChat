@@ -8,7 +8,6 @@ import com.hugo.chat.model.room.dto.RoomDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,26 +28,28 @@ public class RoomServiceImpl implements RoomService {
             System.err.println("No Main detected");
             repository.saveAndFlush(new Room(UUID.randomUUID(), "main"));
             repository.setMainRoom(Room.MAIN_ROOM_ID);
+            System.out.println("Main created");
         }
-        System.out.println(repository.findAll().get(0).getId());
     }
 
     @Override
-    public RoomDTO createRoom(RoomDTO dto) {
+    public RoomDTO createRoom(RoomDTO dto, boolean isListed) {
         if (repository.existsByName(dto.getName()))
             throw new IllegalArgumentException("Name already exists");
         if (dto.getName().length() > 255)
             throw new IllegalArgumentException("Name is longer than 255. Length is: " + dto.getName().length());
         Room room = RoomDTO.toRoom(dto);
         room.setId(null);
+        room.setListed(isListed);
         RoomDTO finished = RoomDTO.toDTO(repository.saveAndFlush(room));
-        handler.roomEvents(getAllRooms());
+        handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
         return finished;
     }
 
     @Override
     public Collection<RoomDTO> getAllRooms() {
         return repository.findAll().stream()
+                .filter(Room::isListed)
                 .map(RoomDTO::toDTO)
                 .sorted(((o1, o2) -> {
                     if (o1.getName().equals("main"))
@@ -69,8 +70,8 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room Name already exists.");
         if(dto.getName().length() > 255)
             throw new IllegalArgumentException("Name is longer than 255. Length is: " + dto.getName().length());
-        repository.saveAndFlush(RoomDTO.toRoom(dto));
-        handler.roomEvents(getAllRooms());
-        return null;
+        RoomDTO roomToSend = RoomDTO.toDTO(repository.saveAndFlush(RoomDTO.toRoom(dto)));
+        handler.roomEvents(new EmitterDTO<>("rooms", getAllRooms()));
+        return roomToSend;
     }
 }

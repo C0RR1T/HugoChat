@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface EventHandler {
     SseEmitter streamUpdates(String id);
     SseEmitter streamRoomsUpdate();
-    void roomEvents(Collection<RoomDTO> content);
+    void roomEvents(EmitterDTO<Collection<RoomDTO>> content);
     void newEvent(EmitterDTO<?> content, UUID roomId);
 }
