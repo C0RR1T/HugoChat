@@ -6,10 +6,11 @@ import UserDTO from "../user/model/UserDTO";
 export default class RoomServiceImpl implements RoomService {
     async create(name: string): Promise<RoomDTO> {
         try {
-            const {data} = await axiosAPI.post<RoomDTO>("/rooms", {name})
+            const {data} = await axiosAPI.post<RoomDTO>("/rooms?listed=true", {name})
             console.log("Created room with id " + data.id);
             return data;
         } catch (e) {
+            console.log(e);
             throw new Error(e);
         }
     }
