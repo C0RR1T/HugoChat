@@ -29,6 +29,16 @@ public class MessageServiceImpl implements MessageService {
         this.eventHandler = eventHandler;
     }
 
+    /**
+     * Creates new Message
+     * @param messagedto DTO to be created
+     * @param roomId In which room the message should be saved in
+     * @return The saved Message as DTO
+     * @throws NoSuchElementException When the RoomID doesn't exists
+     * @throws NoSuchElementException When the UserID doesn't exists
+     * @throws IllegalArgumentException When the message body is to long (-> MAX_MESSAGE_LENGTH)
+     * @throws IllegalArgumentException When the User sends messages too fast
+     */
     @Override
     public MessageDTO createMessage(MessageDTO messagedto, String roomId) {
         if (messagedto.getBody().length() > MAX_MESSAGE_LENGTH)
@@ -54,6 +64,14 @@ public class MessageServiceImpl implements MessageService {
         return messageSaved;
     }
 
+    /**
+     * Gets messages before a specific message
+     * @param messageID ID of message to check before
+     * @param amount Amount of messages sent
+     * @param roomId Room of the messages
+     * @return Collection of MessageDTOs
+     * @throws IllegalArgumentException When the MessageID isn't found
+     */
     @Override
     public Collection<MessageDTO> getOldMessages(String messageID, int amount, String roomId) throws IllegalArgumentException {
         Optional<Message> m = repository.findById(UUID.fromString(messageID));
@@ -68,6 +86,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
+    /**
+     * Gets all Messages before a timestamp, returns an Array with the length of amount
+     * @param before UNIX timestamp
+     * @param amount How many messages should be sent
+     * @param roomId Messages from room
+     * @return Collection of MessageDTOs
+     */
     private Collection<MessageDTO> getMessagesBefore(long before, int amount, String roomId) {
         return repository.getOldMessage(before, UUID.fromString(roomId)).stream()
                 .limit(amount)

@@ -29,6 +29,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * Creates a new User
+     *
+     * @param user UserDTO containing the username
+     * @return the new User as UserDTO
+     * @throws IllegalArgumentException when the Username is too long (-> MAX_USERNAME_LENGTH
+     */
     @Override
     public UserDTO createUser(UserDTO user) {
         if (user.getName().length() <= MAX_USERNAME_LENGTH) {
@@ -39,9 +46,15 @@ public class UserServiceImpl implements UserService {
             u = repository.saveAndFlush(u);
             eventHandler.newEvent(new EmitterDTO<>("users", getUsers(u.getCurrentRoom())), u.getCurrentRoom());
             return new UserDTO(u.getId(), u.getName());
-        } else throw new IllegalArgumentException("Message is too long");
+        } else throw new IllegalArgumentException("Username is too long");
     }
 
+    /**
+     * Gets all Users in a specific room
+     *
+     * @param roomId RoomID to be checked
+     * @return the List of users in the room
+     */
     @Override
     public Collection<UserDTO> getUsers(UUID roomId) {
         return repository.getUsersByRoom(roomId).stream().
@@ -54,6 +67,9 @@ public class UserServiceImpl implements UserService {
         return getUsers(UUID.fromString(roomId));
     }
 
+    /**
+     * Deletes inactive Users after the User didn't update himself for USER_TIMEOUT sec
+     */
     @Override
     public void deleteInactiveUser() {
         Timer timer = new Timer();
@@ -71,6 +87,14 @@ public class UserServiceImpl implements UserService {
         }, 10000, 10000);
     }
 
+    /**
+     * Updates the Username of a User
+     *
+     * @param user UserDTO containing new username and the ID of the user
+     * @return the User as DTO with the new username
+     * @throws IllegalArgumentException when the username is longer than MAX_USERNAME_LENGTH
+     * @throws NoSuchElementException   when the UserID doesn't exists
+     */
     @Override
     public UserDTO updateUser(UserDTO user) {
         if (user.getName().length() <= MAX_USERNAME_LENGTH) {
@@ -85,19 +109,29 @@ public class UserServiceImpl implements UserService {
         } else throw new IllegalArgumentException();
     }
 
+    /**
+     * Sets the User active again, if the roomId doesn't match up with the saved room of the User, a event is triggered in both room to update their Userlist
+     *
+     * @param id     ID of the User
+     * @param roomId ID of the room
+     * @throws NoSuchElementException when the UserID doesn't exist
+     * @throws NoSuchElementException when the RoomID doesn't exist
+     */
     @Override
     public void setUserActive(String id, String roomId) {
         Optional<User> optUser = repository.findById(UUID.fromString(id));
-        if (optUser.isPresent()) {
-            User user = optUser.get();
-            user.setLastActive(System.currentTimeMillis());
-            if (user.getCurrentRoom() != UUID.fromString(roomId)) {
-                UUID oldId = user.getCurrentRoom();
-                user.setCurrentRoom(UUID.fromString(roomId));
-                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(oldId)), oldId);
-                eventHandler.newEvent(new EmitterDTO<>("users", getUsers(user.getCurrentRoom())), user.getCurrentRoom());
-            }
-            repository.saveAndFlush(optUser.get());
-        } else throw new NoSuchElementException();
+        if (optUser.isEmpty())
+            throw new NoSuchElementException("UserID doesn't exist.");
+        if(!roomRepo.existsById(UUID.fromString(roomId)))
+            throw new NoSuchElementException("RoomID doesn't exist");
+        User user = optUser.get();
+        user.setLastActive(System.currentTimeMillis());
+        if (user.getCurrentRoom() != UUID.fromString(roomId)) {
+            UUID oldId = user.getCurrentRoom();
+            user.setCurrentRoom(UUID.fromString(roomId));
+            eventHandler.newEvent(new EmitterDTO<>("users", getUsers(oldId)), oldId);
+            eventHandler.newEvent(new EmitterDTO<>("users", getUsers(user.getCurrentRoom())), user.getCurrentRoom());
+        }
+        repository.saveAndFlush(optUser.get());
     }
 }

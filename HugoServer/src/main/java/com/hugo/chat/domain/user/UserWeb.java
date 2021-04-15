@@ -48,12 +48,12 @@ public class UserWeb {
     }
 
     @PatchMapping("/rooms/{roomId}/users/active/{userId}")
-    public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
+    public ResponseEntity<?> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
         try {
             service.setUserActive(id, roomId);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException n) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(n.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
