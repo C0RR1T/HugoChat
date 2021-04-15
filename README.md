@@ -20,6 +20,11 @@ deleted. Content, username (not uniquely identifiable) and timestamp are stored.
 *HugoChat is also **not** very secure, one can easily do things as if they were another user. This is not a very big
 problem though because all userId info is only temporary.*
 
+### Technologies used 
+ * Spring Boot REST API
+ * React/Typescript with create-react-app
+ * PostgreSQL
+
 ## How to run HugoChat
 
 What you need:
@@ -27,7 +32,7 @@ What you need:
 - Java (to run the backend)
 - Docker (postgres image for the database)
 - NodeJS (for the frontend)
-- Yarn (frontend package manager)
+- Yarn (nodejs package manager)
 
 Clone the repository.
 
