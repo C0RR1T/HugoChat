@@ -29,7 +29,7 @@ const Messages = (props: MessagesProps) => {
             ref.scrollIntoView();
             setFirstScroll(true);
         }
-    }, [props.scroll, firstScroll]);
+    });
 
     useEffect(() => {
         messageService.getLatestMessages(props.roomId, 20).then(
@@ -40,11 +40,12 @@ const Messages = (props: MessagesProps) => {
     useEffect(() => {
         let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
 
+        eventSource.onmessage = (event: MessageEvent<string>) => {
+            const data: {type: string, data: any} = JSON.parse(event.data);
 
-        eventSource.onmessage = (event: MessageEvent<MessageDTO>) => {
-            if (event.type === "message") {
-                messages.push(event.data);
-                setMessages(messages);
+            if (data.type === "message") {
+                const newMsg = [...messages, data.data];
+                setMessages(newMsg);
             }
         }
 
@@ -52,16 +53,18 @@ const Messages = (props: MessagesProps) => {
             eventSource.close();
         }
         return () => eventSource.close();
-    }, [props.roomId])
+    }, [props.roomId, messages])
 
     return (
         <div className="text-chat">
             <div className="messages">
                 <LoadMoreButton loadHandler={() => {
-                    messageService.getMessagesBefore(props.roomId, messages[0].id, 20).then(msg => {
-                        msg.push(...messages);
-                        setMessages(msg);
-                    })
+                    if (messages[0]) {
+                        messageService.getMessagesBefore(props.roomId, messages[0].id, 20).then(msg => {
+                            msg.push(...messages);
+                            setMessages(msg);
+                        })
+                    }
                 }}/>
                 {messageService.dtoToProps(messages, props.user.id).map(msg => <Message {...msg} key={msg.id}/>)}
                 <div ref={messageRef}/>
@@ -73,7 +76,6 @@ const Messages = (props: MessagesProps) => {
 
 
 const submitHandler = (content: string, messageRef: RefObject<HTMLDivElement>, props: MessagesProps) => {
-    console.log(content)
     if (content.length > 1000) {
         alert("Message too long, must be less than 1000 characters");
         return;

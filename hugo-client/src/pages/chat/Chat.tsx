@@ -2,16 +2,14 @@ import React from 'react';
 import Messages from "./Messages";
 import Users from "./Users";
 import {Rooms} from "./Room";
-import RoomDTO from "../../services/room/model/RoomDTO";
 import UserDTO from "../../services/user/model/UserDTO";
-import {roomService, userService} from "../../services/Services";
+import {userService} from "../../services/Services";
 
 const DEFAULT_NAME = "Hugo Boss";
 
 interface ChatState {
     user: UserDTO
     windowWidth: number,
-    rooms: RoomDTO[],
     currentRoom: string
 }
 
@@ -26,7 +24,6 @@ class Chat extends React.Component<{}, ChatState> {
                 id: ""
             },
             windowWidth: 0,
-            rooms: [],
             currentRoom: "00000000-0000-0000-0000-000000000000"
         }
     }
@@ -34,10 +31,6 @@ class Chat extends React.Component<{}, ChatState> {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-
-        roomService.getAll().then(rooms => this.setState({
-            rooms
-        }));
 
         userService.createUser(DEFAULT_NAME).then(user => {
             this.setState({user});
@@ -63,10 +56,9 @@ class Chat extends React.Component<{}, ChatState> {
         } else {
             alert(`Name too long: '${name.length}'. Must be less than 255 characters`)
         }
-
     }
 
-    handleRoomChange = async (roomId: string) => {
+    handleRoomChange = (roomId: string) => {
         this.setState({
             currentRoom: roomId
         });
@@ -77,18 +69,12 @@ class Chat extends React.Component<{}, ChatState> {
         return (
             <div className="parent">
                 <Rooms
-                    rooms={this.state.rooms.map(dto => {
-                        return {
-                            id: dto.id,
-                            name: dto.name,
-                            roomChangeHandler: (id) => {
-                                this.handleRoomChange(id);
-                            }
-                        }
-                    })}
                     current={this.state.currentRoom}
+                    roomChangeHandler={(id) => {
+                        this.handleRoomChange(id);
+                    }}
                 />
-                <Messages scroll={this.state.windowWidth > 768}
+                <Messages scroll={true}
                           user={this.state.user}
                           roomId={this.state.currentRoom}
                 />

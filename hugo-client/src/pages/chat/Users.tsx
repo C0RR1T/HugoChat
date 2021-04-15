@@ -24,9 +24,11 @@ const Users = (props: UsersProps) => {
     useEffect(() => {
         let eventSource = new EventSource(BASE_URL + `/rooms/${props.roomId}/update`);
 
-        eventSource.onmessage = (event: MessageEvent<UserDTO[]>) => {
-            console.log(event);
-            if (event.type === "users") {
+        eventSource.onmessage = (event: MessageEvent<string>) => {
+            const data: {type: string, data: any} = JSON.parse(event.data);
+
+            if (data.type === "users") {
+                setUsers((data.data as UserDTO[]).filter(user => user.id !== props.user.id));
             }
         }
 

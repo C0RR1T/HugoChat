@@ -37,6 +37,7 @@ export default class MessageServiceImpl implements MessageService {
             return data;
         } catch (e) {
             throw new Error(e);
+        } finally {
         }
     }
 

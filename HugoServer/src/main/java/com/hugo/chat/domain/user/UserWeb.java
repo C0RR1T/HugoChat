@@ -26,7 +26,7 @@ public class UserWeb {
         }
     }
 
-    @GetMapping("users/hugo")
+    @GetMapping("/users/hugo")
     public ResponseEntity<String> hugo() {
         return ResponseEntity.ok().body("Hugo Boss");
     }
@@ -47,7 +47,7 @@ public class UserWeb {
         return ResponseEntity.ok().body(service.getUsers(roomId));
     }
 
-    @PatchMapping("/rooms/{roomId}/active/{userId}")
+    @PatchMapping("/rooms/{roomId}/users/active/{userId}")
     public ResponseEntity<Void> setUserActive(@PathVariable("userId") String id, @PathVariable("roomId") String roomId) {
         try {
             service.setUserActive(id, roomId);
