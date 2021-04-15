@@ -4,6 +4,7 @@ import Users from "./Users";
 import {Rooms} from "./Room";
 import UserDTO from "../../services/user/model/UserDTO";
 import {userService} from "../../services/Services";
+import {BrowserRouter} from "react-router-dom";
 
 const DEFAULT_NAME = "Hugo Boss";
 
@@ -67,23 +68,25 @@ class Chat extends React.Component<{}, ChatState> {
 
     render() {
         return (
-            <div className="parent">
-                <Rooms
-                    current={this.state.currentRoom}
-                    roomChangeHandler={(id) => {
-                        this.handleRoomChange(id);
-                    }}
-                />
-                <Messages scroll={true}
-                          user={this.state.user}
-                          roomId={this.state.currentRoom}
-                />
-                <Users
-                    user={this.state.user}
-                    nameChangeHandler={this.handleNameChange}
-                    roomId={this.state.currentRoom}
-                />
-            </div>
+            <BrowserRouter>
+                <div className="parent">
+                    <Rooms
+                        current={this.state.currentRoom}
+                        roomChangeHandler={(id) => {
+                            this.handleRoomChange(id);
+                        }}
+                    />
+                    <Messages scroll={true}
+                              user={this.state.user}
+                              roomId={this.state.currentRoom}
+                    />
+                    <Users
+                        user={this.state.user}
+                        nameChangeHandler={this.handleNameChange}
+                        roomId={this.state.currentRoom}
+                    />
+                </div>
+            </BrowserRouter>
         );
     }
 }

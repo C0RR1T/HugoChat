@@ -2,7 +2,7 @@ import {roomService} from "../../services/Services";
 import React, {useEffect, useRef, useState} from "react";
 import RoomDTO from "../../services/room/model/RoomDTO";
 import {BASE_URL} from "../../services/AxiosUtility";
-import {type} from "os";
+import {Link} from "react-router-dom";
 
 interface RoomsProps {
     current: string
@@ -58,6 +58,8 @@ const Rooms = (props: RoomsProps) => {
             }} key={room.id}/> :
             <Room {...room} roomChangeHandler={props.roomChangeHandler} key={room.id}/>)
 
+    console.log(showRooms);
+
     return (
         <div className="rooms">
             <RoomSearch changeHandler={query => {
@@ -77,9 +79,9 @@ interface RoomProps {
 }
 
 const Room = (props: RoomProps) =>
-    <div className="room" onClick={() => props.roomChangeHandler(props.id)}>
-        {props.name}
-    </div>
+        <Link to={`/${props.id}`} className="room" onClick={() => props.roomChangeHandler(props.id)}>
+            {props.name}
+        </Link>
 
 
 const CurrentRoom = (props: RoomProps) =>
