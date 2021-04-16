@@ -31,7 +31,6 @@ public class EventHandlerImpl implements EventHandler {
      * @param id
      * @return
      */
-    @CrossOrigin
     @GetMapping("/rooms/{roomId}/update")
     public SseEmitter streamUpdates(@PathVariable("roomId") String id) {
         SseEmitterWrap emitterWrap = new SseEmitterWrap(new SseEmitter(-1L), UUID.fromString(id));
@@ -43,10 +42,9 @@ public class EventHandlerImpl implements EventHandler {
 
 
     /**
-     * Emitter for Room Updates
+     * Emitter for {@link com.hugo.chat.model.room.Room} Updates
      * @return SseEmitter
      */
-    @CrossOrigin
     @GetMapping("/rooms/update")
     public SseEmitter streamRoomsUpdate() {
         SseEmitter emitter = new SseEmitter(-1L);
@@ -57,7 +55,7 @@ public class EventHandlerImpl implements EventHandler {
     }
 
     /**
-     * Sends the current availabe rooms
+     * Sends the current availabe {@link com.hugo.chat.model.room.Room}
      * @param content content to be send
      */
     @Override
@@ -75,9 +73,9 @@ public class EventHandlerImpl implements EventHandler {
 
 
     /**
-     * Event containing new Message or the userlist of current room
+     * Event containing new {@link com.hugo.chat.model.message.Message} or a list of {@link com.hugo.chat.model.user.User} of current room
      * @param content content to be send
-     * @param roomId roomID where the event is sent to
+     * @param roomId {@link com.hugo.chat.model.room.Room#id} where the event is sent to
      */
     public void newEvent(EmitterDTO<?> content, UUID roomId) {
         ArrayList<SseEmitterWrap> deadEmitters = new ArrayList<>();

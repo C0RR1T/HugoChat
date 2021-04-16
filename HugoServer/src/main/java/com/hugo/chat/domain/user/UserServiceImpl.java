@@ -31,9 +31,9 @@ public class UserServiceImpl implements UserService {
     /**
      * Creates a new User
      *
-     * @param user UserDTO containing the username
-     * @return the new User as UserDTO
-     * @throws IllegalArgumentException when the Username is too long (-> MAX_USERNAME_LENGTH
+     * @param user {@link UserDTO} containing the username
+     * @return the new {@link User} as {@link UserDTO}
+     * @throws IllegalArgumentException when the {@link User#name} is too longer than {@link UserServiceImpl#MAX_USERNAME_LENGTH}
      */
     @Override
     public UserDTO createUser(UserDTO user) {
@@ -50,10 +50,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Gets all Users in a specific room
+     * Gets all {@link User}s in a specific {@link Room}
      *
-     * @param roomId RoomID to be checked
-     * @return the List of users in the room
+     * @param roomId {@link Room#id} to be checked
+     * @return the List of {@link User}s in the {@link Room}
      */
     @Override
     public Collection<UserDTO> getUsers(UUID roomId) {
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Delete all users that have not sent their active signal for longer than 10s and send an SSE to the affected room
+     * Delete all {@link User}s that have not sent their active signal for longer than {@link UserServiceImpl#USER_TIMEOUT} and send an SSE to the affected room
      */
     @Override
     public void deleteInactiveUser() {
@@ -85,12 +85,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Updates the Username of a User
+     * Updates the {@link User#name} of a {@link User}
      *
-     * @param user UserDTO containing new username and the ID of the user
-     * @return the User as DTO with the new username
-     * @throws IllegalArgumentException when the username is longer than MAX_USERNAME_LENGTH
-     * @throws NoSuchElementException   when the UserID doesn't exists
+     * @param user {@link UserDTO} containing new {@link User#name} and the {@link User#id}
+     * @return the {@link User} as {@link UserDTO} with the new {@link User#name}
+     * @throws IllegalArgumentException when the {@link User#name} is longer than {@link UserServiceImpl#MAX_USERNAME_LENGTH}
+     * @throws NoSuchElementException   when the {@link User#id} doesn't exists
      */
     @Override
     public UserDTO updateUser(UserDTO user) {
@@ -109,12 +109,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Sets the User active again, if the roomId doesn't match up with the saved room of the User, a event is triggered in both room to update their Userlist
+     * Sets the {@link User} active again, if the {@link Room#id} doesn't match up with {@link User#currentRoom}, a event is triggered in both {@link Room}s to update their Userlist
      *
-     * @param id     ID of the User
-     * @param roomId ID of the room
-     * @throws NoSuchElementException when the UserID doesn't exist
-     * @throws NoSuchElementException when the RoomID doesn't exist
+     * @param id     {@link User#id}
+     * @param roomId {@link Room#id}
+     * @throws NoSuchElementException when the {@link User#id} doesn't exist
+     * @throws NoSuchElementException when the {@link Room#id} doesn't exist
      */
     @Override
     public void setUserActive(String id, String roomId) {
