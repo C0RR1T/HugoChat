@@ -1,5 +1,7 @@
 # HugoChat
 
+You can find HugoChat [here](http://161.97.165.1/)!
+
 ![image](https://user-images.githubusercontent.com/48135649/114876059-3caa9b80-9dfe-11eb-9d66-519e05a4771d.png)
 
 ## What is HugoChat?
