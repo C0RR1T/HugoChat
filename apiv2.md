@@ -1,5 +1,6 @@
 # API Routes
 
+Base Port: `8080`
 Base Route: `/api/v2`
 
 ## DTO
@@ -172,7 +173,8 @@ Example body: `MessageDTO` without id
 
 ```json
 {
-  "sentBy": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
+  "sentBy": "HugoBot",
+  "sentByID": "8b343b07-83bd-47e0-b317-7dbb8e3985a8",
   "body": "hi",
   "sentOn": 5590432785885
 }
