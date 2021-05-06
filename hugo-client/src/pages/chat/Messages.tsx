@@ -31,7 +31,7 @@ const Messages = (props: MessagesProps) => {
             ref.scrollIntoView();
             setFirstScroll(true);
         }
-    }, [firstScroll, props.scroll]);
+    }, [firstScroll, props.scroll, messageRef.current, messages]);
 
     useEffect(() => {
         messageService.getLatestMessages(roomId, 20).then(
