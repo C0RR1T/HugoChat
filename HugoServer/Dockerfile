@@ -1,18 +1,16 @@
-FROM java AS build
+FROM gradle AS build
 
 WORKDIR /app
 
-COPY ./gradlew ./gradle ./
-RUN ./gradlew
-
 COPY . .
+RUN ./gradlew build
 RUN ./gradlew jar
 
 # ---
 
-FROM gcr.io/distroless/java17-debian11
+FROM gcr.io/distroless/java17
 
 WORKDIR /app
 
-COPY --from=build build/libs/HugoServer-0.0.1-SNAPSHOT.war HugoServer.war
-RUN ["java", "-jar", "HugoServer.war"]
+COPY --from=build /app/build/libs/HugoServer-0.0.1-SNAPSHOT.jar /app/HugoServer.jar
+ENTRYPOINT  ["java", "-jar", "/app/HugoServer.jar"]
