@@ -8,7 +8,7 @@ RUN ./gradlew jar
 
 # ---
 
-FROM gcr.io/distroless/java17
+FROM gcr.io/distroless/java21
 
 WORKDIR /app
 
