@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from "axios";
 
-const BASE_URL = "https://api.hugo-chat.nilstrieb.dev/api/v2";
+const BASE_URL = "https://api.hugo-chat.noratrieb.dev/api/v2";
 //const BASE_URL = "http://localhost:8080";
 
 const defaultAxiosInstance: AxiosInstance = axios.create({
